@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Perth Rain Gauges · Challenge</title>
+<meta name="description" content="Our calibrated rainfall forecasts compared with other weather models on the same gauge readings.">
+<link rel="stylesheet" href="assets/style.css">
+<script type="module" src="assets/challenge.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">Perth <span>Rain Gauges</span></a>
+    <nav class="primary" aria-label="Pages">
+      <a href="index.html">Forecast</a>
+      <a href="challenge.html" aria-current="page">Challenge</a>
+      <a href="map.html">Map</a>
+      <a href="performance.html">Performance</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <section class="loc-head">
+    <h1>Forecast Challenge</h1>
+    <p class="gauge-line">Our calibrated forecasts against other weather models, scored on the same rain-gauge readings.
+    Rain amounts and rain probabilities have separate leaderboards. “Cannot tell apart” and “insufficient evidence”
+    are common and honest results.</p>
+  </section>
+  <div id="challenge"><p class="muted">Loading…</p></div>
+</main>
+<footer>
+  <div class="foot-inner">
+    <p>Forecast data: <a href="https://open-meteo.com/">Open-Meteo.com</a> (CC BY 4.0), from ECMWF (IFS, AIFS), DWD (ICON),
+    JMA and NOAA NCEP model output. Observations © Commonwealth of Australia, Bureau of Meteorology.</p>
+  </div>
+</footer>
+</body>
+</html>

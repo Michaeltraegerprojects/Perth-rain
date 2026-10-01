@@ -1,12 +1,13 @@
 {
  "schema_version": 1,
- "exported_utc": "2026-10-01T03:17:03Z",
+ "exported_utc": "2026-10-01T04:00:52Z",
  "release": "Frozen audited release (no El Niño input), models trained 2026-09-30",
  "forecast_made_utc": "2026-10-01T02:30:00Z",
  "files": [
   "forecast.json",
   "performance.json",
-  "map.json"
+  "map.json",
+  "challenge.json"
  ],
  "attribution": "Forecast data: Open-Meteo.com (CC BY 4.0), from ECMWF, JMA and NOAA NCEP model output. Observations: Commonwealth of Australia, Bureau of Meteorology."
 }

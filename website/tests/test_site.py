@@ -129,3 +129,28 @@ def test_map_marks_planned_gauges_as_not_in_use():
     assert planned and all(g["id"] == "009264" for g in planned)
     fc = json.loads((PUBLIC / "forecast.json").read_text(encoding="utf-8"))
     assert all(l["gauge"]["id"] != "009264" for l in fc["locations"]), "a planned gauge must not appear as in use"
+
+
+def test_challenge_export_keeps_probabilities_and_missing_honest():
+    p = PUBLIC / "challenge.json"
+    if not p.exists():
+        pytest.skip("challenge.json not exported yet")
+    d = json.loads(p.read_text(encoding="utf-8"))
+    for track in ("historical", "prospective"):
+        for g in (d.get(track) or {}).get("groups", []):
+            for pr in g["probabilities"]:
+                if pr["key"] not in ("champion", "clim"):
+                    assert pr["Brier"] is None and "unavailable" in pr["note"]
+            n = {a["n_days"] for a in g["amounts"]}
+            assert len(n) == 1, "every competitor must be scored on the same days"
+            for row in g["paired"]:
+                if row["n_days"] < 60:
+                    assert row["verdict"] == "insufficient evidence"
+    text = p.read_text(encoding="utf-8").lower()
+    assert "most accurate" not in text
+
+
+def test_validator_rejects_nan_which_browsers_cannot_parse(tmp_path):
+    d = _copy_public(tmp_path)
+    (d / "manifest.json").write_text('{"schema_version": 1, "x": NaN}', encoding="utf-8")
+    assert any("invalid JSON for browsers" in p for p in X.validate(d))

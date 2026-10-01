@@ -83,3 +83,13 @@ test("latest Himawari image: newest 10-minute time the tile service can serve, e
   assert.ok(seen.every((u) => u.includes("/5/18/26.png")));       // the tile over Perth
   assert.equal(await latestHimawari("ir", now, async () => ({ ok: false, headers: { get: () => "" } })), null);
 });
+
+test("challenge verdicts never declare a winner without evidence", async () => {
+  const { verdictText, verdictClass } = await import("../assets/challenge.js");
+  const base = { first: "Our forecast (median)", second: "NOAA GFS (raw)", first_key: "champion_median" };
+  assert.equal(verdictText({ ...base, verdict: "insufficient evidence" }), "Insufficient evidence");
+  assert.equal(verdictText({ ...base, verdict: "inconclusive" }), "Cannot tell apart");
+  assert.equal(verdictText({ ...base, verdict: "first better" }), "Our forecast (median) better");
+  assert.equal(verdictClass({ ...base, verdict: "second better" }), "worse");
+  assert.equal(verdictClass({ ...base, verdict: "inconclusive" }), "ns");
+});

@@ -1,0 +1,460 @@
+{
+ "description": "Frozen champion: audited no-ENSO release. Challengers are compared against it; it is never retrained, re-selected or replaced by the challenge code.",
+ "selection_rule_files": {
+  "src/perthrain/calibrate.py": "1d519c3c83f0e9249a4394d55da269cef40fcb0f6cb6ce60e19a5b9e3c119719",
+  "src/perthrain/predict.py": "8748fc6515650061b7ba33e38a8f70d3958af3a65fa92dcbcbd06712c58d19fa",
+  "src/perthrain/build.py": "80889ecae54f6770a9ac56099d4bb643037f9d5231f0a08b6d5e48f4dfe91f50",
+  "src/perthrain/forecasts.py": "370eda58d3ae25e520ccd10c7114007d4ad8e97cd733daf974556acbde308bd8",
+  "src/perthrain/enso_guard.py": "5dd0e7de3a90cf7a4bc67340517722ff407b4580e1e0457ee42262c99fae421b"
+ },
+ "locations": {
+  "perth": {
+   "name": "Perth",
+   "run_id": "noenso-20260930T155128Z-a716ab4d",
+   "created_utc": "2026-09-30T15:51:28Z",
+   "code_sha256": "ecfc7e94bd034fe0443b233769f63aec718574350e6078bd1b7d1ac879524a95",
+   "enso_status": "no_enso",
+   "manifest_sha256": "55efa5d92cac433bdcc83bbbb034f1c462b794bacc5a87394c35ca3d5ac6fcf2",
+   "selection_sha256": "49a85166061272f4fe71fd018f27817c23dd9fffb4cafbc15ab248412c9f97f3",
+   "leads": {
+    "day1": {
+     "artifact": "data/perth/models/hurdle_day1.joblib",
+     "sha256": "c46953c33374f08775a48994c358e81f928db952843c2f78d540f119fecb450d",
+     "selected": {
+      "feature_set": "ecmwf_ifs_sr",
+      "C": 1.0,
+      "season": false,
+      "climate": null
+     },
+     "routing_order": [
+      "ecmwf_ifs_sr"
+     ],
+     "feature_schemas": {
+      "ecmwf_ifs_sr": [
+       "log1p(fc_sr_ecmwf_ifs_mm)"
+      ]
+     },
+     "eval_first": "2024-03-16",
+     "eval_last": "2026-09-29"
+    },
+    "day2": {
+     "artifact": "data/perth/models/hurdle_day2.joblib",
+     "sha256": "1d14400331c25b98ec6b783dcb4686a73072b6bc22a470acf0df8cc2cbe22bc8",
+     "selected": {
+      "feature_set": "all_composite",
+      "C": 1.0,
+      "season": false,
+      "climate": null
+     },
+     "routing_order": [
+      "all_composite",
+      "jma_gsm_pr",
+      "ecmwf_ifs025_pr",
+      "ecmwf_composite",
+      "ecmwf_ifs_sr"
+     ],
+     "feature_schemas": {
+      "all_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_jma_gsm_mm), log1p(fc_pr_ncep_gfs_global_mm), log1p(fc_pr_ecmwf_ifs025_mm))"
+      ],
+      "jma_gsm_pr": [
+       "log1p(fc_pr_jma_gsm_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "ecmwf_ifs025_pr": [
+       "log1p(fc_pr_ecmwf_ifs025_mm)"
+      ],
+      "ecmwf_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_ecmwf_ifs025_mm))"
+      ],
+      "ecmwf_ifs_sr": [
+       "log1p(fc_sr_ecmwf_ifs_mm)"
+      ]
+     },
+     "eval_first": "2024-03-17",
+     "eval_last": "2026-09-29"
+    },
+    "day3": {
+     "artifact": "data/perth/models/hurdle_day3.joblib",
+     "sha256": "b944ffe392febc7dbb8481cdffdefa73c2346e8a78ddb94b5f5dd98cdd8c490d",
+     "selected": {
+      "feature_set": "all_composite",
+      "C": 1.0,
+      "season": false,
+      "climate": null
+     },
+     "routing_order": [
+      "all_composite",
+      "ecmwf_composite",
+      "jma_gsm_pr",
+      "ecmwf_ifs025_pr",
+      "ecmwf_ifs_sr"
+     ],
+     "feature_schemas": {
+      "all_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_jma_gsm_mm), log1p(fc_pr_ncep_gfs_global_mm), log1p(fc_pr_ecmwf_ifs025_mm))"
+      ],
+      "ecmwf_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_ecmwf_ifs025_mm))"
+      ],
+      "jma_gsm_pr": [
+       "log1p(fc_pr_jma_gsm_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "ecmwf_ifs025_pr": [
+       "log1p(fc_pr_ecmwf_ifs025_mm)"
+      ],
+      "ecmwf_ifs_sr": [
+       "log1p(fc_sr_ecmwf_ifs_mm)"
+      ]
+     },
+     "eval_first": "2024-03-18",
+     "eval_last": "2026-09-29"
+    }
+   }
+  },
+  "clarkson": {
+   "name": "Clarkson",
+   "run_id": "noenso-20260930T155208Z-373e8cf3",
+   "created_utc": "2026-09-30T15:52:08Z",
+   "code_sha256": "ecfc7e94bd034fe0443b233769f63aec718574350e6078bd1b7d1ac879524a95",
+   "enso_status": "no_enso",
+   "manifest_sha256": "0eca599e8df0ef150317f98490b12cc9034b70838ffe3a190e3f7fddb029a1e9",
+   "selection_sha256": "c016c3d2a3245f70871163c8e2a9d7e99d83b392a236595800a86441ab0beba0",
+   "leads": {
+    "day1": {
+     "artifact": "data/clarkson/models/hurdle_day1.joblib",
+     "sha256": "10114af08a78bf88c991b24ec7dc76b3db42dcb796b7b9ba47b688d6b6496a4f",
+     "selected": {
+      "feature_set": "ecmwf_ifs_sr",
+      "C": 1.0,
+      "season": true,
+      "climate": null
+     },
+     "routing_order": [
+      "ecmwf_ifs_sr"
+     ],
+     "feature_schemas": {
+      "ecmwf_ifs_sr": [
+       "log1p(fc_sr_ecmwf_ifs_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ]
+     },
+     "eval_first": "2024-03-16",
+     "eval_last": "2026-09-29"
+    },
+    "day2": {
+     "artifact": "data/clarkson/models/hurdle_day2.joblib",
+     "sha256": "0b258083e60f7f61ea13b424fd39a6c7ef6babdc7e07d98fade3ed4c66865960",
+     "selected": {
+      "feature_set": "all_composite",
+      "C": 1.0,
+      "season": true,
+      "climate": null
+     },
+     "routing_order": [
+      "all_composite",
+      "ecmwf_ifs025_pr",
+      "ecmwf_composite",
+      "jma_gsm_pr",
+      "ecmwf_ifs_sr"
+     ],
+     "feature_schemas": {
+      "all_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_jma_gsm_mm), log1p(fc_pr_ncep_gfs_global_mm), log1p(fc_pr_ecmwf_ifs025_mm))",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "ecmwf_ifs025_pr": [
+       "log1p(fc_pr_ecmwf_ifs025_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "ecmwf_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_ecmwf_ifs025_mm))",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "jma_gsm_pr": [
+       "log1p(fc_pr_jma_gsm_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "ecmwf_ifs_sr": [
+       "log1p(fc_sr_ecmwf_ifs_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ]
+     },
+     "eval_first": "2024-03-17",
+     "eval_last": "2026-09-29"
+    },
+    "day3": {
+     "artifact": "data/clarkson/models/hurdle_day3.joblib",
+     "sha256": "887e67bf27401047d75cdd596438178ec9faa22cba263dcd38f0cbbb9a874c38",
+     "selected": {
+      "feature_set": "all_composite",
+      "C": 1.0,
+      "season": false,
+      "climate": null
+     },
+     "routing_order": [
+      "all_composite",
+      "ecmwf_ifs025_pr",
+      "jma_gsm_pr",
+      "ecmwf_composite",
+      "ecmwf_ifs_sr"
+     ],
+     "feature_schemas": {
+      "all_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_jma_gsm_mm), log1p(fc_pr_ncep_gfs_global_mm), log1p(fc_pr_ecmwf_ifs025_mm))"
+      ],
+      "ecmwf_ifs025_pr": [
+       "log1p(fc_pr_ecmwf_ifs025_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "jma_gsm_pr": [
+       "log1p(fc_pr_jma_gsm_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "ecmwf_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_ecmwf_ifs025_mm))",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "ecmwf_ifs_sr": [
+       "log1p(fc_sr_ecmwf_ifs_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ]
+     },
+     "eval_first": "2024-03-18",
+     "eval_last": "2026-09-29"
+    }
+   }
+  },
+  "ocean_reef": {
+   "name": "Ocean Reef",
+   "run_id": "noenso-20260930T155246Z-a716ab4d",
+   "created_utc": "2026-09-30T15:52:46Z",
+   "code_sha256": "ecfc7e94bd034fe0443b233769f63aec718574350e6078bd1b7d1ac879524a95",
+   "enso_status": "no_enso",
+   "manifest_sha256": "c4d4c60e606548d677c8bc450d0294482afb86818a64b3eabff3d253f5a3b790",
+   "selection_sha256": "c697446169cb1369f2a90e8333f1dfe1e431dfb65777c6b5e510cb5dd989a7e5",
+   "leads": {
+    "day1": {
+     "artifact": "data/ocean_reef/models/hurdle_day1.joblib",
+     "sha256": "e8a50175dcaa3d8569a37047c250961d91d0acb50106d0fb12280b779bda71eb",
+     "selected": {
+      "feature_set": "ecmwf_ifs_sr",
+      "C": 1.0,
+      "season": false,
+      "climate": null
+     },
+     "routing_order": [
+      "ecmwf_ifs_sr"
+     ],
+     "feature_schemas": {
+      "ecmwf_ifs_sr": [
+       "log1p(fc_sr_ecmwf_ifs_mm)"
+      ]
+     },
+     "eval_first": "2024-03-16",
+     "eval_last": "2026-09-29"
+    },
+    "day2": {
+     "artifact": "data/ocean_reef/models/hurdle_day2.joblib",
+     "sha256": "addf2ee385cf6f7eac820b7814cce505883f157841af0132f10425d126130694",
+     "selected": {
+      "feature_set": "all_composite",
+      "C": 1.0,
+      "season": false,
+      "climate": null
+     },
+     "routing_order": [
+      "all_composite",
+      "jma_gsm_pr",
+      "ecmwf_ifs025_pr",
+      "ecmwf_composite",
+      "ecmwf_ifs_sr"
+     ],
+     "feature_schemas": {
+      "all_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_jma_gsm_mm), log1p(fc_pr_ncep_gfs_global_mm), log1p(fc_pr_ecmwf_ifs025_mm))"
+      ],
+      "jma_gsm_pr": [
+       "log1p(fc_pr_jma_gsm_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "ecmwf_ifs025_pr": [
+       "log1p(fc_pr_ecmwf_ifs025_mm)"
+      ],
+      "ecmwf_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_ecmwf_ifs025_mm))"
+      ],
+      "ecmwf_ifs_sr": [
+       "log1p(fc_sr_ecmwf_ifs_mm)"
+      ]
+     },
+     "eval_first": "2024-03-17",
+     "eval_last": "2026-09-29"
+    },
+    "day3": {
+     "artifact": "data/ocean_reef/models/hurdle_day3.joblib",
+     "sha256": "adb8d694c86ef46926475b5b3b5d585c0a6c334d1aeb4708e8d6c49967351fe6",
+     "selected": {
+      "feature_set": "all_composite",
+      "C": 1.0,
+      "season": false,
+      "climate": null
+     },
+     "routing_order": [
+      "all_composite",
+      "ecmwf_composite",
+      "jma_gsm_pr",
+      "ecmwf_ifs025_pr",
+      "ecmwf_ifs_sr"
+     ],
+     "feature_schemas": {
+      "all_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_jma_gsm_mm), log1p(fc_pr_ncep_gfs_global_mm), log1p(fc_pr_ecmwf_ifs025_mm))"
+      ],
+      "ecmwf_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_ecmwf_ifs025_mm))"
+      ],
+      "jma_gsm_pr": [
+       "log1p(fc_pr_jma_gsm_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "ecmwf_ifs025_pr": [
+       "log1p(fc_pr_ecmwf_ifs025_mm)"
+      ],
+      "ecmwf_ifs_sr": [
+       "log1p(fc_sr_ecmwf_ifs_mm)"
+      ]
+     },
+     "eval_first": "2024-03-18",
+     "eval_last": "2026-09-29"
+    }
+   }
+  },
+  "fremantle": {
+   "name": "Fremantle",
+   "run_id": "noenso-20260930T155325Z-6521c3bf",
+   "created_utc": "2026-09-30T15:53:25Z",
+   "code_sha256": "ecfc7e94bd034fe0443b233769f63aec718574350e6078bd1b7d1ac879524a95",
+   "enso_status": "no_enso",
+   "manifest_sha256": "6db2b3abb36698a326a32d195d94b8bb4a4349c9c3be63f21d0b5679936446aa",
+   "selection_sha256": "2489cc0bf9777512ea96e19bb74552d9d67e243f20ac87963a08d31e782a5529",
+   "leads": {
+    "day1": {
+     "artifact": "data/fremantle/models/hurdle_day1.joblib",
+     "sha256": "1cd9428aa51bfd48fc1e2e6b11b487ca6b6ac012f0535315b16b6ef9da54b101",
+     "selected": {
+      "feature_set": "ecmwf_ifs_sr",
+      "C": 1.0,
+      "season": true,
+      "climate": null
+     },
+     "routing_order": [
+      "ecmwf_ifs_sr"
+     ],
+     "feature_schemas": {
+      "ecmwf_ifs_sr": [
+       "log1p(fc_sr_ecmwf_ifs_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ]
+     },
+     "eval_first": "2024-03-16",
+     "eval_last": "2026-09-29"
+    },
+    "day2": {
+     "artifact": "data/fremantle/models/hurdle_day2.joblib",
+     "sha256": "b34df760e6fa61741e396f49f8a38eabf365e651ccfe3f7eeb3f2d9a094eefc4",
+     "selected": {
+      "feature_set": "all_composite",
+      "C": 1.0,
+      "season": false,
+      "climate": null
+     },
+     "routing_order": [
+      "all_composite",
+      "jma_gsm_pr",
+      "ecmwf_ifs025_pr",
+      "ecmwf_composite",
+      "ecmwf_ifs_sr"
+     ],
+     "feature_schemas": {
+      "all_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_jma_gsm_mm), log1p(fc_pr_ncep_gfs_global_mm), log1p(fc_pr_ecmwf_ifs025_mm))"
+      ],
+      "jma_gsm_pr": [
+       "log1p(fc_pr_jma_gsm_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "ecmwf_ifs025_pr": [
+       "log1p(fc_pr_ecmwf_ifs025_mm)"
+      ],
+      "ecmwf_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_ecmwf_ifs025_mm))",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "ecmwf_ifs_sr": [
+       "log1p(fc_sr_ecmwf_ifs_mm)"
+      ]
+     },
+     "eval_first": "2024-03-17",
+     "eval_last": "2026-09-29"
+    },
+    "day3": {
+     "artifact": "data/fremantle/models/hurdle_day3.joblib",
+     "sha256": "d3730c83c195b1bea843a1be878b4a8e476cd8d7fcf10113b0d7ab9c07ade75e",
+     "selected": {
+      "feature_set": "all_composite",
+      "C": 1.0,
+      "season": false,
+      "climate": null
+     },
+     "routing_order": [
+      "all_composite",
+      "jma_gsm_pr",
+      "ecmwf_composite",
+      "ecmwf_ifs025_pr",
+      "ecmwf_ifs_sr"
+     ],
+     "feature_schemas": {
+      "all_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_jma_gsm_mm), log1p(fc_pr_ncep_gfs_global_mm), log1p(fc_pr_ecmwf_ifs025_mm))"
+      ],
+      "jma_gsm_pr": [
+       "log1p(fc_pr_jma_gsm_mm)",
+       "season_sin(day_of_year)",
+       "season_cos(day_of_year)"
+      ],
+      "ecmwf_composite": [
+       "mean(log1p(fc_sr_ecmwf_ifs_mm), log1p(fc_pr_ecmwf_ifs025_mm))"
+      ],
+      "ecmwf_ifs025_pr": [
+       "log1p(fc_pr_ecmwf_ifs025_mm)"
+      ],
+      "ecmwf_ifs_sr": [
+       "log1p(fc_sr_ecmwf_ifs_mm)"
+      ]
+     },
+     "eval_first": "2024-03-18",
+     "eval_last": "2026-09-29"
+    }
+   }
+  }
+ }
+}

@@ -253,7 +253,12 @@ def validate(folder: Path) -> list[str]:
             problems.append(f"{f.name}: contains an e-mail address")
         if re.search(r"(api[_-]?key|token|secret|password)\s*[:=]", text, re.I):
             problems.append(f"{f.name}: contains a credential-like field")
-        json.loads(text)
+        def _reject(c):
+            raise ValueError(f"non-standard JSON constant {c}")
+        try:
+            json.loads(text, parse_constant=_reject)     # browsers reject NaN / Infinity
+        except ValueError as exc:
+            problems.append(f"{f.name}: invalid JSON for browsers ({exc})")
     fc = json.loads((folder / "forecast.json").read_text(encoding="utf-8"))
     if fc.get("schema_version") != SCHEMA_VERSION:
         problems.append("forecast.json: wrong schema_version")
@@ -301,9 +306,14 @@ def main(argv=None):
     if PENDING.exists():
         shutil.rmtree(PENDING)
     PENDING.mkdir(parents=True)
+    challenge_src = ROOT / "reports" / "challenge" / "challenge_site.json"   # written by `python -m challenge export`
+    extra = []
+    if challenge_src.exists():
+        extra = [("challenge.json", json.loads(challenge_src.read_text(encoding="utf-8")))]
+        manifest["files"].append("challenge.json")
     for n, obj in (("manifest.json", manifest), ("forecast.json", forecast), ("performance.json", performance),
-                   ("map.json", mapdata)):
-        (PENDING / n).write_text(json.dumps(obj, indent=1, ensure_ascii=False), encoding="utf-8")
+                   ("map.json", mapdata), *extra):
+        (PENDING / n).write_text(json.dumps(obj, indent=1, ensure_ascii=False, allow_nan=False), encoding="utf-8")
     problems = validate(PENDING)
     if problems:
         sys.exit("export written to website/data/pending/ but FAILED validation:\n  " + "\n  ".join(problems))

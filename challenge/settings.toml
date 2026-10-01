@@ -1,0 +1,14 @@
+# Forecast Challenge settings. Changing these never touches the champion.
+
+[schedule]
+# Daily issue time(s) in UTC. 21:00 UTC = 05:00 AWST: the 12 UTC runs of the previous day are published, and the
+# next 9am-9am window has not started, so the champion can issue its 1-, 2- and 3-day forecasts.
+issue_times_utc = ["21:00"]
+# A collection more than this many minutes after its slot is refused (unless --force, which records the real time).
+max_delay_minutes = 180
+horizon_days = 4
+
+[verdicts]
+min_days = 60
+min_wet_days = 15
+alpha = 0.05            # after Holm adjustment across every comparison in the report
