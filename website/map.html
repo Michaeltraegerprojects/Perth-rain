@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Perth Rain Gauges · Map</title>
+<meta name="description" content="Map of the rain gauges used for each location, with optional satellite cloud imagery.">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css"
+  integrity="sha384-uTttxo/aOKbdE5RlD/SPzSDoDmNvGlUYPjONi2MN/b7c9HPSvW07OIuyP7uL6jxK" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"
+  integrity="sha384-5+cfbwT0iiub6VsQAdn6yz16nr6sDiQoHx6tm4O8OVYXHYOxcffFmCJBL0dgdvGp" crossorigin="anonymous"></script>
+<script type="module" src="assets/map.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">Perth <span>Rain Gauges</span></a>
+    <nav class="primary" aria-label="Pages">
+      <a href="index.html">Forecast</a>
+      <a href="map.html" aria-current="page">Map</a>
+      <a href="performance.html">Performance</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <section class="loc-head">
+    <h1>Gauges and satellite view</h1>
+    <p class="gauge-line">Where each forecast's rain gauge is, and how far it is from the suburb. Solid lines: the gauge
+    used now. Dashed: the gauge chosen for the next version, not used by any forecast yet.</p>
+    <p class="notice">This page is a visual aid only; nothing on it changes the forecasts. It loads map tiles from
+    OpenFreeMap, and satellite images from NASA or EOX only when you switch them on, so those services see your
+    request. Satellite images show clouds, not rainfall at the gauge.</p>
+  </section>
+  <section class="map-panel">
+    <div class="map-controls" role="group" aria-label="Map layers">
+      <label><input type="checkbox" id="ov-ir"> Cloud satellite, infrared <span class="muted small">(day and night)</span></label>
+      <span id="time-ir" class="small muted" aria-live="polite"></span>
+      <label><input type="checkbox" id="ov-vis"> Cloud satellite, visible light <span class="muted small">(daytime only)</span></label>
+      <span id="time-vis" class="small muted" aria-live="polite"></span>
+      <label class="slider">Cloud layer opacity <input type="range" id="opacity" min="20" max="100" value="70"></label>
+      <label><input type="checkbox" id="ov-eox"> Satellite photo base <span class="muted small">(Sentinel-2 mosaic, 2024, 10 m pixels)</span></label>
+    </div>
+    <p id="map-status" class="small muted" aria-live="polite">Loading map…</p>
+    <div id="map" role="region" aria-label="3D map of the gauges"></div>
+    <p class="note">Drag with two fingers (or Ctrl + scroll) to move; use the compass to tilt and rotate. Himawari-9
+    images are usually 30–60 minutes old when NASA publishes them; the time shown is when the image was taken.</p>
+  </section>
+</main>
+<footer>
+  <div class="foot-inner">
+    <p>Base map: OpenFreeMap © OpenMapTiles, data from OpenStreetMap. Cloud imagery: Himawari-9 (Japan Meteorological
+    Agency) via NASA GIBS. Satellite photo: EOxCloudless by EOX IT Services GmbH (contains modified Copernicus
+    Sentinel data 2024), non-commercial licence. Gauges: Bureau of Meteorology station lists.</p>
+  </div>
+</footer>
+</body>
+</html>

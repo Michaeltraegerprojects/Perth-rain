@@ -197,10 +197,49 @@ def export_performance(locs):
                               "accuracy is therefore unknown and is planned for the next version."]}
 
 
+# ------------------------------------------------------------------------------------------------------ map
+# Gauges chosen for the next version but not yet used by any published forecast (shown as "planned").
+PLANNED_GAUGES = {"Clarkson": "009264"}
+
+
+def _km(lat1, lon1, lat2, lon2):
+    r = 6371.0088
+    p1, p2 = math.radians(lat1), math.radians(lat2)
+    a = math.sin((p2 - p1) / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(math.radians(lon2 - lon1) / 2) ** 2
+    return 2 * r * math.asin(math.sqrt(a))
+
+
+def export_map(entries):
+    locations, gauges, links = [], {}, []
+    for e in entries:
+        s = slug(e["name"])
+        locations.append({"id": s, "name": e["name"], "lat": round(e["latitude"], 5), "lon": round(e["longitude"], 5),
+                          "coordinate_source": e.get("coordinate_source", "")})
+        st = json.loads((ROOT / "reports" / s / "run_summary.json").read_text())["station"]
+        gid = st["station_id"]
+        g = gauges.setdefault(gid, {"id": gid, "name": st["station_name"].title(), "lat": round(st["latitude"], 4),
+                                    "lon": round(st["longitude"], 4), "status": "current", "serves": []})
+        g["serves"].append(e["name"])
+        links.append({"location": e["name"], "gauge": gid, "status": "current",
+                      "distance_km": round(_km(e["latitude"], e["longitude"], st["latitude"], st["longitude"]), 1)})
+        if e["name"] in PLANNED_GAUGES:
+            pid = PLANNED_GAUGES[e["name"]]
+            allst = pd.read_csv(ROOT / "reports" / s / "nearby_bom_stations_all_IDCJMC0014.csv", dtype={"station_id": str})
+            r = allst[allst.station_id.str.zfill(6) == pid].iloc[0]
+            gauges.setdefault(pid, {"id": pid, "name": r.station_name.title(), "lat": round(float(r.latitude), 4),
+                                    "lon": round(float(r.longitude), 4), "status": "planned", "serves": []})
+            gauges[pid]["serves"].append(e["name"])
+            links.append({"location": e["name"], "gauge": pid, "status": "planned",
+                          "distance_km": round(_km(e["latitude"], e["longitude"], float(r.latitude), float(r.longitude)), 1)})
+    return {"locations": locations, "gauges": list(gauges.values()), "links": links,
+            "notes": {"planned": "Planned gauge: chosen for the next version; its readings are not yet used by any "
+                                 "forecast on this site."}}
+
+
 # ------------------------------------------------------------------------------------------------ validate
 def validate(folder: Path) -> list[str]:
     problems = []
-    need = ["manifest.json", "forecast.json", "performance.json"]
+    need = ["manifest.json", "forecast.json", "performance.json", "map.json"]
     for n in need:
         if not (folder / n).exists():
             problems.append(f"missing {n}")
@@ -251,16 +290,19 @@ def main(argv=None):
     forecast = {"schema_version": SCHEMA_VERSION, "exported_utc": exported, "timezone": TZ,
                 "locations": [export_location(n, s, status, verif) for n, s in locs]}
     performance = {"schema_version": SCHEMA_VERSION, "exported_utc": exported, **export_performance(locs)}
+    entries = tomllib.loads((ROOT / "config.toml").read_text())["locations"]
+    mapdata = {"schema_version": SCHEMA_VERSION, "exported_utc": exported, **export_map(entries)}
     manifest = {"schema_version": SCHEMA_VERSION, "exported_utc": exported,
                 "release": "Frozen audited release (no El Niño input), models trained 2026-09-30",
                 "forecast_made_utc": max(l["forecast_made_utc"] for l in forecast["locations"]),
-                "files": ["forecast.json", "performance.json"],
+                "files": ["forecast.json", "performance.json", "map.json"],
                 "attribution": "Forecast data: Open-Meteo.com (CC BY 4.0), from ECMWF, JMA and NOAA NCEP model output. "
                                "Observations: Commonwealth of Australia, Bureau of Meteorology."}
     if PENDING.exists():
         shutil.rmtree(PENDING)
     PENDING.mkdir(parents=True)
-    for n, obj in (("manifest.json", manifest), ("forecast.json", forecast), ("performance.json", performance)):
+    for n, obj in (("manifest.json", manifest), ("forecast.json", forecast), ("performance.json", performance),
+                   ("map.json", mapdata)):
         (PENDING / n).write_text(json.dumps(obj, indent=1, ensure_ascii=False), encoding="utf-8")
     problems = validate(PENDING)
     if problems:

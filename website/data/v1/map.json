@@ -1,0 +1,112 @@
+{
+ "schema_version": 1,
+ "exported_utc": "2026-10-01T03:17:03Z",
+ "locations": [
+  {
+   "id": "perth",
+   "name": "Perth",
+   "lat": -31.95224,
+   "lon": 115.8614,
+   "coordinate_source": "GeoNames 2063523 (Perth, PPLA, WA) via Open-Meteo Geocoding API, 2026-09-30"
+  },
+  {
+   "id": "clarkson",
+   "name": "Clarkson",
+   "lat": -31.68282,
+   "lon": 115.7247,
+   "coordinate_source": "GeoNames 6697150 (Clarkson, PPLL, City of Wanneroo, WA) via Open-Meteo Geocoding API, 2026-09-30"
+  },
+  {
+   "id": "ocean_reef",
+   "name": "Ocean Reef",
+   "lat": -31.75871,
+   "lon": 115.73601,
+   "coordinate_source": "GeoNames 8349092 (Ocean Reef, PPLX, City of Joondalup, WA) via Open-Meteo Geocoding API, 2026-09-30"
+  },
+  {
+   "id": "fremantle",
+   "name": "Fremantle",
+   "lat": -32.05632,
+   "lon": 115.74557,
+   "coordinate_source": "GeoNames 2071223 (Fremantle, PPLX, City of Fremantle, WA) via Open-Meteo Geocoding API, 2026-09-30"
+  }
+ ],
+ "gauges": [
+  {
+   "id": "009225",
+   "name": "Perth Metro",
+   "lat": -31.9192,
+   "lon": 115.8728,
+   "status": "current",
+   "serves": [
+    "Perth",
+    "Ocean Reef"
+   ]
+  },
+  {
+   "id": "009178",
+   "name": "Gingin Aero",
+   "lat": -31.4628,
+   "lon": 115.8642,
+   "status": "current",
+   "serves": [
+    "Clarkson"
+   ]
+  },
+  {
+   "id": "009264",
+   "name": "Tamala Park (Mindarie)",
+   "lat": -31.7078,
+   "lon": 115.7244,
+   "status": "planned",
+   "serves": [
+    "Clarkson"
+   ]
+  },
+  {
+   "id": "009215",
+   "name": "Swanbourne",
+   "lat": -31.956,
+   "lon": 115.7619,
+   "status": "current",
+   "serves": [
+    "Fremantle"
+   ]
+  }
+ ],
+ "links": [
+  {
+   "location": "Perth",
+   "gauge": "009225",
+   "status": "current",
+   "distance_km": 3.8
+  },
+  {
+   "location": "Clarkson",
+   "gauge": "009178",
+   "status": "current",
+   "distance_km": 27.8
+  },
+  {
+   "location": "Clarkson",
+   "gauge": "009264",
+   "status": "planned",
+   "distance_km": 2.8
+  },
+  {
+   "location": "Ocean Reef",
+   "gauge": "009225",
+   "status": "current",
+   "distance_km": 22.0
+  },
+  {
+   "location": "Fremantle",
+   "gauge": "009215",
+   "status": "current",
+   "distance_km": 11.3
+  }
+ ],
+ "notes": {
+  "planned": "Planned gauge: chosen for the next version; its readings are not yet used by any forecast on this site."
+ }
+}

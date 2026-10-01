@@ -12,8 +12,9 @@ sys.path.insert(0, str(SITE / "tools"))
 import export_site_data as X  # noqa: E402
 
 PUBLIC = SITE / "data" / "v1"
-PUBLISHABLE = [p for p in SITE.rglob("*") if p.is_file() and "tests" not in p.parts and "tools" not in p.parts
-               and "pending" not in p.parts]
+# exactly what deploy/github-pages-workflow.yml copies: top-level pages, assets/, data/v1/
+PUBLISHABLE = sorted([*SITE.glob("*.html"), *(SITE / "assets").rglob("*"), *(SITE / "data" / "v1").rglob("*")])
+PUBLISHABLE = [p for p in PUBLISHABLE if p.is_file()]
 
 
 def test_published_data_passes_validation():
@@ -31,7 +32,7 @@ def test_site_contains_only_web_files():
 def test_no_local_paths_credentials_or_personal_data(path):
     text = path.read_text(encoding="utf-8", errors="ignore")
     assert not re.search(r"[A-Za-z]:\\|[A-Za-z]:/(?!/)|\\Users\\|/Users/|AppData|\.venv|\.joblib", text), path
-    assert not re.search(r"[\w.+-]+@[\w-]+\.[\w.]+", text), f"{path}: e-mail address"
+    assert not re.search(r"[\w.+-]+@[A-Za-z][\w-]*\.[A-Za-z]{2,}", text), f"{path}: e-mail address"
     assert not re.search(r"(api[_-]?key|secret|password|token)\s*[:=]\s*\S", text, re.I), path
 
 
@@ -96,3 +97,35 @@ def test_export_does_not_read_model_artifacts():
     src = (SITE / "tools" / "export_site_data.py").read_text(encoding="utf-8")
     assert "joblib" not in src.replace("(.joblib)", "").replace(".joblib|", "") or "import joblib" not in src
     assert "import joblib" not in src and "joblib.load" not in src
+
+
+ALLOWED_HOSTS = {"tiles.openfreemap.org", "gibs.earthdata.nasa.gov", "tiles.maps.eox.at", "cdn.jsdelivr.net",
+                 # plain links (not loaded automatically)
+                 "open-meteo.com", "openfreemap.org", "www.openmaptiles.org", "www.openstreetmap.org",
+                 "earthdata.nasa.gov", "cloudless.eox.at"}
+
+
+def test_only_approved_external_hosts():
+    for p in PUBLISHABLE:
+        if p.suffix not in (".html", ".js", ".css"):
+            continue
+        hosts = set(re.findall(r"https://([a-z0-9.-]+)", p.read_text(encoding="utf-8")))
+        assert hosts <= ALLOWED_HOSTS, (p.name, hosts - ALLOWED_HOSTS)
+
+
+def test_third_party_code_is_pinned_and_integrity_checked():
+    html = (SITE / "map.html").read_text(encoding="utf-8")
+    for tag in re.findall(r"<(?:script|link)[^>]+cdn\.jsdelivr\.net[^>]+>", html):
+        assert re.search(r"@\d+\.\d+\.\d+/", tag), tag
+        assert 'integrity="sha384-' in tag and 'crossorigin="anonymous"' in tag, tag
+    for page in ("index.html", "performance.html"):
+        assert "https://" not in re.sub(r'<a [^>]*href="https://[^"]+"', "", (SITE / page).read_text(encoding="utf-8")), \
+            f"{page} must load no third-party resources"
+
+
+def test_map_marks_planned_gauges_as_not_in_use():
+    m = json.loads((PUBLIC / "map.json").read_text(encoding="utf-8"))
+    planned = [g for g in m["gauges"] if g["status"] == "planned"]
+    assert planned and all(g["id"] == "009264" for g in planned)
+    fc = json.loads((PUBLIC / "forecast.json").read_text(encoding="utf-8"))
+    assert all(l["gauge"]["id"] != "009264" for l in fc["locations"]), "a planned gauge must not appear as in use"

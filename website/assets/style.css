@@ -180,3 +180,22 @@ footer { border-top: 1px solid var(--line); }
   .brand { font-size: 16px; }
 }
 table.fit { min-width: 0; }
+
+/* ------------------------------------------------------------------ map page */
+.map-panel { display: grid; gap: 10px; min-width: 0; }
+.map-controls {
+  display: grid; gap: 6px 18px; grid-template-columns: minmax(0, 1fr);
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px;
+}
+.map-controls label { display: flex; align-items: center; gap: 8px; min-height: 36px; flex-wrap: wrap; }
+.map-controls input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--teal); }
+.map-controls .slider input { flex: 1; min-width: 120px; accent-color: var(--teal); }
+#map { height: 68vh; min-height: 420px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); }
+@media (min-width: 900px) { .map-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.maplibregl-ctrl-attrib { font-size: 11px; }
+.topbar-inner { flex-wrap: wrap; row-gap: 0; }
+nav.primary { flex-wrap: wrap; }
+@media (max-width: 420px) {
+  .topbar-inner { padding-block: 6px; }
+  nav.primary a { padding: 6px 8px; font-size: 14px; }
+}

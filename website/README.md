@@ -14,6 +14,12 @@ when the forecast was made and when the data was exported, and flags a forecast 
   - one card per rain day, with the exact window times;
   - verified, unverified, unavailable and stale states;
   - expandable raw-model totals and provenance.
+- `map.html` (optional, visual only): a 3D map of each suburb, its gauge and the distance between them, with
+  Tamala Park shown as the *planned* Clarkson gauge. It has switchable layers:
+  - Himawari-9 cloud imagery (infrared or visible) from NASA GIBS, labelled with the time the image was taken;
+  - a Sentinel-2 satellite photo base (EOxCloudless 2024).
+
+  Nothing on this page feeds the forecasts.
 - `performance.html`: held-out results per gauge and lead time. It shows sample sizes, test dates, raw models, the
   blend, climatology and paired intervals.
 
@@ -87,7 +93,17 @@ The site is static, so no backend is needed: all computation happens in the loca
 `website/` folder. It is deliberately **not** in `.github/workflows/`, so nothing runs until it is approved and
 copied there. It has no schedule: it runs on manual dispatch only.
 
-## Privacy
+## Privacy and third-party services
 
-- No analytics, cookies, external fonts or third-party scripts.
-- The only browser storage is the last chosen location (`localStorage`), and only on the viewer's device.
+- **Forecast and Performance pages:** they load nothing from other sites. There are no analytics, cookies or
+  external fonts. The only browser storage is the last chosen location (`localStorage`, on the viewer's device).
+- **Map page:** it contacts other services, and says so at the top.
+
+  | Service | What it supplies | When | Terms |
+  |---|---|---|---|
+  | jsDelivr | MapLibre GL JS 5.24.0 (BSD-3) | always | version pinned, SRI integrity hash checked |
+  | OpenFreeMap | base map and 3D buildings | always | free, no key; credit "OpenFreeMap © OpenMapTiles, data from OpenStreetMap" |
+  | NASA GIBS | Himawari-9 cloud images (JMA) | only when switched on | free, no key; credit NASA GIBS and JMA |
+  | EOX | Sentinel-2 cloudless mosaic | only when switched on | CC BY-NC-SA 4.0, **non-commercial use only**, credit shown; commercial use needs an EOX licence |
+
+  No Windy, Google or BoM imagery is embedded (see `reports/v2/windy_assessment.md`).

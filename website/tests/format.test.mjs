@@ -68,3 +68,18 @@ test("comparison labels are plain language", () => {
   assert.equal(F.comparisonLabel("Brier (event rain >= 0.2 mm): calibrated minus flat climatology"),
     "Rain/no-rain score vs season-blind climatology");
 });
+
+test("latest Himawari image: newest 10-minute time the tile service can serve, else null", async () => {
+  const { latestHimawari } = await import("../assets/map.js");
+  const now = Date.parse("2026-10-01T03:17:00Z");
+  const seen = [];
+  const fake = async (url) => {
+    seen.push(url);
+    const ok = url.includes("2026-10-01T02:30:00Z");
+    return { ok, headers: { get: () => (ok ? "image/png" : "application/xml") } };
+  };
+  assert.equal(await latestHimawari("ir", now, fake), "2026-10-01T02:30:00Z");
+  assert.ok(seen[0].includes("2026-10-01T03:10:00Z"));            // starts at the current 10-minute step
+  assert.ok(seen.every((u) => u.includes("/5/18/26.png")));       // the tile over Perth
+  assert.equal(await latestHimawari("ir", now, async () => ({ ok: false, headers: { get: () => "" } })), null);
+});
