@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Perth Rain Gauges</title>
+<meta name="description" content="Calibrated 9am-to-9am rainfall forecasts for Bureau of Meteorology gauges near Perth, Clarkson, Ocean Reef and Fremantle.">
+<link rel="stylesheet" href="assets/style.css">
+<script type="module" src="assets/forecast.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">Perth <span>Rain Gauges</span></a>
+    <nav class="primary" aria-label="Pages">
+      <a href="index.html" aria-current="page">Forecast</a>
+      <a href="performance.html">Performance</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <div id="picker" class="picker" role="group" aria-label="Choose a location"></div>
+  <div id="forecast"><p class="muted">Loading forecast…</p></div>
+  <details class="explain">
+    <summary>How to read these forecasts</summary>
+    <div class="body">
+      <p><b>Rain day.</b> Each card covers 24 hours from 9am to 9am, Perth time, as the Bureau of Meteorology records daily
+      rainfall. The date on the card is the day the window <b>ends</b>: “Sat 3 Oct” means rain from 9am Friday to 9am Saturday.</p>
+      <p><b>Chances.</b> “Chance of at least 0.2 mm” is the probability the gauge records measurable rain (0.2 mm is one step
+      of the gauge). Chances under 1% are shown as “&lt;1%”: small, not impossible. For heavy rain the model has little
+      data, so ≥ 5 mm and ≥ 10 mm chances are rough.</p>
+      <p><b>Amounts.</b> The expected total averages over wet and dry outcomes. The median is the middle outcome, so a median
+      of 0 mm means a dry day is more likely than a wet one, not that rain cannot fall. The likely range covers the middle
+      80% of outcomes.</p>
+      <p><b>Lead time.</b> Hours from the weather-model run the forecast is based on to the start and end of the window.
+      A forecast is only issued when every model run it needs had been published before the forecast was made.</p>
+      <p><b>Status.</b> <i>Verified</i>: every model input was checked against the exact model run in the public archive.
+      <i>Unverified</i>: at least one run could not be checked because it is not archived. <i>Unavailable</i>: the needed
+      model runs had not been published yet, which is not a forecast of zero rain. <i>Stale</i>: the exported forecast is
+      old; this site cannot refresh it.</p>
+      <p><b>Fallback model.</b> When the preferred combination of models is not available yet, a simpler calibrated model
+      that needs fewer inputs is used. The card says when this happens.</p>
+    </div>
+  </details>
+</main>
+<footer>
+  <div class="foot-inner">
+    <p>Forecast data: <a href="https://open-meteo.com/">Open-Meteo.com</a> (CC BY 4.0), from ECMWF, JMA and NOAA NCEP model
+    output. Observations © Commonwealth of Australia, Bureau of Meteorology. Not an official forecast; for warnings use
+    the Bureau of Meteorology.</p>
+  </div>
+</footer>
+</body>
+</html>

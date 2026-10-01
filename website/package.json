@@ -1,0 +1,11 @@
+{
+  "name": "perth-rain-website",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Static site for the Perth rain-gauge forecasts. No dependencies, no build step.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/format.test.mjs",
+    "check": "node --check assets/format.js && node --check assets/forecast.js && node --check assets/performance.js"
+  }
+}

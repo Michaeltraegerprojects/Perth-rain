@@ -1,0 +1,1481 @@
+{
+ "schema_version": 1,
+ "exported_utc": "2026-10-01T02:49:42Z",
+ "gauges": [
+  {
+   "gauge_id": "009225",
+   "gauge_name": "Perth Metro",
+   "serves": [
+    "Perth",
+    "Ocean Reef"
+   ],
+   "leads": [
+    {
+     "lead_group": "day1",
+     "n_days": 183,
+     "test_first": "2026-03-29",
+     "test_last": "2026-09-29",
+     "trained_to": "2026-03-25",
+     "selected_model": "ecmwf_ifs_sr",
+     "selected_model_label": "ECMWF IFS only",
+     "identical_rows_for_all_methods": true,
+     "pinball_skill_vs_seasonal_climatology": 0.5161,
+     "brier_ge_0_2mm": {
+      "calibrated": 0.146,
+      "seasonal_climatology": 0.2514
+     },
+     "observed_rain_day_frequency": 0.4262,
+     "point_accuracy_mm": [
+      {
+       "method": "Calibrated median",
+       "kind": "calibrated",
+       "mae": 1.243,
+       "bias": 0.229,
+       "rmse": 3.27
+      },
+      {
+       "method": "Calibrated expected total",
+       "kind": "calibrated",
+       "mae": 1.339,
+       "bias": 0.627,
+       "rmse": 3.328
+      },
+      {
+       "method": "ECMWF IFS (single run) (raw)",
+       "kind": "raw",
+       "mae": 1.378,
+       "bias": 0.733,
+       "rmse": 3.517
+      },
+      {
+       "method": "Season-aware climatology (median)",
+       "kind": "climatology",
+       "mae": 2.108,
+       "bias": -1.979,
+       "rmse": 4.693
+      }
+     ],
+     "paired_differences": [
+      {
+       "comparison": "MAE: calibrated median minus raw:sr_ecmwf_ifs",
+       "mean": -0.1347,
+       "ci95": [
+        -0.2503,
+        -0.0243
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:sr_ecmwf_ifs",
+       "mean": -0.0388,
+       "ci95": [
+        -0.0859,
+        0.0037
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus seasonal climatology",
+       "mean": -0.1053,
+       "ci95": [
+        -0.152,
+        -0.0582
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus flat climatology",
+       "mean": -0.1159,
+       "ci95": [
+        -0.1598,
+        -0.0751
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "pinball loss: calibrated minus seasonal climatology",
+       "mean": -0.4654,
+       "ci95": [
+        -0.6494,
+        -0.2981
+       ],
+       "significant": true
+      }
+     ]
+    },
+    {
+     "lead_group": "day2",
+     "n_days": 180,
+     "test_first": "2026-03-16",
+     "test_last": "2026-09-29",
+     "trained_to": "2026-03-12",
+     "selected_model": "all_composite",
+     "selected_model_label": "All-model composite",
+     "identical_rows_for_all_methods": true,
+     "pinball_skill_vs_seasonal_climatology": 0.5637,
+     "brier_ge_0_2mm": {
+      "calibrated": 0.1311,
+      "seasonal_climatology": 0.2284
+     },
+     "observed_rain_day_frequency": 0.3944,
+     "point_accuracy_mm": [
+      {
+       "method": "Calibrated median",
+       "kind": "calibrated",
+       "mae": 1.449,
+       "bias": 0.652,
+       "rmse": 4.484
+      },
+      {
+       "method": "Calibrated expected total",
+       "kind": "calibrated",
+       "mae": 1.343,
+       "bias": 0.659,
+       "rmse": 3.838
+      },
+      {
+       "method": "ECMWF IFS (single run) (raw)",
+       "kind": "raw",
+       "mae": 1.448,
+       "bias": 0.856,
+       "rmse": 4.574
+      },
+      {
+       "method": "ECMWF IFS 0.25° (raw)",
+       "kind": "raw",
+       "mae": 1.29,
+       "bias": 0.719,
+       "rmse": 3.055
+      },
+      {
+       "method": "JMA GSM (raw)",
+       "kind": "raw",
+       "mae": 1.739,
+       "bias": 0.343,
+       "rmse": 4.553
+      },
+      {
+       "method": "NOAA GFS (raw)",
+       "kind": "raw",
+       "mae": 1.609,
+       "bias": 0.397,
+       "rmse": 6.289
+      },
+      {
+       "method": "Equal-weight blend (raw)",
+       "kind": "raw",
+       "mae": 1.353,
+       "bias": 0.579,
+       "rmse": 3.584
+      },
+      {
+       "method": "Season-aware climatology (median)",
+       "kind": "climatology",
+       "mae": 2.415,
+       "bias": -2.285,
+       "rmse": 6.653
+      }
+     ],
+     "paired_differences": [
+      {
+       "comparison": "MAE: calibrated median minus raw:sr_ecmwf_ifs",
+       "mean": 0.0015,
+       "ci95": [
+        -0.4179,
+        0.365
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:sr_ecmwf_ifs",
+       "mean": -0.1051,
+       "ci95": [
+        -0.5059,
+        0.2212
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_ecmwf_ifs025",
+       "mean": 0.1593,
+       "ci95": [
+        -0.2235,
+        0.6435
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_ecmwf_ifs025",
+       "mean": 0.0527,
+       "ci95": [
+        -0.2943,
+        0.4445
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_jma_gsm",
+       "mean": -0.2901,
+       "ci95": [
+        -0.7325,
+        0.2126
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_jma_gsm",
+       "mean": -0.3968,
+       "ci95": [
+        -0.8799,
+        0.0494
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_ncep_gfs_global",
+       "mean": -0.1601,
+       "ci95": [
+        -0.5598,
+        0.1486
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_ncep_gfs_global",
+       "mean": -0.2668,
+       "ci95": [
+        -0.7554,
+        0.0646
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:equal_weight_blend",
+       "mean": 0.0968,
+       "ci95": [
+        -0.0708,
+        0.2813
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:equal_weight_blend",
+       "mean": -0.0098,
+       "ci95": [
+        -0.116,
+        0.0893
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus seasonal climatology",
+       "mean": -0.0973,
+       "ci95": [
+        -0.1494,
+        -0.0476
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus flat climatology",
+       "mean": -0.1166,
+       "ci95": [
+        -0.1611,
+        -0.0699
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "pinball loss: calibrated minus seasonal climatology",
+       "mean": -0.5905,
+       "ci95": [
+        -0.9732,
+        -0.2818
+       ],
+       "significant": true
+      }
+     ]
+    },
+    {
+     "lead_group": "day3",
+     "n_days": 179,
+     "test_first": "2026-03-16",
+     "test_last": "2026-09-29",
+     "trained_to": "2026-03-12",
+     "selected_model": "all_composite",
+     "selected_model_label": "All-model composite",
+     "identical_rows_for_all_methods": true,
+     "pinball_skill_vs_seasonal_climatology": 0.5754,
+     "brier_ge_0_2mm": {
+      "calibrated": 0.1364,
+      "seasonal_climatology": 0.2281
+     },
+     "observed_rain_day_frequency": 0.3966,
+     "point_accuracy_mm": [
+      {
+       "method": "Calibrated median",
+       "kind": "calibrated",
+       "mae": 1.357,
+       "bias": 0.486,
+       "rmse": 3.768
+      },
+      {
+       "method": "Calibrated expected total",
+       "kind": "calibrated",
+       "mae": 1.323,
+       "bias": 0.519,
+       "rmse": 3.425
+      },
+      {
+       "method": "ECMWF IFS (single run) (raw)",
+       "kind": "raw",
+       "mae": 1.374,
+       "bias": 0.605,
+       "rmse": 3.512
+      },
+      {
+       "method": "ECMWF IFS 0.25° (raw)",
+       "kind": "raw",
+       "mae": 1.844,
+       "bias": 1.207,
+       "rmse": 5.463
+      },
+      {
+       "method": "JMA GSM (raw)",
+       "kind": "raw",
+       "mae": 1.877,
+       "bias": 0.494,
+       "rmse": 5.554
+      },
+      {
+       "method": "NOAA GFS (raw)",
+       "kind": "raw",
+       "mae": 1.692,
+       "bias": 0.035,
+       "rmse": 4.992
+      },
+      {
+       "method": "Equal-weight blend (raw)",
+       "kind": "raw",
+       "mae": 1.301,
+       "bias": 0.585,
+       "rmse": 3.127
+      },
+      {
+       "method": "Season-aware climatology (median)",
+       "kind": "climatology",
+       "mae": 2.443,
+       "bias": -2.263,
+       "rmse": 6.665
+      }
+     ],
+     "paired_differences": [
+      {
+       "comparison": "MAE: calibrated median minus raw:sr_ecmwf_ifs",
+       "mean": -0.0163,
+       "ci95": [
+        -0.2908,
+        0.2522
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:sr_ecmwf_ifs",
+       "mean": -0.051,
+       "ci95": [
+        -0.2585,
+        0.1592
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_ecmwf_ifs025",
+       "mean": -0.4867,
+       "ci95": [
+        -1.191,
+        0.0114
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_ecmwf_ifs025",
+       "mean": -0.5214,
+       "ci95": [
+        -1.1715,
+        -0.0628
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_jma_gsm",
+       "mean": -0.5191,
+       "ci95": [
+        -1.4264,
+        0.1547
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_jma_gsm",
+       "mean": -0.5538,
+       "ci95": [
+        -1.4073,
+        0.0446
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_ncep_gfs_global",
+       "mean": -0.3342,
+       "ci95": [
+        -0.7609,
+        0.0225
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_ncep_gfs_global",
+       "mean": -0.3689,
+       "ci95": [
+        -0.7596,
+        -0.0408
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:equal_weight_blend",
+       "mean": 0.0562,
+       "ci95": [
+        -0.1367,
+        0.258
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:equal_weight_blend",
+       "mean": 0.0214,
+       "ci95": [
+        -0.0822,
+        0.1221
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus seasonal climatology",
+       "mean": -0.0917,
+       "ci95": [
+        -0.1406,
+        -0.0455
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus flat climatology",
+       "mean": -0.1119,
+       "ci95": [
+        -0.1561,
+        -0.0703
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "pinball loss: calibrated minus seasonal climatology",
+       "mean": -0.6101,
+       "ci95": [
+        -0.9513,
+        -0.3343
+       ],
+       "significant": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "gauge_id": "009178",
+   "gauge_name": "Gingin Aero",
+   "serves": [
+    "Clarkson"
+   ],
+   "leads": [
+    {
+     "lead_group": "day1",
+     "n_days": 184,
+     "test_first": "2026-03-28",
+     "test_last": "2026-09-29",
+     "trained_to": "2026-03-24",
+     "selected_model": "ecmwf_ifs_sr",
+     "selected_model_label": "ECMWF IFS only",
+     "identical_rows_for_all_methods": true,
+     "pinball_skill_vs_seasonal_climatology": 0.4621,
+     "brier_ge_0_2mm": {
+      "calibrated": 0.1119,
+      "seasonal_climatology": 0.2634
+     },
+     "observed_rain_day_frequency": 0.3696,
+     "point_accuracy_mm": [
+      {
+       "method": "Calibrated median",
+       "kind": "calibrated",
+       "mae": 1.448,
+       "bias": 0.462,
+       "rmse": 3.987
+      },
+      {
+       "method": "Calibrated expected total",
+       "kind": "calibrated",
+       "mae": 1.633,
+       "bias": 0.889,
+       "rmse": 4.021
+      },
+      {
+       "method": "ECMWF IFS (single run) (raw)",
+       "kind": "raw",
+       "mae": 1.538,
+       "bias": 0.625,
+       "rmse": 4.219
+      },
+      {
+       "method": "Season-aware climatology (median)",
+       "kind": "climatology",
+       "mae": 2.061,
+       "bias": -1.808,
+       "rmse": 5.131
+      }
+     ],
+     "paired_differences": [
+      {
+       "comparison": "MAE: calibrated median minus raw:sr_ecmwf_ifs",
+       "mean": -0.0897,
+       "ci95": [
+        -0.3316,
+        0.1055
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:sr_ecmwf_ifs",
+       "mean": 0.0953,
+       "ci95": [
+        -0.1076,
+        0.2649
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus seasonal climatology",
+       "mean": -0.1515,
+       "ci95": [
+        -0.1896,
+        -0.1118
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus flat climatology",
+       "mean": -0.1275,
+       "ci95": [
+        -0.1741,
+        -0.0806
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "pinball loss: calibrated minus seasonal climatology",
+       "mean": -0.4182,
+       "ci95": [
+        -0.6266,
+        -0.2226
+       ],
+       "significant": true
+      }
+     ]
+    },
+    {
+     "lead_group": "day2",
+     "n_days": 180,
+     "test_first": "2026-03-15",
+     "test_last": "2026-09-29",
+     "trained_to": "2026-03-11",
+     "selected_model": "all_composite",
+     "selected_model_label": "All-model composite",
+     "identical_rows_for_all_methods": true,
+     "pinball_skill_vs_seasonal_climatology": 0.5129,
+     "brier_ge_0_2mm": {
+      "calibrated": 0.0836,
+      "seasonal_climatology": 0.2407
+     },
+     "observed_rain_day_frequency": 0.3389,
+     "point_accuracy_mm": [
+      {
+       "method": "Calibrated median",
+       "kind": "calibrated",
+       "mae": 1.329,
+       "bias": 0.198,
+       "rmse": 3.903
+      },
+      {
+       "method": "Calibrated expected total",
+       "kind": "calibrated",
+       "mae": 1.414,
+       "bias": 0.516,
+       "rmse": 3.741
+      },
+      {
+       "method": "ECMWF IFS (single run) (raw)",
+       "kind": "raw",
+       "mae": 1.537,
+       "bias": 0.43,
+       "rmse": 4.105
+      },
+      {
+       "method": "ECMWF IFS 0.25° (raw)",
+       "kind": "raw",
+       "mae": 1.718,
+       "bias": 0.864,
+       "rmse": 5.942
+      },
+      {
+       "method": "JMA GSM (raw)",
+       "kind": "raw",
+       "mae": 1.254,
+       "bias": 0.058,
+       "rmse": 3.186
+      },
+      {
+       "method": "NOAA GFS (raw)",
+       "kind": "raw",
+       "mae": 1.393,
+       "bias": 0.042,
+       "rmse": 4.259
+      },
+      {
+       "method": "Equal-weight blend (raw)",
+       "kind": "raw",
+       "mae": 1.288,
+       "bias": 0.349,
+       "rmse": 3.409
+      },
+      {
+       "method": "Season-aware climatology (median)",
+       "kind": "climatology",
+       "mae": 2.194,
+       "bias": -1.909,
+       "rmse": 5.412
+      }
+     ],
+     "paired_differences": [
+      {
+       "comparison": "MAE: calibrated median minus raw:sr_ecmwf_ifs",
+       "mean": -0.2073,
+       "ci95": [
+        -0.496,
+        0.079
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:sr_ecmwf_ifs",
+       "mean": -0.1222,
+       "ci95": [
+        -0.4271,
+        0.1552
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_ecmwf_ifs025",
+       "mean": -0.3884,
+       "ci95": [
+        -1.2547,
+        0.1726
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_ecmwf_ifs025",
+       "mean": -0.3033,
+       "ci95": [
+        -1.1336,
+        0.2251
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_jma_gsm",
+       "mean": 0.0755,
+       "ci95": [
+        -0.2111,
+        0.369
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_jma_gsm",
+       "mean": 0.1605,
+       "ci95": [
+        -0.1094,
+        0.4363
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_ncep_gfs_global",
+       "mean": -0.0634,
+       "ci95": [
+        -0.3305,
+        0.2181
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_ncep_gfs_global",
+       "mean": 0.0217,
+       "ci95": [
+        -0.2909,
+        0.3293
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:equal_weight_blend",
+       "mean": 0.0411,
+       "ci95": [
+        -0.1124,
+        0.1954
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:equal_weight_blend",
+       "mean": 0.1261,
+       "ci95": [
+        -0.0061,
+        0.2645
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus seasonal climatology",
+       "mean": -0.157,
+       "ci95": [
+        -0.1953,
+        -0.1225
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus flat climatology",
+       "mean": -0.1426,
+       "ci95": [
+        -0.1833,
+        -0.1035
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "pinball loss: calibrated minus seasonal climatology",
+       "mean": -0.4906,
+       "ci95": [
+        -0.7416,
+        -0.2614
+       ],
+       "significant": true
+      }
+     ]
+    },
+    {
+     "lead_group": "day3",
+     "n_days": 179,
+     "test_first": "2026-03-16",
+     "test_last": "2026-09-29",
+     "trained_to": "2026-03-12",
+     "selected_model": "all_composite",
+     "selected_model_label": "All-model composite",
+     "identical_rows_for_all_methods": true,
+     "pinball_skill_vs_seasonal_climatology": 0.442,
+     "brier_ge_0_2mm": {
+      "calibrated": 0.0834,
+      "seasonal_climatology": 0.2434
+     },
+     "observed_rain_day_frequency": 0.3408,
+     "point_accuracy_mm": [
+      {
+       "method": "Calibrated median",
+       "kind": "calibrated",
+       "mae": 1.543,
+       "bias": 0.264,
+       "rmse": 4.981
+      },
+      {
+       "method": "Calibrated expected total",
+       "kind": "calibrated",
+       "mae": 1.58,
+       "bias": 0.498,
+       "rmse": 4.782
+      },
+      {
+       "method": "ECMWF IFS (single run) (raw)",
+       "kind": "raw",
+       "mae": 2.14,
+       "bias": 0.743,
+       "rmse": 8.413
+      },
+      {
+       "method": "ECMWF IFS 0.25° (raw)",
+       "kind": "raw",
+       "mae": 1.904,
+       "bias": 1.041,
+       "rmse": 6.748
+      },
+      {
+       "method": "JMA GSM (raw)",
+       "kind": "raw",
+       "mae": 1.745,
+       "bias": 0.366,
+       "rmse": 4.307
+      },
+      {
+       "method": "NOAA GFS (raw)",
+       "kind": "raw",
+       "mae": 1.681,
+       "bias": -0.115,
+       "rmse": 4.701
+      },
+      {
+       "method": "Equal-weight blend (raw)",
+       "kind": "raw",
+       "mae": 1.595,
+       "bias": 0.509,
+       "rmse": 4.536
+      },
+      {
+       "method": "Season-aware climatology (median)",
+       "kind": "climatology",
+       "mae": 2.216,
+       "bias": -1.897,
+       "rmse": 5.42
+      }
+     ],
+     "paired_differences": [
+      {
+       "comparison": "MAE: calibrated median minus raw:sr_ecmwf_ifs",
+       "mean": -0.5962,
+       "ci95": [
+        -1.4027,
+        -0.0257
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:sr_ecmwf_ifs",
+       "mean": -0.5598,
+       "ci95": [
+        -1.3787,
+        0.0332
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_ecmwf_ifs025",
+       "mean": -0.361,
+       "ci95": [
+        -1.2775,
+        0.2288
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_ecmwf_ifs025",
+       "mean": -0.3247,
+       "ci95": [
+        -1.2313,
+        0.2557
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_jma_gsm",
+       "mean": -0.2018,
+       "ci95": [
+        -0.7,
+        0.3867
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_jma_gsm",
+       "mean": -0.1654,
+       "ci95": [
+        -0.6718,
+        0.4091
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_ncep_gfs_global",
+       "mean": -0.1376,
+       "ci95": [
+        -0.4144,
+        0.1191
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_ncep_gfs_global",
+       "mean": -0.1012,
+       "ci95": [
+        -0.3876,
+        0.154
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:equal_weight_blend",
+       "mean": -0.0518,
+       "ci95": [
+        -0.2922,
+        0.1402
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:equal_weight_blend",
+       "mean": -0.0154,
+       "ci95": [
+        -0.2558,
+        0.1572
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus seasonal climatology",
+       "mean": -0.16,
+       "ci95": [
+        -0.205,
+        -0.1153
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus flat climatology",
+       "mean": -0.1432,
+       "ci95": [
+        -0.1863,
+        -0.1012
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "pinball loss: calibrated minus seasonal climatology",
+       "mean": -0.4288,
+       "ci95": [
+        -0.7447,
+        -0.123
+       ],
+       "significant": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "gauge_id": "009215",
+   "gauge_name": "Swanbourne",
+   "serves": [
+    "Fremantle"
+   ],
+   "leads": [
+    {
+     "lead_group": "day1",
+     "n_days": 184,
+     "test_first": "2026-03-26",
+     "test_last": "2026-09-29",
+     "trained_to": "2026-03-22",
+     "selected_model": "ecmwf_ifs_sr",
+     "selected_model_label": "ECMWF IFS only",
+     "identical_rows_for_all_methods": true,
+     "pinball_skill_vs_seasonal_climatology": 0.4892,
+     "brier_ge_0_2mm": {
+      "calibrated": 0.1467,
+      "seasonal_climatology": 0.2723
+     },
+     "observed_rain_day_frequency": 0.462,
+     "point_accuracy_mm": [
+      {
+       "method": "Calibrated median",
+       "kind": "calibrated",
+       "mae": 1.539,
+       "bias": 0.357,
+       "rmse": 4.664
+      },
+      {
+       "method": "Calibrated expected total",
+       "kind": "calibrated",
+       "mae": 1.687,
+       "bias": 0.914,
+       "rmse": 5.047
+      },
+      {
+       "method": "ECMWF IFS (single run) (raw)",
+       "kind": "raw",
+       "mae": 1.774,
+       "bias": 1.089,
+       "rmse": 5.051
+      },
+      {
+       "method": "Season-aware climatology (median)",
+       "kind": "climatology",
+       "mae": 2.403,
+       "bias": -2.16,
+       "rmse": 7.384
+      }
+     ],
+     "paired_differences": [
+      {
+       "comparison": "MAE: calibrated median minus raw:sr_ecmwf_ifs",
+       "mean": -0.2345,
+       "ci95": [
+        -0.3921,
+        -0.0926
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:sr_ecmwf_ifs",
+       "mean": -0.0872,
+       "ci95": [
+        -0.2255,
+        0.0222
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus seasonal climatology",
+       "mean": -0.1256,
+       "ci95": [
+        -0.1652,
+        -0.0861
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus flat climatology",
+       "mean": -0.1238,
+       "ci95": [
+        -0.1642,
+        -0.0836
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "pinball loss: calibrated minus seasonal climatology",
+       "mean": -0.5233,
+       "ci95": [
+        -0.9482,
+        -0.1996
+       ],
+       "significant": true
+      }
+     ]
+    },
+    {
+     "lead_group": "day2",
+     "n_days": 180,
+     "test_first": "2026-03-14",
+     "test_last": "2026-09-29",
+     "trained_to": "2026-03-10",
+     "selected_model": "all_composite",
+     "selected_model_label": "All-model composite",
+     "identical_rows_for_all_methods": true,
+     "pinball_skill_vs_seasonal_climatology": 0.4889,
+     "brier_ge_0_2mm": {
+      "calibrated": 0.1273,
+      "seasonal_climatology": 0.2467
+     },
+     "observed_rain_day_frequency": 0.4278,
+     "point_accuracy_mm": [
+      {
+       "method": "Calibrated median",
+       "kind": "calibrated",
+       "mae": 1.908,
+       "bias": 0.838,
+       "rmse": 5.822
+      },
+      {
+       "method": "Calibrated expected total",
+       "kind": "calibrated",
+       "mae": 1.608,
+       "bias": 0.526,
+       "rmse": 4.447
+      },
+      {
+       "method": "ECMWF IFS (single run) (raw)",
+       "kind": "raw",
+       "mae": 1.894,
+       "bias": 0.801,
+       "rmse": 5.495
+      },
+      {
+       "method": "ECMWF IFS 0.25° (raw)",
+       "kind": "raw",
+       "mae": 1.711,
+       "bias": 0.817,
+       "rmse": 4.033
+      },
+      {
+       "method": "JMA GSM (raw)",
+       "kind": "raw",
+       "mae": 2.022,
+       "bias": 0.235,
+       "rmse": 5.48
+      },
+      {
+       "method": "NOAA GFS (raw)",
+       "kind": "raw",
+       "mae": 1.884,
+       "bias": 0.471,
+       "rmse": 6.998
+      },
+      {
+       "method": "Equal-weight blend (raw)",
+       "kind": "raw",
+       "mae": 1.756,
+       "bias": 0.581,
+       "rmse": 4.483
+      },
+      {
+       "method": "Season-aware climatology (median)",
+       "kind": "climatology",
+       "mae": 2.53,
+       "bias": -2.291,
+       "rmse": 7.794
+      }
+     ],
+     "paired_differences": [
+      {
+       "comparison": "MAE: calibrated median minus raw:sr_ecmwf_ifs",
+       "mean": 0.0142,
+       "ci95": [
+        -0.5421,
+        0.5195
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:sr_ecmwf_ifs",
+       "mean": -0.2859,
+       "ci95": [
+        -0.7812,
+        0.1064
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_ecmwf_ifs025",
+       "mean": 0.197,
+       "ci95": [
+        -0.2751,
+        0.8096
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_ecmwf_ifs025",
+       "mean": -0.1031,
+       "ci95": [
+        -0.5026,
+        0.321
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_jma_gsm",
+       "mean": -0.1136,
+       "ci95": [
+        -0.8453,
+        0.63
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_jma_gsm",
+       "mean": -0.4137,
+       "ci95": [
+        -1.1103,
+        0.1769
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_ncep_gfs_global",
+       "mean": 0.0237,
+       "ci95": [
+        -0.3919,
+        0.4219
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_ncep_gfs_global",
+       "mean": -0.2765,
+       "ci95": [
+        -0.835,
+        0.1488
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:equal_weight_blend",
+       "mean": 0.1517,
+       "ci95": [
+        -0.2168,
+        0.5306
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:equal_weight_blend",
+       "mean": -0.1484,
+       "ci95": [
+        -0.411,
+        0.0455
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus seasonal climatology",
+       "mean": -0.1194,
+       "ci95": [
+        -0.1669,
+        -0.0773
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus flat climatology",
+       "mean": -0.1295,
+       "ci95": [
+        -0.171,
+        -0.0905
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "pinball loss: calibrated minus seasonal climatology",
+       "mean": -0.5483,
+       "ci95": [
+        -0.9889,
+        -0.2526
+       ],
+       "significant": true
+      }
+     ]
+    },
+    {
+     "lead_group": "day3",
+     "n_days": 180,
+     "test_first": "2026-03-13",
+     "test_last": "2026-09-29",
+     "trained_to": "2026-03-09",
+     "selected_model": "all_composite",
+     "selected_model_label": "All-model composite",
+     "identical_rows_for_all_methods": true,
+     "pinball_skill_vs_seasonal_climatology": 0.5448,
+     "brier_ge_0_2mm": {
+      "calibrated": 0.1374,
+      "seasonal_climatology": 0.2455
+     },
+     "observed_rain_day_frequency": 0.4333,
+     "point_accuracy_mm": [
+      {
+       "method": "Calibrated median",
+       "kind": "calibrated",
+       "mae": 1.516,
+       "bias": 0.165,
+       "rmse": 4.014
+      },
+      {
+       "method": "Calibrated expected total",
+       "kind": "calibrated",
+       "mae": 1.594,
+       "bias": 0.359,
+       "rmse": 4.079
+      },
+      {
+       "method": "ECMWF IFS (single run) (raw)",
+       "kind": "raw",
+       "mae": 1.392,
+       "bias": 0.481,
+       "rmse": 3.579
+      },
+      {
+       "method": "ECMWF IFS 0.25° (raw)",
+       "kind": "raw",
+       "mae": 2.181,
+       "bias": 1.221,
+       "rmse": 6.179
+      },
+      {
+       "method": "JMA GSM (raw)",
+       "kind": "raw",
+       "mae": 1.964,
+       "bias": 0.368,
+       "rmse": 6.454
+      },
+      {
+       "method": "NOAA GFS (raw)",
+       "kind": "raw",
+       "mae": 1.918,
+       "bias": 0.219,
+       "rmse": 5.889
+      },
+      {
+       "method": "Equal-weight blend (raw)",
+       "kind": "raw",
+       "mae": 1.702,
+       "bias": 0.572,
+       "rmse": 4.105
+      },
+      {
+       "method": "Season-aware climatology (median)",
+       "kind": "climatology",
+       "mae": 2.533,
+       "bias": -2.278,
+       "rmse": 7.789
+      }
+     ],
+     "paired_differences": [
+      {
+       "comparison": "MAE: calibrated median minus raw:sr_ecmwf_ifs",
+       "mean": 0.124,
+       "ci95": [
+        -0.2296,
+        0.4947
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:sr_ecmwf_ifs",
+       "mean": 0.2019,
+       "ci95": [
+        -0.1847,
+        0.6378
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_ecmwf_ifs025",
+       "mean": -0.6649,
+       "ci95": [
+        -1.3544,
+        -0.139
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_ecmwf_ifs025",
+       "mean": -0.587,
+       "ci95": [
+        -1.2356,
+        -0.1079
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_jma_gsm",
+       "mean": -0.4477,
+       "ci95": [
+        -1.5034,
+        0.2699
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_jma_gsm",
+       "mean": -0.3698,
+       "ci95": [
+        -1.306,
+        0.2687
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:pr_ncep_gfs_global",
+       "mean": -0.4016,
+       "ci95": [
+        -0.9637,
+        0.0529
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:pr_ncep_gfs_global",
+       "mean": -0.3237,
+       "ci95": [
+        -0.8472,
+        0.1041
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated median minus raw:equal_weight_blend",
+       "mean": -0.1859,
+       "ci95": [
+        -0.4394,
+        0.0139
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "MAE: calibrated expected total minus raw:equal_weight_blend",
+       "mean": -0.108,
+       "ci95": [
+        -0.2587,
+        0.0118
+       ],
+       "significant": false
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus seasonal climatology",
+       "mean": -0.108,
+       "ci95": [
+        -0.1542,
+        -0.0638
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "Brier (event rain >= 0.2 mm): calibrated minus flat climatology",
+       "mean": -0.1205,
+       "ci95": [
+        -0.1601,
+        -0.0848
+       ],
+       "significant": true
+      },
+      {
+       "comparison": "pinball loss: calibrated minus seasonal climatology",
+       "mean": -0.6117,
+       "ci95": [
+        -1.0209,
+        -0.3407
+       ],
+       "significant": true
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "method": {
+  "holdout": "Last 20 % of dates, never used for fitting or model choice; scored once.",
+  "event_definition": "Rain day = 9am-9am total >= 0.2 mm (inclusive).",
+  "bias_sign": "forecast minus observed",
+  "uncertainty": "95 % circular block bootstrap of per-day differences, 7-day blocks, 2000 resamples.",
+  "probability_comparison_with_raw_models": "Not possible: raw models give amounts, not probabilities."
+ },
+ "not_evaluated": [
+  "The ECMWF-only fallback fit that currently serves most day-2 and day-3 forecasts was not scored on the held-out days in this release; only its raw input was. Its own accuracy is therefore unknown and is planned for the next version."
+ ]
+}

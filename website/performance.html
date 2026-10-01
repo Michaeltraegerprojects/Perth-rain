@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Perth Rain Gauges · Performance</title>
+<meta name="description" content="How the calibrated rainfall forecasts scored on held-out days, with sample sizes, test dates and benchmarks.">
+<link rel="stylesheet" href="assets/style.css">
+<script type="module" src="assets/performance.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">Perth <span>Rain Gauges</span></a>
+    <nav class="primary" aria-label="Pages">
+      <a href="index.html">Forecast</a>
+      <a href="performance.html" aria-current="page">Performance</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <section class="loc-head">
+    <h1>How the forecasts scored</h1>
+    <p class="gauge-line">Each model was tested on the most recent 20% of days, which it never saw while being fitted or
+    chosen. Every method below was scored on exactly the same gauge, rain-day windows and readings.</p>
+    <details class="explain">
+      <summary>What the numbers mean</summary>
+      <div class="body">
+        <p><b>MAE</b>: average size of the error in mm per rain day. <b>Bias</b>: forecast minus observed, so a positive
+        bias means too much rain on average. <b>RMSE</b> weights big misses more.</p>
+        <p><b>Calibrated median</b> and <b>calibrated expected total</b> are two different single-number summaries of the
+        same forecast; each is scored separately. <b>Raw</b> rows are the weather models' own totals before calibration.
+        <b>Season-aware climatology</b> forecasts the usual rain for that time of year at that gauge, using training
+        data only.</p>
+        <p><b>Brier score</b> measures rain/no-rain probabilities (event: at least 0.2 mm, inclusive). Raw models give
+        amounts, not probabilities, so they have no Brier score.</p>
+        <p><b>Paired differences</b> compare errors day by day on the same days, with a 95% interval from a block
+        bootstrap (7-day blocks). If the interval includes zero, the difference is not significant and any ranking is
+        descriptive only. Several comparisons are made, so one significant result on its own should not be over-read.</p>
+        <p><b>In short</b>: the calibrated forecasts clearly beat climatology. Against the raw models and their blend, most
+        rain-amount differences are within noise, so no general accuracy gain over the raw models is claimed.</p>
+      </div>
+    </details>
+  </section>
+  <div id="perf"><p class="muted">Loading…</p></div>
+</main>
+<footer>
+  <div class="foot-inner">
+    <p>Forecast data: <a href="https://open-meteo.com/">Open-Meteo.com</a> (CC BY 4.0), from ECMWF, JMA and NOAA NCEP model
+    output. Observations © Commonwealth of Australia, Bureau of Meteorology.</p>
+  </div>
+</footer>
+</body>
+</html>

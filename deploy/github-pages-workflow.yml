@@ -1,0 +1,53 @@
+# GitHub Pages deployment for the static site in website/.
+# NOT ACTIVE: copy to .github/workflows/pages.yml only after approval.
+# Manual trigger only (no schedule, no push trigger): publishing stays a deliberate human action.
+name: Publish website to GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pandas pyarrow pytest
+      - run: python -m pytest -q website/tests
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm --prefix website test && npm --prefix website run check
+
+  deploy:
+    needs: check
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble site (published files only)
+        run: |
+          mkdir _site
+          cp website/*.html _site/
+          cp -r website/assets _site/assets
+          mkdir -p _site/data && cp -r website/data/v1 _site/data/v1
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

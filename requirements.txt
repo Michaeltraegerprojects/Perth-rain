@@ -1,0 +1,11 @@
+# Exact versions used for the verified run (Python 3.12, Windows 10)
+requests==2.32.5
+pandas==2.3.3
+numpy==2.5.3
+pyarrow==21.0.0
+scikit-learn==1.7.2
+scipy==1.18.1
+joblib==1.6.0
+threadpoolctl==3.7.0
+pytest==8.4.2
+tzdata==2026.4

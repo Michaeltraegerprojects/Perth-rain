@@ -1,0 +1,70 @@
+// Run with: npm test (in website/) or: node --test website/tests/format.test.mjs
+import test from "node:test";
+import assert from "node:assert/strict";
+import * as F from "../assets/format.js";
+
+test("probabilities are percentages and never 0% or 100%", () => {
+  assert.equal(F.pct(0.1446), "14%");
+  assert.equal(F.pct(0.0036), "<1%");
+  assert.equal(F.pct(0), "<1%");          // a rounded zero is shown as small, not impossible
+  assert.equal(F.pct(0.995), ">99%");
+  assert.equal(F.pct(null), "—");
+  assert.equal(F.pct(0.5), "50%");
+});
+
+test("small non-zero rain amounts never display as 0", () => {
+  assert.equal(F.mm(0), "0");
+  assert.equal(F.mm(0.03), "<0.1");
+  assert.equal(F.mm(0.121), "0.1");
+  assert.equal(F.mm(12.6), "13");
+  assert.equal(F.mm(null), "—");
+  assert.equal(F.rangeText(0, 0.2), "0–0.2 mm");
+});
+
+test("the 9am-9am window is shown in Perth time and the label is the END date", () => {
+  assert.equal(F.dayLabel("2026-10-03"), "Sat 3 Oct");
+  assert.equal(F.windowText("2026-10-02T01:00:00Z", "2026-10-03T01:00:00Z"), "9am Fri 2 Oct → 9am Sat 3 Oct (AWST)");
+});
+
+test("median 0 mm is explained as 'dry more likely', never as impossible", () => {
+  const note = F.medianNote({ amounts_mm: { median: 0 }, probabilities: { ge_0_2mm: 0.14 } });
+  assert.match(note, /does not mean rain is impossible/);
+  assert.match(note, /14%/);
+  assert.equal(F.medianNote({ amounts_mm: { median: 1.2 }, probabilities: { ge_0_2mm: 0.7 } }), "");
+});
+
+test("stale after 18 hours, judged on the viewer's clock", () => {
+  const made = "2026-10-01T02:30:00Z";
+  assert.equal(F.freshness(made, Date.parse("2026-10-01T10:00:00Z")).stale, false);
+  assert.equal(F.freshness(made, Date.parse("2026-10-01T21:00:00Z")).stale, true);
+});
+
+test("window states: upcoming, started, ended", () => {
+  const d = { window_start_utc: "2026-10-02T01:00:00Z", window_end_utc: "2026-10-03T01:00:00Z" };
+  assert.equal(F.windowState(d, Date.parse("2026-10-01T12:00:00Z")), "upcoming");
+  assert.equal(F.windowState(d, Date.parse("2026-10-02T12:00:00Z")), "started");
+  assert.equal(F.windowState(d, Date.parse("2026-10-03T02:00:00Z")), "ended");
+});
+
+test("primary forecast is the shortest lead; unavailable days have none", () => {
+  const day = { forecasts: [
+    { status: "ok", lead_group: "day3", lead_hours_to_window_start: 43 },
+    { status: "ok", lead_group: "day2", lead_hours_to_window_start: 37 }] };
+  assert.equal(F.primaryForecast(day).lead_group, "day2");
+  assert.equal(F.primaryForecast({ forecasts: [] }), null);
+});
+
+test("status chips and routes are labelled", () => {
+  assert.equal(F.verificationChip("verified").cls, "ok");
+  assert.equal(F.verificationChip("unverified").text, "Unverified inputs");
+  assert.equal(F.routeText({ route: "primary" }), "Selected model");
+  assert.equal(F.routeText({ route: "fallback#4" }), "Fallback model (choice 5)");
+  assert.equal(F.leadText({ lead_hours_to_window_start: 37, lead_hours_to_window_end: 61 }), "37–61 h after model run");
+});
+
+test("comparison labels are plain language", () => {
+  assert.equal(F.comparisonLabel("MAE: calibrated expected total minus raw:equal_weight_blend"),
+    "Error of calibrated expected total vs raw equal-weight blend");
+  assert.equal(F.comparisonLabel("Brier (event rain >= 0.2 mm): calibrated minus flat climatology"),
+    "Rain/no-rain score vs season-blind climatology");
+});

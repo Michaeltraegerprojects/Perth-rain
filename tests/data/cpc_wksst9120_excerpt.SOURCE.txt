@@ -1,0 +1,2 @@
+Verbatim excerpt (first 4 lines + 8 data rows) of https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for
+downloaded 2026-09-30; full file sha256 f257c99dfaa111e2503d208c93e93e380d0ffcc386bf5742fb2c48f980ecaa40, 148353 bytes, 2352 weekly rows 1981-09-02 .. 2026-09-23.

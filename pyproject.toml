@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "perthrain"
+version = "0.1.0"
+description = "ML-ready dataset pairing archived NWP rainfall forecasts with BoM gauge observations"
+requires-python = ">=3.11"
+dependencies = [
+  "requests>=2.32,<2.33",
+  "pandas>=2.3,<2.4",
+  "pyarrow>=21,<22",
+  "scikit-learn>=1.7,<1.8",
+  "scipy>=1.14",
+  "joblib>=1.4",
+  "tzdata",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<9"]
+
+[project.scripts]
+perthrain = "perthrain.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

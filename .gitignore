@@ -1,0 +1,40 @@
+# --- environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+node_modules/
+*.egg-info/
+
+# --- credentials and local configuration
+.env
+.env.*
+*.pem
+*.key
+.claude/
+.vscode/
+.idea/
+
+# --- data, models and archives (large, regenerable or forensic; never published)
+/data/
+/archive/
+/logs/
+*.joblib
+*.pkl
+*.parquet
+*.zip
+*.for
+COPY_VERIFICATION*.*
+
+# --- generated reports (the website publishes only its own reviewed export in website/data/v1/)
+/reports/
+
+# --- website export staging (only website/data/v1/ is published, after approval)
+website/data/pending/
+
+# --- OS noise
+.DS_Store
+Thumbs.db
