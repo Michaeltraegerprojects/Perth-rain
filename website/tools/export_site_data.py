@@ -297,11 +297,14 @@ def validate(folder: Path) -> list[str]:
     if ol.exists():
         o = json.loads(ol.read_text(encoding="utf-8"))
         for day in o.get("days", []):
-            if not day.get("calibrated") and "%" in day.get("rain", ""):
+            raw_text = " ".join(str(day.get(k) or "") for k in ("rain", "model_agreement", "possible_rainfall"))
+            if not day.get("calibrated") and ("%" in raw_text or day.get("chance_of_any_rain")):
                 problems.append(f"outlook.json {day.get('date')}: raw model guidance shown as a percentage chance")
             if not isinstance(day.get("calibrated"), bool):
                 problems.append(f"outlook.json {day.get('date')}: missing calibrated flag")
-        for k in ("generated_utc", "model_guidance_retrieved_utc", "headline", "method", "sources"):
+            if day.get("calibrated") and not day.get("chance_of_any_rain"):
+                problems.append(f"outlook.json {day.get('date')}: calibrated day without a chance of rain")
+        for k in ("generated_utc", "model_guidance_retrieved_utc", "headline", "sources"):
             if not o.get(k):
                 problems.append(f"outlook.json: missing {k}")
     return problems

@@ -164,12 +164,16 @@ def test_outlook_keeps_raw_guidance_apart_from_calibrated_chances(tmp_path):
     if not p.exists():
         pytest.skip("outlook.json not exported yet")
     o = json.loads(p.read_text(encoding="utf-8"))
-    assert o["days"] and all(isinstance(d["calibrated"], bool) for d in o["days"])
-    assert all("%" not in d["rain"] for d in o["days"] if not d["calibrated"])
-    assert "Not an official forecast" in o["sources"]
+    assert len(o["days"]) == 7 and all(isinstance(d["calibrated"], bool) for d in o["days"])
+    for day in o["days"]:
+        if day["calibrated"]:
+            assert day["chance_of_any_rain"]
+        else:
+            assert day["chance_of_any_rain"] is None and "%" not in (day["model_agreement"] or "")
+    assert "Not an official forecast" in o["sources"] and o["findings"]
     d = _copy_public(tmp_path)
     o["days"][0]["calibrated"] = False
-    o["days"][0]["rain"] = "Rain: 60% chance"
+    o["days"][0]["chance_of_any_rain"] = "60%"
     (d / "outlook.json").write_text(json.dumps(o), encoding="utf-8")
     assert any("raw model guidance shown as a percentage" in x for x in X.validate(d))
 
