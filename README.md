@@ -53,8 +53,8 @@ uv pip install --python .venv/Scripts/python.exe -r requirements.txt
 uv pip install --python .venv/Scripts/python.exe -e .
 ```
 
-(`python -m venv` and `pip` as above work too.) Then confirm with `.venv/Scripts/python -m pytest -q`; it should
-report 375 passed.
+(`python -m venv` and `pip` as above work too.) Then confirm with the unit tests, which need no local data:
+`.venv/Scripts/python -m pytest -q -m "not local_data"` (see [Tests](#tests)).
 
 ## Run
 
@@ -383,9 +383,33 @@ against NOAA CPC.
 
 ## Tests
 
+Tests are split by what they need. **Unit tests** run on a fresh clone. **Integration tests** (marker `local_data`)
+check the locally built `data/`, `reports/` and `archive/` folders, which are never committed.
+
+Unit tests (Python, then the website's JavaScript; Node 18+):
+
+```bash
+.venv/Scripts/python -m pytest -q -m "not local_data"
+```
+```bash
+npm --prefix website test
+```
+
+Integration tests, after `run`, `calibrate`, the challenge `historical` step and a website export have built the
+local data:
+
+```bash
+.venv/Scripts/python -m pytest -q -m local_data
+```
+
+Everything (both groups; this is what a release is checked with):
+
 ```bash
 .venv/Scripts/python -m pytest -q
 ```
+
+`pytest` collects `tests/`, `challenge/tests/` and `website/tests/`. A regression test copies only the tracked files
+to a temporary folder and runs the unit selection there, so a test that quietly needs local data fails.
 
 * `test_transformations.py`: windows (including DST), header and unit validation, missing ≠ zero,
   negative/extreme/duplicate handling, the CDO station guard, inferred Previous-Runs issue times, end-labelled

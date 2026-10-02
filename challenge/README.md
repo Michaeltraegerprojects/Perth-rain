@@ -27,8 +27,15 @@ use, no key).
 
 - **Location:** forecasts are taken at the gauge coordinates; the returned grid point is recorded.
 - **Same gauge reading:** every competitor is scored against the same reading, for the same 9am–9am window, at the
-  same lead group, under the same as-of rule. A forecast counts only if its model run (+6 h publication) came
-  before the cutoff: the window start (historical) or the issue time (prospective).
+  same lead group, under the same as-of rule. A forecast counts only if its model run was available before the
+  cutoff: the window start (historical) or the issue time (prospective).
+- **Availability evidence:** each forecast records how its availability was established.
+  - **Observed:** the explicit run was fetched (HTTP 200) at issue time, or the model's published metadata showed the
+    run as its latest or an earlier one.
+  - **Estimated:** neither is available, so availability is assumed at initialisation + 6 h. This is a fixed
+    estimate; JMA was measured at about 9.6 h.
+  - The Challenge tab shows each competitor's run initialisation, information age (hours from initialisation to
+    issue) and basis. The same lead group does not mean the same information age.
 - **Leads:**
   - Day 1 uses the 12 UTC single run, which is the champion's rule.
   - Days 2–3 use `previous_dayN`, the champion's pr inputs. They also use the 12 UTC single-run rule, labelled
@@ -39,18 +46,38 @@ use, no key).
 - **Probabilities:** only the champion issues probabilities. Raw models are deterministic, so their Brier scores are
   "unavailable". For a point forecast the CRPS equals its absolute error.
 - **Uncertainty:** paired 7-day block bootstrap. P-values are Holm-adjusted across every comparison in a report.
-- **Verdicts:** a verdict needs ≥ 60 common days, ≥ 15 wet days and an adjusted p < 0.05. Otherwise the result is
-  "insufficient evidence" or "inconclusive".
+  Identical errors are a tie (p = 1), never a win.
+- **Verdicts:** the thresholds come from `[verdicts]` in `challenge/settings.toml` (currently ≥ 60 common days,
+  ≥ 15 wet days and an adjusted p < 0.05). Otherwise the result is "insufficient evidence" or "inconclusive".
+
+## Champion freeze
+
+`challenge/champion_freeze.json` (schema 2) records, by SHA-256:
+
+- every model artifact, `manifest.json` and `selection.json`;
+- `config.toml` and every package module on the prediction and calibration import paths;
+- the runtime versions (Python, numpy, pandas, scikit-learn, scipy, joblib);
+- the per-row held-out reference files.
+
+`verify` compares bytes and versions only and never unpickles an artifact. `refreeze --reason` writes a new record
+after a reviewed code, config or runtime change. It first re-checks every gauge × lead reproduction, refuses if any
+artifact, manifest or selection changed, and keeps the old record in `challenge/freeze_history/`.
 
 ## Tracks
 
 - **Historical:** the champion's original, untouched held-out days. The champion's held-out forecasts are reproduced
-  from its frozen configuration, and the run stops unless they match the stored audited scores exactly. These are
-  exploratory comparisons for the challengers. Nothing is tuned on them.
+  from its frozen configuration. The run stops unless they match on all of the following:
+  - the evaluation keys (station, window, reading);
+  - every stored aggregate score;
+  - every row of the saved reference (`challenge/reference/`, local, hash in the freeze).
+
+  These are exploratory comparisons for the challengers. Nothing is tuned on them.
 - **Prospective:** an append-only, hash-chained ledger (`data/challenge/ledger.jsonl`) of every forecast as issued.
   - The schedule is set in `challenge/settings.toml`: 21:00 UTC daily (05:00 AWST).
   - Off-schedule `--force` runs are labelled "unscheduled".
   - Observations are joined later in a separate scored table; the ledger is never rewritten.
+  - A checkpoint file stores the record count and head hash, so deleting or truncating the final records is
+    detected. `collect` holds an exclusive lock file; a second writer is refused.
 
 ## Commands
 
@@ -75,7 +102,10 @@ From the project root, using the project's `.venv`:
 .venv/Scripts/python -m pytest -q challenge/tests
 ```
 
+Add `-m "not local_data"` to skip the tests that need the locally built champion, data and reference files.
+
 - `collect` must run within 3 hours after 21:00 UTC; nothing schedules it automatically.
 - `score` refreshes recent gauge readings from BoM's public FTP files and rescores.
 - `export` writes the Challenge-tab data; `website/tools/export_site_data.py` then stages it for review.
-- The other subcommands are `freeze`, `probe`, `verify-semantics` and `historical`.
+- The other subcommands are `freeze`, `refreeze --reason`, `checkpoint`, `probe`, `verify-semantics` and
+  `historical`.

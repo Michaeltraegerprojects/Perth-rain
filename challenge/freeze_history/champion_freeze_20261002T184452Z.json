@@ -1,45 +1,18 @@
 {
- "schema_version": 2,
  "description": "Frozen champion: audited no-ENSO release. Challengers are compared against it; it is never retrained, re-selected or replaced by the challenge code.",
- "inference_files": {
-  "config.toml": "f4a2eb3bf240371d10c799c54fbc3477f2f26ad5db9399ef4debe8f0ac67e2f1",
+ "selection_rule_files": {
+  "src/perthrain/calibrate.py": "1d519c3c83f0e9249a4394d55da269cef40fcb0f6cb6ce60e19a5b9e3c119719",
+  "src/perthrain/predict.py": "8748fc6515650061b7ba33e38a8f70d3958af3a65fa92dcbcbd06712c58d19fa",
   "src/perthrain/build.py": "80889ecae54f6770a9ac56099d4bb643037f9d5231f0a08b6d5e48f4dfe91f50",
-  "src/perthrain/calibrate.py": "0c7bb1f243b03a9e5a7f57e89f6cee9a12c4accc022ce76c362239009485c9bf",
-  "src/perthrain/config.py": "2460dcfa1d6ae275795e5ef3fa59e90ad9cafb8b6f9cb42f101c4723aa55e259",
-  "src/perthrain/enso_guard.py": "f379292e81358a8c0802bed98743699ab1f877f528b2db397c10a8da3c722ac1",
   "src/perthrain/forecasts.py": "370eda58d3ae25e520ccd10c7114007d4ad8e97cd733daf974556acbde308bd8",
-  "src/perthrain/http.py": "dc9b3c8823c5bb457d53b96d21df1979cc7d5c935e4173576af8f79518a6afe7",
-  "src/perthrain/observations.py": "ec533d079c23186fc7c2a64c4aed1e8e012cfd2ec9b00bd65370697b5088ca80",
-  "src/perthrain/pipeline.py": "1ce0e74c44e6fbddea82c78371a2e434d8b5eb4776118c0a63545b39e48867e6",
-  "src/perthrain/predict.py": "f560655de98e32a1c6fac5c756bdcb55358e201e34be90458ba697f747192f7b",
-  "src/perthrain/provenance.py": "67c1423997b7a2cc1e1cd6a9f1cc00783d843560c3ec0459726cd120fc84bc9b",
-  "src/perthrain/stations.py": "c308d310705498dc9d6546f80ff56aabbb3fbc3a4b5f0e5f25466a48ef42ed6f"
- },
- "runtime": {
-  "python": "3.12.11",
-  "numpy": "2.5.3",
-  "pandas": "2.3.3",
-  "scikit-learn": "1.7.2",
-  "scipy": "1.18.1",
-  "joblib": "1.6.0"
- },
- "holdout_references": {
-  "holdout_clarkson_day1.parquet": "189613217c12f3b844b57032fea98a294a785c1f597e9bcb5df82114002dd2cd",
-  "holdout_clarkson_day2.parquet": "a9e0991d7de9e5142f8a432c0366735e3bc86546f7bd9c483c78b585ccfd9e87",
-  "holdout_clarkson_day3.parquet": "1b5e1849ecb2415d39da9700bd0d67fa0045368cb9f32d7a0afdce28fd9f2fa4",
-  "holdout_fremantle_day1.parquet": "beb86009f5f3f2091f71b5158259122e244e4b19fd9223f00425eb8eefea0ccf",
-  "holdout_fremantle_day2.parquet": "3a0704102de62f49fa6e797adf2c7f3a188c6dd4ee007d3da3e0b16d051d938b",
-  "holdout_fremantle_day3.parquet": "9a385b9f76ced06559e5d80e177b220022d9495becfff78ae5e8e4edab807155",
-  "holdout_perth_day1.parquet": "60ebe05806b52527027d6bc9a5ad126abba26950583fd48b939e80f82f68010a",
-  "holdout_perth_day2.parquet": "eb9e4fc17d7929a712f42ff4fa49a830faf8957d1b70b3673dee980c6aea0167",
-  "holdout_perth_day3.parquet": "610c7712e568008178381186a44dfa5637002989f58e2834425214a40d5fc2c1"
+  "src/perthrain/enso_guard.py": "5dd0e7de3a90cf7a4bc67340517722ff407b4580e1e0457ee42262c99fae421b"
  },
  "locations": {
   "perth": {
    "name": "Perth",
    "run_id": "noenso-20260930T155128Z-a716ab4d",
    "created_utc": "2026-09-30T15:51:28Z",
-   "training_code_sha256": "ecfc7e94bd034fe0443b233769f63aec718574350e6078bd1b7d1ac879524a95",
+   "code_sha256": "ecfc7e94bd034fe0443b233769f63aec718574350e6078bd1b7d1ac879524a95",
    "enso_status": "no_enso",
    "manifest_sha256": "55efa5d92cac433bdcc83bbbb034f1c462b794bacc5a87394c35ca3d5ac6fcf2",
    "selection_sha256": "49a85166061272f4fe71fd018f27817c23dd9fffb4cafbc15ab248412c9f97f3",
@@ -146,7 +119,7 @@
    "name": "Clarkson",
    "run_id": "noenso-20260930T155208Z-373e8cf3",
    "created_utc": "2026-09-30T15:52:08Z",
-   "training_code_sha256": "ecfc7e94bd034fe0443b233769f63aec718574350e6078bd1b7d1ac879524a95",
+   "code_sha256": "ecfc7e94bd034fe0443b233769f63aec718574350e6078bd1b7d1ac879524a95",
    "enso_status": "no_enso",
    "manifest_sha256": "0eca599e8df0ef150317f98490b12cc9034b70838ffe3a190e3f7fddb029a1e9",
    "selection_sha256": "c016c3d2a3245f70871163c8e2a9d7e99d83b392a236595800a86441ab0beba0",
@@ -269,7 +242,7 @@
    "name": "Ocean Reef",
    "run_id": "noenso-20260930T155246Z-a716ab4d",
    "created_utc": "2026-09-30T15:52:46Z",
-   "training_code_sha256": "ecfc7e94bd034fe0443b233769f63aec718574350e6078bd1b7d1ac879524a95",
+   "code_sha256": "ecfc7e94bd034fe0443b233769f63aec718574350e6078bd1b7d1ac879524a95",
    "enso_status": "no_enso",
    "manifest_sha256": "c4d4c60e606548d677c8bc450d0294482afb86818a64b3eabff3d253f5a3b790",
    "selection_sha256": "c697446169cb1369f2a90e8333f1dfe1e431dfb65777c6b5e510cb5dd989a7e5",
@@ -376,7 +349,7 @@
    "name": "Fremantle",
    "run_id": "noenso-20260930T155325Z-6521c3bf",
    "created_utc": "2026-09-30T15:53:25Z",
-   "training_code_sha256": "ecfc7e94bd034fe0443b233769f63aec718574350e6078bd1b7d1ac879524a95",
+   "code_sha256": "ecfc7e94bd034fe0443b233769f63aec718574350e6078bd1b7d1ac879524a95",
    "enso_status": "no_enso",
    "manifest_sha256": "6db2b3abb36698a326a32d195d94b8bb4a4349c9c3be63f21d0b5679936446aa",
    "selection_sha256": "2489cc0bf9777512ea96e19bb74552d9d67e243f20ac87963a08d31e782a5529",
@@ -483,18 +456,5 @@
     }
    }
   }
- },
- "created_utc": "2026-10-02T18:44:52Z",
- "reason": "Audit of 0de31ee (findings 3, 4, 7): schema 2 record adds config.toml, the inference import graph, runtime versions and per-row held-out references; model artifacts, manifests and selections unchanged",
- "history": [
-  {
-   "replaced_utc": "20261002T184452Z",
-   "record_file": "freeze_history/champion_freeze_20261002T184452Z.json",
-   "record_sha256": "2a29c0f8bc84d518c2922e88c0d5779f8af32f1d65f18968a171979fd3b1bd45",
-   "schema_version": 1,
-   "changed": [
-    "schema 1 -> 2: added config, inference modules, runtime"
-   ]
-  }
- ]
+ }
 }

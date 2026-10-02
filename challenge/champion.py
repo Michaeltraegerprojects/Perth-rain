@@ -13,7 +13,8 @@ Record (schema 2) covers:
 * routing order and feature schemas, read from the run's manifest.json (no artifact is unpickled).
 
 verify() compares bytes and versions only. It never deserialises an artifact, so a modified or malicious file is
-reported as a change before anything could load it.
+reported as a change before anything could load it. Text files (config and code) are hashed with CRLF line endings
+read as LF, so a Windows checkout and a Linux checkout of the same commit give the same record.
 """
 from __future__ import annotations
 
@@ -42,6 +43,15 @@ class ChampionChanged(RuntimeError):
 
 def _sha(p: Path) -> str:
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+
+def _sha_text(p: Path) -> str:
+    """Hash of a text file independent of its line endings (git may check it out with CRLF or LF)."""
+    return hashlib.sha256(Path(p).read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
+
+def _write_record(path: Path, rec: dict) -> None:
+    path.write_text(json.dumps(rec, indent=1) + "\n", encoding="utf-8", newline="\n")
 
 
 def slug(name: str) -> str:
@@ -73,9 +83,9 @@ def inference_modules() -> list[str]:
 
 
 def inference_files() -> dict:
-    files = {"config.toml": _sha(ROOT / "config.toml")}
+    files = {"config.toml": _sha_text(ROOT / "config.toml")}
     for m in inference_modules():
-        files[f"src/perthrain/{m}"] = _sha(ROOT / "src" / "perthrain" / m)
+        files[f"src/perthrain/{m}"] = _sha_text(ROOT / "src" / "perthrain" / m)
     return files
 
 
@@ -169,7 +179,7 @@ def freeze(reason: str = "initial freeze") -> Path:
                               f"({_diff(old, cur) or 'record format'}); not overwritten. Investigate, or use "
                               "`refreeze --reason` after a reviewed change that leaves the artifacts untouched.")
     rec = dict(cur, created_utc=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), reason=reason, history=[])
-    FREEZE.write_text(json.dumps(rec, indent=1), encoding="utf-8")
+    _write_record(FREEZE, rec)
     return FREEZE
 
 
@@ -212,11 +222,11 @@ def refreeze(reason: str) -> Path:
     hist_dir.mkdir(exist_ok=True)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     kept = hist_dir / f"champion_freeze_{stamp}.json"
-    kept.write_bytes(FREEZE.read_bytes())
+    kept.write_bytes(FREEZE.read_bytes().replace(b"\r\n", b"\n"))   # as committed (the repository stores LF)
     history = list(old.get("history", [])) + [{"replaced_utc": stamp, "record_file": f"freeze_history/{kept.name}",
                                                "record_sha256": _sha(kept), "schema_version": old.get("schema_version", 1),
                                                "changed": _diff(old, cur) if old.get("schema_version") == SCHEMA
                                                else ["schema 1 -> 2: added config, inference modules, runtime"]}]
     rec = dict(cur, created_utc=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), reason=reason, history=history)
-    FREEZE.write_text(json.dumps(rec, indent=1), encoding="utf-8")
+    _write_record(FREEZE, rec)
     return FREEZE

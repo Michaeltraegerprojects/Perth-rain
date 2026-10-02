@@ -1,7 +1,11 @@
-"""Regression tests for the external review of commit 0de31ee (findings 1, 3-7) and the timing-evidence request.
-Each test was written to fail on 0de31ee before the fix."""
+"""Regression tests for the external review of commit 0de31ee (findings 1, 3-8) and the timing-evidence request.
+Each test was written to fail on 0de31ee before the fix. Finding 2 (model promotion) is in tests/test_audit_promotion.py."""
 import json
+import os
 import pickle
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 import joblib
@@ -159,6 +163,19 @@ def test_changing_config_is_detected(synthetic_project):
         champion.verify()
 
 
+def test_line_endings_alone_are_not_a_champion_change(synthetic_project):
+    """A CRLF (Windows) and an LF (Linux, CI) checkout of the same commit must give the same record."""
+    p = champion.freeze()
+    assert b"\r\n" not in p.read_bytes(), "freeze record must be written with LF, as the repository stores it"
+    for f in [synthetic_project / "config.toml", *(synthetic_project / "src" / "perthrain").glob("*.py")]:
+        f.write_bytes(f.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n"))
+    champion.verify()
+    cfg = synthetic_project / "config.toml"
+    cfg.write_bytes(cfg.read_bytes().replace(b"publication_latency_hours = 6", b"publication_latency_hours = 9"))
+    with pytest.raises(champion.ChampionChanged, match="config.toml"):
+        champion.verify()
+
+
 def test_runtime_mismatch_is_detected(synthetic_project, monkeypatch):
     champion.freeze()
     cur = champion.runtime_versions()
@@ -236,3 +253,63 @@ def test_competitor_timing_separates_observed_and_estimated_availability():
     assert b["availability_basis"] == "observed" and b["info_age_h"] == 15.0
     assert c["availability_basis"] == "estimated (initialisation + 6 h)"
     assert d["run_init_utc"] == "2026-10-01T06:00Z" and d["availability_basis"] == "estimated (initialisation + 6 h)"
+
+
+# ------------------------------------------------------------------------- finding 8: clean checkout
+_BOOT = """
+import os, sys
+root = os.path.normcase(os.getcwd())
+# drop any other checkout of this project (an editable install puts its src/ on sys.path)
+def other(p):
+    p = os.path.abspath(p or '.')
+    return os.path.isdir(os.path.join(p, 'perthrain')) and not os.path.normcase(p).startswith(root)
+sys.path = [p for p in sys.path if not other(p)]
+import pytest
+rc = pytest.main(sys.argv[1:])
+import perthrain
+assert os.path.normcase(perthrain.__file__).startswith(root), perthrain.__file__
+sys.exit(rc)
+"""
+
+
+def _clean_checkout(dest: Path) -> Path:
+    root = Path(__file__).resolve().parents[2]
+    try:
+        files = subprocess.run(["git", "ls-files", "-z"], cwd=root, capture_output=True, check=True).stdout
+    except (OSError, subprocess.CalledProcessError):
+        pytest.skip("not a git checkout (already a clean export?)")
+    for rel in filter(None, files.decode().split("\0")):
+        src = root / rel
+        if src.is_file():
+            (dest / rel).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dest / rel)
+    return dest
+
+
+def _pytest_in(repo: Path, *args):
+    env = {k: v for k, v in os.environ.items() if k not in ("PYTHONPATH", "PYTEST_ADDOPTS")}
+    return subprocess.run([sys.executable, "-c", _BOOT, "-q", "-p", "no:cacheprovider", *args],
+                          cwd=repo, env=env, capture_output=True, text=True, timeout=600)
+
+
+def test_unit_suite_collects_and_runs_on_a_clean_checkout(tmp_path):
+    """Tracked files only (no data/, reports/ or archive/): the unit selection must collect without errors, and tests
+    that used to read local artifacts must run and pass."""
+    repo = _clean_checkout(tmp_path / "repo")
+    assert not any((repo / d).exists() for d in ("data", "reports", "archive"))
+    col = _pytest_in(repo, "--collect-only", "-m", "not local_data")
+    assert col.returncode == 0, col.stdout[-3000:] + col.stderr[-3000:]
+    run = _pytest_in(repo, "-m", "not local_data",
+                     "tests/test_enso_guard.py",
+                     "tests/test_review_regressions.py::test_caller_supplied_bundles_are_validated",
+                     "challenge/tests/test_challenge.py::test_challenge_code_lives_outside_the_audited_package")
+    assert run.returncode == 0, run.stdout[-3000:] + run.stderr[-3000:]
+    assert not any((repo / d).exists() for d in ("data", "reports", "archive")), "a unit test wrote local data"
+
+
+def test_integration_tests_are_marked():
+    import tomllib
+    root = Path(__file__).resolve().parents[2]
+    ini = tomllib.loads((root / "pyproject.toml").read_text())["tool"]["pytest"]["ini_options"]
+    assert any(m.startswith("local_data:") for m in ini["markers"])
+    assert {"tests", "challenge/tests", "website/tests"} <= set(ini["testpaths"])
