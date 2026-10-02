@@ -61,6 +61,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LOCS = [loc for _name, loc in _LOCS]
 
 
+@pytest.mark.local_data
 @pytest.mark.parametrize("loc", LOCS)
 def test_every_served_row_used_only_runs_issued_before_the_prediction(loc):
     """Real entry point on the cached inputs of the newest served run: every input of every served row must come

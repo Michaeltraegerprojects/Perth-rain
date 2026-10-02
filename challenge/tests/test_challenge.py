@@ -211,6 +211,7 @@ def test_schedule_slot():
 
 
 # ------------------------------------------------------------------------------------------- champion
+@pytest.mark.local_data
 def test_champion_is_unchanged_and_tampering_is_detected(tmp_path, monkeypatch):
     rec = champion.verify()
     assert set(rec["locations"]) == {"perth", "clarkson", "ocean_reef", "fremantle"}
@@ -224,13 +225,23 @@ def test_champion_is_unchanged_and_tampering_is_detected(tmp_path, monkeypatch):
 
 
 def test_challenge_code_lives_outside_the_audited_package():
+    """Structural check (no local data needed): the production package never imports the challenge code, and the
+    freeze covers the whole inference import graph."""
+    import ast
     pkg = ROOT / "src" / "perthrain"
     assert not any("challenge" in p.name for p in pkg.glob("*.py"))
-    frozen = json.loads(champion.FREEZE.read_text())
-    from perthrain.provenance import code_sha256
-    assert all(L["code_sha256"] == code_sha256() for L in frozen["locations"].values())
+    for p in pkg.glob("*.py"):
+        for node in ast.walk(ast.parse(p.read_text(encoding="utf-8"))):
+            names = ([a.name for a in node.names] if isinstance(node, ast.Import)
+                     else [node.module or ""] if isinstance(node, ast.ImportFrom) else [])
+            assert not any(n.split(".")[0] == "challenge" for n in names), f"{p.name} imports the challenge code"
+    mods = champion.inference_modules()
+    assert {"predict.py", "calibrate.py", "config.py", "pipeline.py", "http.py"} <= set(mods)
+    assert not set(mods) & champion.NOT_INFERENCE
+    assert "config.toml" in champion.inference_files()
 
 
+@pytest.mark.local_data
 def test_historical_champion_reproduction_matches_stored_scores():
     p = ROOT / "data" / "challenge" / "historical_contest.parquet"
     assert p.exists(), "run `python -m challenge historical` first"

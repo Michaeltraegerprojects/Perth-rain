@@ -27,5 +27,8 @@ perthrain = "perthrain.cli:main"
 where = ["src"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["src"]
+testpaths = ["tests", "challenge/tests", "website/tests"]
+pythonpath = ["src", "."]
+markers = [
+    "local_data: integration test that needs the locally built data/, reports/ and archive/ folders (not in the repository)",
+]

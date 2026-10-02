@@ -249,10 +249,10 @@ def test_loader_rejects_corrupt_foreign_and_mislabelled_artifacts(tmp_path, clea
     assert set(load_bundles(cfg)) == {"day1", "day2", "day3"}               # clean set loads
 
 
+@pytest.mark.local_data
 def test_loader_rejects_a_quarantined_pre_audit_artifact_copied_back(tmp_path, clean_bundles):
     src = sorted(ROOT.glob("archive/INVALIDATED_*/model_artifacts/perth/hurdle_day3.joblib"))
-    if not src:
-        pytest.skip("quarantined artifact not present")
+    assert src, "quarantined pre-audit artifact not present in archive/"
     from conftest import install_models, write_manifest
     cfg = _cfg(tmp_path)          # separate project: its quarantine manifest does not list this file
     install_models(cfg.data_dir / "models", clean_bundles)
@@ -264,9 +264,14 @@ def test_loader_rejects_a_quarantined_pre_audit_artifact_copied_back(tmp_path, c
 
 # ---------------------------------------------------- the ACTIVE artifacts / payloads
 ACTIVE = sorted(glob.glob(str(ROOT / "data" / "*" / "models" / "hurdle_*.joblib")))
-assert ACTIVE, "no active artifacts: run `calibrate`"
 
 
+@pytest.mark.local_data
+def test_active_artifacts_exist():
+    assert ACTIVE, "no active artifacts: run `calibrate` (integration tests need the locally built data/)"
+
+
+@pytest.mark.local_data
 @pytest.mark.parametrize("path", ACTIVE, ids=[Path(p).parent.parent.name + "/" + Path(p).stem for p in ACTIVE])
 def test_every_active_artifact_is_a_clean_no_enso_artifact(path):
     b = joblib.load(path)
@@ -281,10 +286,12 @@ def test_every_active_artifact_is_a_clean_no_enso_artifact(path):
 PAYLOADS = sorted(glob.glob(str(ROOT / "data" / "*" / "predictions" / "*.csv")))
 
 
+@pytest.mark.local_data
 def test_active_prediction_payloads_exist():
     assert PAYLOADS, "no active prediction payloads: run `predict`"
 
 
+@pytest.mark.local_data
 @pytest.mark.parametrize("path", PAYLOADS, ids=[Path(p).parent.parent.name + "/" + Path(p).name for p in PAYLOADS])
 def test_active_prediction_payloads_come_from_the_active_clean_run(path):
     """EVERY payload file (timestamped records and latest.csv), EVERY row, and the VALUES of the schema and

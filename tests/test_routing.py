@@ -150,12 +150,14 @@ def _cfg(loc_slug):
     return c
 
 
+@pytest.mark.local_data
 @pytest.mark.parametrize("name,loc", LOCS)
 def test_active_artifacts_exist_for_every_configured_location_and_lead(name, loc):
     for lead in ("day1", "day2", "day3"):
         assert (ROOT / "data" / loc / "models" / f"hurdle_{lead}.joblib").exists(), f"{loc} {lead} missing"
 
 
+@pytest.mark.local_data
 @pytest.mark.parametrize("name,loc", LOCS)
 def test_active_artifacts_route_as_the_written_routing_table_says(name, loc):
     cfg = _cfg(loc)
@@ -185,6 +187,7 @@ def test_active_artifacts_route_as_the_written_routing_table_says(name, loc):
         assert r.route == "exhausted"
 
 
+@pytest.mark.local_data
 @pytest.mark.parametrize("name,loc", LOCS)
 def test_served_predictions_are_reproduced_exactly_by_the_real_entry_point(name, loc):
     """compute_predictions (real entry point, OFFLINE: cache only) on the cached live inputs of the newest served

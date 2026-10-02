@@ -400,7 +400,6 @@ def compute_predictions(cfg, horizon_days: int = 4, now: pd.Timestamp | None = N
                         refresh_live: bool = True, bundles: dict | None = None) -> dict:
     now = now or pd.Timestamp.now(tz="UTC")
     now = now.tz_localize("UTC") if now.tzinfo is None else now.tz_convert("UTC")
-    st = station_info(cfg)
     if bundles is None:
         bundles = load_bundles(cfg, experimental)
     else:                                   # caller-supplied artifacts get the same validation as loaded ones
@@ -413,6 +412,7 @@ def compute_predictions(cfg, horizon_days: int = 4, now: pd.Timestamp | None = N
                 enso_guard.assert_no_enso(b, f"supplied {lead} bundle", expected_lead=lead)
     if not bundles:
         raise SystemExit(f"no calibrated models for {cfg.location_name}; run `calibrate` first")
+    st = station_info(cfg)
     windows = future_windows(now, cfg.timezone, horizon_days)
     fetcher = make_fetcher(cfg)
     sr, pr, problems = _fetch_live(cfg, fetcher, st["latitude"], st["longitude"], windows, now, refresh_live)

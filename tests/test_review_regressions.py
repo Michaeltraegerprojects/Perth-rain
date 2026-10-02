@@ -314,6 +314,7 @@ def test_hash_check_covers_archived_models_without_a_manifest(tmp_path):
     assert hashlib.sha256(b"superseded bytes").hexdigest() in G.quarantined_hashes(tmp_path / "archive")
 
 
+@pytest.mark.local_data
 def test_every_archived_model_file_in_this_project_is_hash_blocked():
     root = Path(__file__).resolve().parents[1]
     files = [f for f in (root / "archive").rglob("*.joblib") if f.is_file()]
