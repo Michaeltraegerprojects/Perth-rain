@@ -56,13 +56,8 @@ def champion_holdout(slug: str, lead: str, freeze: dict):
                                       train.observed_precip_mm.to_numpy(float))
     p, lq = m.parts(C.make_X(test, v["cols"], v["combine"], sel["season"], None))
     y = test.observed_precip_mm.to_numpy(float)
-    # the reproduction must equal the stored, audited held-out score
-    stored = pd.read_csv(ROOT / "reports" / slug / "calibration_metrics.csv")
-    st = stored[(stored.lead == lead) & (stored.split == "holdout") & (stored.method == "hurdle")].iloc[0]
     q50 = C.mixture_quantile(p, lq, 0.5)
-    if len(y) != int(st.n) or not np.isclose(np.abs(q50 - y).mean(), st.median_MAE_mm, rtol=0, atol=1e-9):
-        raise champion.ChampionChanged(f"{slug} {lead}: reproduced held-out forecasts do not match the stored score "
-                                       f"(n {len(y)} vs {int(st.n)}, MAE {np.abs(q50 - y).mean()} vs {st.median_MAE_mm})")
+    _check_against_stored(slug, lead, test, p, lq, y, m)
     ytr = train.observed_precip_mm.to_numpy(float)
     ps, lqs, ss = C.climatology_seasonal(ytr, train.label_date_local, test.label_date_local)
     out = test[["label_date_local", "window_start_utc", "window_end_utc", "station_id", "observed_precip_mm"]
@@ -78,10 +73,80 @@ def champion_holdout(slug: str, lead: str, freeze: dict):
         out[f"clim_p_ge_{T:g}"] = C.exceed_prob(ps, lqs, T)
     out["champion_crps"] = _crps_from_quantiles(np.column_stack([C.mixture_quantile(p, lq, t) for t in TAU]), y)
     out["clim_crps"] = _crps_from_quantiles(np.column_stack([C.mixture_quantile(ps, lqs, t) for t in TAU]), y)
+    # information age at the window start = hours from the latest contributing model run to the cutoff
+    for c in RAW_BENCH:
+        if f"lead_hours_{c}" in test.columns:
+            out[f"age_{c}_h"] = test[f"lead_hours_{c}"].to_numpy(float) - 24.0
+    member_ages = [f"age_{c}_h" for c in C.FEATURE_SETS[sel["feature_set"]]["cols"] if f"age_{c}_h" in out]
+    out["age_champion_h"] = out[member_ages].min(axis=1) if member_ages else np.nan
     out["champion_model"] = sel["feature_set"]
     out["champion_run_id"] = freeze["locations"][slug]["run_id"]
     out["champion_trained_to"] = str(train.label_date_local.max().date())
-    return out.reset_index(drop=True), {"hold_start": str(pd.Timestamp(hold_start).date()), "n": len(y)}
+    out = out.reset_index(drop=True)
+    _check_against_reference(slug, lead, out)
+    return out, {"hold_start": str(pd.Timestamp(hold_start).date()), "n": len(y)}
+
+
+# Every held-out aggregate the audited calibration stored for the selected model; all must be reproduced.
+STORED_AGGREGATES = ("pinball_mean", "median_MAE_mm", "median_bias_mm", "median_RMSE_mm", "mean_est_MAE_mm",
+                     "mean_est_bias_mm", "mean_est_RMSE_mm", "brier_0.2", "brier_1", "brier_5", "brier_10",
+                     "exceed_q50", "exceed_q75", "exceed_q90")
+AGG_TOL = 1e-9
+ROW_TOL = 1e-12
+REFERENCE_COLUMNS = ["champion_median_mm", "champion_expected_mm", "champion_p10_mm", "champion_p90_mm",
+                     "champion_p_ge_0.2", "champion_p_ge_1", "champion_p_ge_5", "champion_p_ge_10"]
+
+
+def _check_against_stored(slug, lead, test, p, lq, y, model):
+    """The reproduction must equal the audited held-out evaluation: same rows (station, window and observed
+    target, by fingerprint), same count and every stored aggregate."""
+    stored = pd.read_csv(ROOT / "reports" / slug / "calibration_metrics.csv")
+    st = stored[(stored.lead == lead) & (stored.split == "holdout") & (stored.method == "hurdle")].iloc[0]
+    problems = []
+    n_rows, fp = C.frame_fingerprint(test)
+    if n_rows != int(st.n):
+        problems.append(f"n {n_rows} vs stored {int(st.n)}")
+    if "key_fingerprint" not in st or fp != st.key_fingerprint:
+        problems.append(f"evaluation key fingerprint {fp[:12]}... vs stored {str(st.get('key_fingerprint'))[:12]}...")
+    got = C.prob_metrics(p, lq, y, model.tail_scale_)
+    for k in STORED_AGGREGATES:
+        if k in st and pd.notna(st[k]) and not np.isclose(got.get(k, np.nan), st[k], rtol=0, atol=AGG_TOL):
+            problems.append(f"{k} {got.get(k)} vs stored {st[k]}")
+    if problems:
+        raise champion.ChampionChanged(f"{slug} {lead}: reproduced held-out forecasts do not match the audited "
+                                       f"evaluation: {problems}")
+
+
+def reference_path(slug: str, lead: str) -> Path:
+    return ROOT / "challenge" / "reference" / f"holdout_{slug}_{lead}.parquet"
+
+
+def _row_keys(df: pd.DataFrame) -> pd.Series:
+    """Per-row key as a hash of station, window and observed target (the reference stores no observation values)."""
+    import hashlib
+    raw = (df.station_id.astype(str) + "|" + pd.to_datetime(df.window_start_utc, utc=True).astype(str) + "|" +
+           pd.to_datetime(df.window_end_utc, utc=True).astype(str) + "|" + df.observed_precip_mm.round(6).astype(str))
+    return raw.map(lambda x: hashlib.sha256(x.encode()).hexdigest())
+
+
+def _check_against_reference(slug, lead, out):
+    """Per-row check against the saved reference (written on the first verified run, then frozen by `refreeze`).
+    Aggregates can agree while individual forecasts differ; this catches that."""
+    ref_p = reference_path(slug, lead)
+    cur = pd.DataFrame({"row_key": _row_keys(out), **{c: out[c].to_numpy(float) for c in REFERENCE_COLUMNS}})
+    if not ref_p.exists():
+        ref_p.parent.mkdir(parents=True, exist_ok=True)
+        cur.to_parquet(ref_p, index=False)
+        return
+    ref = pd.read_parquet(ref_p)
+    if set(ref.row_key) != set(cur.row_key) or len(ref) != len(cur):
+        raise champion.ChampionChanged(f"{slug} {lead}: per-row reference has different evaluation rows")
+    m = cur.merge(ref, on="row_key", suffixes=("", "_ref"))
+    bad = [c for c in REFERENCE_COLUMNS if not np.allclose(m[c], m[f"{c}_ref"], rtol=0, atol=ROW_TOL)]
+    if bad:
+        n_bad = int(sum((~np.isclose(m[c], m[f"{c}_ref"], rtol=0, atol=ROW_TOL)).sum() for c in bad))
+        raise champion.ChampionChanged(f"{slug} {lead}: per-row forecasts differ from the reference in {bad} "
+                                       f"({n_bad} values)")
 
 
 def _crps_from_quantiles(Q: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -126,6 +191,7 @@ def add_challengers(tab: pd.DataFrame, g: dict, lead: str) -> pd.DataFrame:
                 tab[c] = np.nan
         # only forecasts that were published before the window started count; others are missing, not zero
         tab.loc[~tab[f"eligible_{model}"].fillna(False).astype(bool), f"fc_{model}_mm"] = np.nan
+        tab = _add_age(tab, model)
     return tab
 
 
@@ -141,6 +207,12 @@ def _sr_totals(model, g, windows, n):
     return pd.concat(rows, ignore_index=True) if rows else pd.DataFrame(columns=["window_start_utc"])
 
 
+def _add_age(tab, name):
+    run = pd.to_datetime(tab.get(f"run_{name}_utc"), utc=True, errors="coerce")
+    tab[f"age_{name}_h"] = (pd.to_datetime(tab.window_start_utc, utc=True) - run).dt.total_seconds() / 3600
+    return tab
+
+
 def _attach(tab, wt, name):
     keep = {"total_mm": f"fc_{name}_mm", "published_before_cutoff": f"eligible_{name}", "latest_run_utc": f"run_{name}_utc",
             "grid_latitude": f"grid_lat_{name}", "grid_longitude": f"grid_lon_{name}", "retrieved_at_utc": f"retrieved_{name}"}
@@ -152,7 +224,7 @@ def _attach(tab, wt, name):
         for c in keep.values():
             tab[c] = np.nan
     tab.loc[~tab[f"eligible_{name}"].fillna(False).astype(bool), f"fc_{name}_mm"] = np.nan
-    return tab
+    return _add_age(tab, name)
 
 
 def build() -> pd.DataFrame:

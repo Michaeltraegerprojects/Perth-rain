@@ -69,6 +69,10 @@ class FetchResult:
 
 
 class Fetcher:
+    #: a cached HTTP 400 ("run not available") is trusted for this long, then asked again: the run may have been
+    #: published since (a request made before publication must not stay "not archived" forever)
+    FAILURE_TTL_HOURS = 6.0
+
     def __init__(self, raw_dir: Path, *, rate_per_second: float = 1.0, connect_timeout: float = 20,
                  read_timeout: float = 120, max_retries: int = 6, user_agent: str = "perthrain"):
         self.raw_dir = Path(raw_dir)
@@ -103,7 +107,12 @@ class Fetcher:
         if meta_path.exists() and not refresh:
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
             cached_ok = meta.get("status") == 200 and body_path.exists()
-            if cached_ok or (not retry_failed and meta.get("status") == 400):
+            fresh_failure = False
+            if meta.get("status") == 400 and meta.get("retrieved_at_utc"):
+                age_h = (datetime.now(timezone.utc) - datetime.fromisoformat(
+                    meta["retrieved_at_utc"].replace("Z", "+00:00"))).total_seconds() / 3600
+                fresh_failure = age_h < self.FAILURE_TTL_HOURS
+            if cached_ok or (not retry_failed and fresh_failure):
                 self.stats["cache_hits"] += 1
                 body = json.loads(body_path.read_text(encoding="utf-8")) if body_path.exists() else None
                 return FetchResult(url, params, meta.get("status"), body, body_path, True,

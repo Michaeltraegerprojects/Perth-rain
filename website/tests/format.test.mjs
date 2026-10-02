@@ -123,3 +123,10 @@ test("outlook lines say whether they are calibrated or raw guidance", async () =
   assert.equal(sourceLabel({ calibrated: true }), "Our calibrated forecast");
   assert.equal(sourceLabel({ calibrated: false }), "Raw model guidance");
 });
+
+test("availability is labelled observed only with evidence, otherwise as the 6-hour estimate", async () => {
+  const { availabilityText } = await import("../assets/challenge.js");
+  assert.equal(availabilityText({ availability_basis: "observed" }), "Observed");
+  assert.equal(availabilityText({ availability_basis: "estimated (initialisation + 6 h)" }), "Estimated (+6 h rule)");
+  assert.equal(availabilityText(null), "—");
+});

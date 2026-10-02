@@ -13,11 +13,14 @@ from challenge import scoring
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "reports" / "challenge"
 
+HIST_BASIS = ("estimated (initialisation + 6 h): the archive does not record when each historical run was "
+              "published; eligibility used the champion's 6-hour rule")
 MULTIPLE_COMPARISONS = ("Every paired comparison in a report (all gauges, leads and competitors) is one family. "
                         "Bootstrap p-values are Holm-adjusted across that whole family before any verdict, so one "
                         "isolated significant result among many is not treated as a win.")
-VERDICT_RULE = (f"A verdict needs at least {scoring.MIN_DAYS} common days and {scoring.MIN_WET_DAYS} observed wet days "
-                f"(>= 0.2 mm) and a Holm-adjusted p < {scoring.ALPHA}; otherwise 'insufficient evidence' or "
+_R = scoring.load_rules()
+VERDICT_RULE = (f"A verdict needs at least {_R['min_days']} common days and {_R['min_wet_days']} observed wet days "
+                f"(>= 0.2 mm) and a Holm-adjusted p < {_R['alpha']}; otherwise 'insufficient evidence' or "
                 "'inconclusive'. Wins are never awarded for missing forecasts.")
 
 
@@ -53,6 +56,15 @@ def build(tab: pd.DataFrame, track: str, key_cols=("window_start_utc",)) -> dict
             paired["gauge_id"], paired["lead"] = gid, lead
             all_paired.append(paired)
         dates = pd.to_datetime(common.window_end_utc, utc=True) if len(common) else pd.Series(dtype="datetime64[ns, UTC]")
+        timing = []
+        for k in cols:
+            key = "champion" if k.startswith("champion") else k
+            col = f"age_{key}_h"
+            if col in common and common[col].notna().any() and key not in [t["key"] for t in timing]:
+                a = common[col].dropna()
+                timing.append({"key": key, "competitor": "Our forecast" if key == "champion" else scoring.LABELS.get(k, k),
+                               "median_age_h": round(float(a.median()), 1), "min_age_h": round(float(a.min()), 1),
+                               "max_age_h": round(float(a.max()), 1), "availability_basis": HIST_BASIS})
         groups.append({
             "gauge_id": gid, "gauge_name": g.gauge_name.iloc[0], "lead": lead, "distances": _distances(gid),
             "champion_model": g.champion_model.iloc[0] if "champion_model" in g else None,
@@ -61,7 +73,7 @@ def build(tab: pd.DataFrame, track: str, key_cols=("window_start_utc",)) -> dict
             "first_date": str(dates.min().date()) if len(dates) else None,
             "last_date": str(dates.max().date()) if len(dates) else None,
             "coverage": _records(cov), "amounts": _records(amounts), "probabilities": _records(probs),
-            "reliability": _records(rel), "interval": scoring.interval_coverage(common)})
+            "reliability": _records(rel), "interval": scoring.interval_coverage(common), "timing": timing})
     paired = scoring.holm(pd.concat(all_paired, ignore_index=True)) if all_paired else pd.DataFrame()
     for grp in groups:
         p = paired[(paired.gauge_id == grp["gauge_id"]) & (paired.lead == grp["lead"])] if len(paired) else paired

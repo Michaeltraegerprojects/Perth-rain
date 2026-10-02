@@ -2,14 +2,23 @@
 gauge observations without touching the ledger.
 
 Ledger: data/challenge/ledger.jsonl (one JSON object per line). Each record carries `prev_hash` and `record_hash`
-(SHA-256 of the record without `record_hash`), so any edit or deletion of an earlier line is detected. The file is
-only ever opened in append mode.
+(SHA-256 of the record without `record_hash`), so editing or deleting a record inside the chain is detected. The
+file is only ever opened in append mode.
+
+A hash chain alone cannot detect deletion of the FINAL records (the remaining prefix is still a valid chain). After
+every append the record count and head hash are written to a separate append-only checkpoint file
+(`ledger.jsonl.checkpoints`); reading fails if the ledger is shorter than, or diverges from, its last checkpoint. The
+challenge export also publishes the head hash, so a copy exists outside this machine (deleting records and
+checkpoints together locally would otherwise go unnoticed). Only one writer at a time: appends take an exclusive
+lock file (`ledger.jsonl.lock`); a second writer is refused rather than allowed to fork the chain.
 """
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import json
-from datetime import date
+import os
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -44,31 +53,126 @@ def _hash(rec: dict) -> str:
     return hashlib.sha256(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()
 
 
+def checkpoint_path(path: Path) -> Path:
+    return path.with_name(path.name + ".checkpoints")
+
+
+def lock_path(path: Path) -> Path:
+    return path.with_name(path.name + ".lock")
+
+
+def _read_checkpoints(path: Path) -> list[dict]:
+    cp = checkpoint_path(path)
+    if not cp.exists():
+        return []
+    out = []
+    for i, line in enumerate(cp.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            c = json.loads(line)
+            c = {"count": int(c["count"]), "head": str(c["head"]), "utc": c.get("utc")}
+        except (ValueError, KeyError, TypeError) as exc:
+            raise LedgerError(f"checkpoint line {i} is unreadable ({exc}); the checkpoint file was damaged") from exc
+        if out and c["count"] < out[-1]["count"]:
+            raise LedgerError(f"checkpoint line {i} goes backwards ({c['count']} < {out[-1]['count']})")
+        out.append(c)
+    return out
+
+
 def read_ledger(path: Path = LEDGER) -> list[dict]:
     if not path.exists():
+        if _read_checkpoints(path):
+            raise LedgerError(f"{path.name} is missing but its checkpoints exist: the ledger was deleted")
         return []
     recs, prev = [], "genesis"
     for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
         if not line.strip():
             continue
-        r = json.loads(line)
+        try:
+            r = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise LedgerError(f"ledger line {i} is not valid JSON (a write was interrupted?). Nothing has been "
+                              f"changed; inspect the end of {path.name} before continuing") from exc
         if r.get("prev_hash") != prev or _hash(r) != r.get("record_hash"):
             raise LedgerError(f"ledger line {i} fails the hash chain: the file was edited or truncated")
         prev = r["record_hash"]
         recs.append(r)
+    cps = _read_checkpoints(path)
+    if cps:
+        last = cps[-1]
+        if len(recs) < last["count"]:
+            raise LedgerError(f"ledger truncated: the last checkpoint records {last['count']} records, "
+                              f"the file holds {len(recs)}")
+        if last["count"] and recs[last["count"] - 1]["record_hash"] != last["head"]:
+            raise LedgerError(f"ledger diverges from its checkpoint at record {last['count']}")
     return recs
 
 
-def append(records: list[dict], path: Path = LEDGER) -> int:
-    existing = read_ledger(path)                   # verifies the chain before writing anything
-    prev = existing[-1]["record_hash"] if existing else "genesis"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "a", encoding="utf-8") as fh:  # append only; never rewritten
+def head(path: Path = LEDGER) -> dict:
+    """Record count and head hash of a verified ledger (published with the challenge export)."""
+    recs = read_ledger(path)
+    return {"count": len(recs), "head_hash": recs[-1]["record_hash"] if recs else None}
+
+
+def ensure_checkpoint(path: Path = LEDGER) -> dict:
+    """Write a checkpoint for an existing ledger that has none (verifies the chain first; changes no record)."""
+    with writer_lock(path):
+        recs = read_ledger(path)
+        cps = _read_checkpoints(path)
+        h = {"count": len(recs), "head": recs[-1]["record_hash"] if recs else "genesis",
+             "utc": f"{datetime.now(timezone.utc):%Y-%m-%dT%H:%M:%SZ}"}
+        if not cps or cps[-1]["count"] != h["count"]:
+            with open(checkpoint_path(path), "a", encoding="utf-8") as fh:
+                fh.write(json.dumps(h) + "\n")
+                fh.flush()
+                os.fsync(fh.fileno())
+        return h
+
+
+@contextlib.contextmanager
+def writer_lock(path: Path = LEDGER):
+    """Exclusive single-writer lock (lock file created atomically). Refuses, never waits or steals."""
+    lp = lock_path(path)
+    lp.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        fd = os.open(lp, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError:
+        info = lp.read_text(encoding="utf-8", errors="replace") if lp.exists() else ""
+        raise LedgerError(f"ledger is locked by another writer ({lp.name}: {info.strip()}). If no other collection "
+                          "is running, the lock is stale: remove it by hand") from None
+    try:
+        os.write(fd, f"pid {os.getpid()} since {datetime.now(timezone.utc):%Y-%m-%dT%H:%M:%SZ}".encode())
+        os.close(fd)
+        yield
+    finally:
+        with contextlib.suppress(FileNotFoundError):
+            os.remove(lp)
+
+
+def append(records: list[dict], path: Path = LEDGER, *, lock: bool = True) -> int:
+    """Append records as one buffered write (flushed and synced), then a checkpoint. ``lock=False`` only for callers
+    that already hold :func:`writer_lock`."""
+    ctx = writer_lock(path) if lock else contextlib.nullcontext()
+    with ctx:
+        existing = read_ledger(path)                   # verifies chain and checkpoint before writing anything
+        prev = existing[-1]["record_hash"] if existing else "genesis"
+        lines = []
         for r in records:
             r = dict(r, prev_hash=prev)
             r["record_hash"] = _hash(r)
-            fh.write(json.dumps(r, sort_keys=True, default=str) + "\n")
+            lines.append(json.dumps(r, sort_keys=True, default=str) + "\n")
             prev = r["record_hash"]
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "a", encoding="utf-8") as fh:  # append only; never rewritten
+            fh.write("".join(lines))
+            fh.flush()
+            os.fsync(fh.fileno())
+        with open(checkpoint_path(path), "a", encoding="utf-8") as fh:
+            fh.write(json.dumps({"count": len(existing) + len(records), "head": prev,
+                                 "utc": f"{datetime.now(timezone.utc):%Y-%m-%dT%H:%M:%SZ}"}) + "\n")
+            fh.flush()
+            os.fsync(fh.fileno())
     return len(records)
 
 
@@ -101,6 +205,13 @@ def _base(issue, cfg, st, w, lead):
 
 
 def collect(now: pd.Timestamp | None = None, force: bool = False) -> int:
+    """Collect one issue. The writer lock is held for the whole collection, so two collections cannot both decide
+    a slot is still open and then both append."""
+    with writer_lock(LEDGER):
+        return _collect(now, force)
+
+
+def _collect(now: pd.Timestamp | None = None, force: bool = False) -> int:
     s = settings()["schedule"]
     freeze = champion.verify()
     now = (now or pd.Timestamp.now(tz="UTC")).floor("s")
@@ -142,6 +253,7 @@ def collect(now: pd.Timestamp | None = None, force: bool = False) -> int:
                                 "model_used": p.feature_set_used if ok else None,
                                 "model_run_id": loc["run_id"], "artifact_sha256": p.artifact_sha256 if p is not None else None,
                                 "inputs": p.source_detail if ok else None,
+                                "availability_basis": p.get("availability_basis") if ok else None,
                                 "retrieved_at_utc": p.retrieved_at_utc if ok else None})
                 # existing raw benchmarks: the champion's own live inputs (same as-of gate)
                 for col in ["sr_ecmwf_ifs", "pr_ecmwf_ifs025", "pr_jma_gsm", "pr_ncep_gfs_global"]:
@@ -154,10 +266,11 @@ def collect(now: pd.Timestamp | None = None, force: bool = False) -> int:
                                                                           (f.timing_reason or "incomplete or not eligible")),
                                     "total_mm": float(f.forecast_precip_mm) if usable else None,
                                     "latest_run_utc": str(f.latest_issue_utc) if f is not None else None,
+                                    "availability_basis": (f.get("availability_basis") if f is not None else None),
                                     "retrieved_at_utc": f.retrieved_at_utc if f is not None else None})
                 records += _challenger_records(base, st, w, n, now, metas)
         print(f"{cfg.location_name}: {sum(1 for x in records if x['location'] == cfg.location_name)} records")
-    return append(records) if records else 0
+    return append(records, LEDGER, lock=False) if records else 0
 
 
 def _challenger_records(base, st, w, n, now, metas) -> list[dict]:

@@ -209,18 +209,22 @@ def _with_loc(bundle, name, data):
 
 def test_artifact_for_another_location_is_refused(tmp_path, clean_bundles):
     """Reviewer: Clarkson-labelled artifacts placed in data/perth/models loaded for Perth."""
+    from conftest import install_models
     cfg = _cfg_here(tmp_path)
-    _put(cfg, _with_loc(clean_bundles["day1"], "Clarkson", "clarkson"))
+    bundles = {k: _with_loc(b, "Perth", "perth") for k, b in clean_bundles.items()}
+    bundles["day1"] = _with_loc(clean_bundles["day1"], "Clarkson", "clarkson")
+    install_models(cfg.data_dir / "models", bundles)
     with pytest.raises(G.EnsoGuardError, match="not 'Perth'"):
         P.load_bundles(cfg)
 
 
 def test_project_under_a_folder_named_archive_loads_through_load_bundles(tmp_path, clean_bundles):
     """Reviewer: the 'parent named archive' allowance was only tested on assert_servable_path."""
+    from conftest import install_models
     root = tmp_path / "archive" / "proj"
     cfg = _cfg_here(root)
-    _put(cfg, _with_loc(clean_bundles["day1"], "Perth", "perth"))
-    assert set(P.load_bundles(cfg)) == {"day1"}
+    install_models(cfg.data_dir / "models", {k: _with_loc(b, "Perth", "perth") for k, b in clean_bundles.items()})
+    assert set(P.load_bundles(cfg)) == {"day1", "day2", "day3"}
 
 
 @pytest.mark.parametrize("field", list(G.REQUIRED_META))

@@ -29,6 +29,29 @@ log = logging.getLogger("perthrain.predict")
 
 LIVE_PR_MODELS = ["jma_gsm", "ncep_gfs_global", "ecmwf_ifs025"]
 LIVE_SR_MODELS = ["ecmwf_ifs"]
+# Open-Meteo metadata domains behind each live Previous Runs model (GFS: both domains; the earlier run counts)
+MODEL_META_IDS = {"jma_gsm": ["jma_gsm"], "ecmwf_ifs025": ["ecmwf_ifs025"],
+                  "ncep_gfs_global": ["ncep_gfs013", "ncep_gfs025"]}
+ESTIMATED = "estimated (initialisation + 6 h)"
+META_URL = "https://api.open-meteo.com/data/{}/static/meta.json"
+
+
+def fetch_model_meta(fetcher, refresh: bool = True) -> dict:
+    """Latest run each live Previous Runs model has actually published, from Open-Meteo's model metadata. A model
+    whose metadata cannot be read is left out (its inputs then fall back to the labelled 6-hour estimate)."""
+    out = {}
+    for model, ids in MODEL_META_IDS.items():
+        lasts, checked = [], None
+        for mid in ids:
+            res = fetcher.get_json(META_URL.format(mid), {}, "open_meteo/live/meta", refresh=refresh,
+                                   label=f"LIVE meta {mid}")
+            t = (res.body or {}).get("last_run_initialisation_time") if res.ok else None
+            if t:
+                lasts.append(pd.Timestamp(t, unit="s", tz="UTC"))
+                checked = res.retrieved_at_utc
+        if lasts and len(lasts) == len(ids):
+            out[model] = {"last_run_init_utc": min(lasts), "checked_utc": checked}
+    return out
 LEADS = {"day1": 1, "day2": 2, "day3": 3}
 ALL_MODEL_COLS = ["sr_ecmwf_ifs", "pr_ecmwf_ifs025", "pr_jma_gsm", "pr_ncep_gfs_global"]
 
@@ -94,7 +117,7 @@ def _fetch_live(cfg, fetcher, lat: float, lon: float, windows: pd.DataFrame, now
 
 
 def live_feature_table(cfg, sr: pd.DataFrame, pr: pd.DataFrame, windows: pd.DataFrame,
-                       now: pd.Timestamp) -> pd.DataFrame:
+                       now: pd.Timestamp, model_meta: dict | None = None) -> pd.DataFrame:
     """Aggregate live hourly forecasts to the windows with the training-time rules.
 
     An input is usable only if every model run it depends on was issued and (by the documented latency) published
@@ -120,6 +143,19 @@ def live_feature_table(cfg, sr: pd.DataFrame, pr: pd.DataFrame, windows: pd.Data
     fw["timing_ok"] = (latest_issue + pd.Timedelta(hours=cfg.publication_latency_hours)) <= now
     fw["timing_reason"] = np.where(fw.timing_ok, "",
                                    "required run not issued/published before the prediction time")
+    # Availability evidence. Single runs were fetched by explicit run= and answered: observed. Previous Runs inputs
+    # are checked against the latest run the model's own metadata lists as published; without metadata they rely on
+    # the fixed 6-hour estimate, and say so.
+    fw["availability_basis"] = np.where(fw.source_api == "single_runs", "observed", ESTIMATED)
+    for model, m in (model_meta or {}).items():
+        sel = (fw.source_api == "previous_runs") & (fw.model == model)
+        if not sel.any():
+            continue
+        fw.loc[sel, "availability_basis"] = "observed"
+        late = sel & (fw.latest_issue_utc > m["last_run_init_utc"])
+        fw.loc[late, "timing_ok"] = False
+        fw.loc[late, "timing_reason"] = (f"named run not yet published (model's latest published run "
+                                         f"{m['last_run_init_utc']:%Y-%m-%d %HZ}, checked {m.get('checked_utc')})")
     fw["usable"] = ok & fw.timing_ok
     return fw
 
@@ -256,6 +292,9 @@ def predict_windows(bundles: dict, fw: pd.DataFrame, windows: pd.DataFrame, tz: 
             for c in fit["cols"]:
                 rec[f"input_{c}_mm"] = float(vals[c])   # NWP input total (uncalibrated), provenance only
             rec["source_detail"] = _issue_text(usable[usable.col.isin(fit["cols"])])
+            used = usable[usable.col.isin(fit["cols"])]
+            rec["availability_basis"] = ("observed" if "availability_basis" in used and
+                                         (used.availability_basis == "observed").all() else ESTIMATED)
             rec["retrieved_at_utc"] = str(usable.retrieved_at_utc.max())
             rows.append(rec)
     return pd.DataFrame(rows)
@@ -267,17 +306,20 @@ def load_bundles(cfg, experimental: bool = False) -> dict:
     d = Path(cfg.data_dir) / ("models_enso_experimental" if experimental else "models")
     quarantine_root = provenance.archive_root(cfg)
     bad_hashes = enso_guard.quarantined_hashes(quarantine_root)
+    listed = _manifest_artifacts(d, experimental)
     out = {}
     for lead in LEADS:
         p = d / f"hurdle_{lead}.joblib"
-        if not p.exists() and not p.is_symlink():
-            continue              # the lead is reported explicitly as 'no_model_artifact' by predict_windows
+        if lead not in listed:
+            continue              # only possible for experimental sets; reported as 'no_model_artifact' downstream
         if not experimental:
             rp = enso_guard.assert_servable_path(p, d, quarantine_root)
         else:
             rp = p
         data = rp.read_bytes()                # read ONCE: the bytes that are hashed are the bytes that are loaded
         digest = hashlib.sha256(data).hexdigest()
+        if digest != listed[lead]["sha256"]:
+            raise enso_guard.EnsoGuardError(f"{p}: bytes do not match manifest.json (the set was modified or mixed)")
         if not experimental and digest in bad_hashes:
             raise enso_guard.EnsoGuardError(f"{p}: byte-identical to a quarantined file (copy or hard link)")
         try:
@@ -303,7 +345,37 @@ def load_bundles(cfg, experimental: bool = False) -> dict:
     ids = {b["meta"]["run_id"] for b in out.values()}
     if len(ids) > 1:
         raise enso_guard.EnsoGuardError(f"{d}: artifacts from different runs {sorted(ids)}")
+    man_id = listed.get("_run_id")
+    if out and man_id and ids != {man_id}:
+        raise enso_guard.EnsoGuardError(f"{d}: artifacts are from run {sorted(ids)}, manifest.json from {man_id}")
     return out
+
+
+def _manifest_artifacts(d: Path, experimental: bool) -> dict:
+    """The model set as declared by its manifest.json. A directory with model files but no readable manifest, with
+    files missing from or not listed in the manifest, or (production) without all leads, is refused: an interrupted
+    promotion or a hand edit must never be served as a partial set."""
+    present = sorted(p.name for p in d.glob("hurdle_*.joblib")) if d.exists() else []
+    man_p = d / "manifest.json"
+    if not present and not man_p.exists():
+        return {}
+    if not man_p.exists():
+        raise enso_guard.EnsoGuardError(f"{d}: model files without manifest.json; refusing an incomplete or "
+                                        "unverifiable model set")
+    try:
+        man = json.loads(man_p.read_text(encoding="utf-8"))
+        arts = {a["lead"]: {"file": a["file"], "sha256": a["sha256"]} for a in man["artifacts"]}
+    except (ValueError, KeyError, TypeError) as exc:
+        raise enso_guard.EnsoGuardError(f"{man_p}: unreadable manifest ({exc})") from exc
+    files = {a["file"] for a in arts.values()}
+    missing, unlisted = sorted(files - set(present)), sorted(set(present) - files)
+    if missing or unlisted:
+        raise enso_guard.EnsoGuardError(f"{d}: model files do not match manifest.json (missing: {missing}, "
+                                        f"not listed: {unlisted})")
+    if not experimental and set(arts) != set(LEADS):
+        raise enso_guard.EnsoGuardError(f"{d}: manifest.json covers {sorted(arts)}; all of {list(LEADS)} are required")
+    arts["_run_id"] = (man.get("meta") or {}).get("run_id")
+    return arts
 
 
 def _fmt_pct(x: float) -> str:
@@ -344,7 +416,11 @@ def compute_predictions(cfg, horizon_days: int = 4, now: pd.Timestamp | None = N
     windows = future_windows(now, cfg.timezone, horizon_days)
     fetcher = make_fetcher(cfg)
     sr, pr, problems = _fetch_live(cfg, fetcher, st["latitude"], st["longitude"], windows, now, refresh_live)
-    fw = live_feature_table(cfg, sr, pr, windows, now)
+    model_meta = fetch_model_meta(fetcher, refresh_live)
+    for m in MODEL_META_IDS:
+        if m not in model_meta:
+            problems.append(f"model metadata for {m} unavailable: its availability is the 6-hour estimate")
+    fw = live_feature_table(cfg, sr, pr, windows, now, model_meta)
     clim, climate_info = None, {"status_only": ENSO_UNVERIFIED_NOTE}
     if experimental:
         indices = climate.load_indices(fetcher, cfg.raw_dir)

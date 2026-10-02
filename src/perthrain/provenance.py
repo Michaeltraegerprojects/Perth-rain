@@ -91,6 +91,18 @@ def make_run_meta(cfg, enso_status: str, kind: str = "calibration", training_wid
             "versions": dependency_versions()}
 
 
+def archive_dir(src_dir: Path, archive_root: Path, label: str) -> Path:
+    """Move a whole directory to archive_root/<label>[_n]/ (never overwriting) and return the new path."""
+    dest = Path(archive_root) / label
+    n = 1
+    while dest.exists():
+        n += 1
+        dest = Path(archive_root) / f"{label}_{n}"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(str(src_dir), str(dest))
+    return dest
+
+
 def move_aside(target_dir: Path, archive_root: Path, label: str) -> Path | None:
     """If ``target_dir`` holds files, MOVE them to archive_root/<label>/ (never overwrite) and return that path."""
     target_dir = Path(target_dir)

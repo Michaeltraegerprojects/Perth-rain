@@ -109,6 +109,32 @@ function pairedBlock(g) {
     crps.length ? pairedTable(crps, "CRPS difference (mm)") : null);
 }
 
+/** Availability evidence for one competitor: observed (explicit run / model metadata) or the 6-hour estimate. */
+export function availabilityText(t) {
+  if (!t || !t.availability_basis) return "—";
+  return t.availability_basis === "observed" ? "Observed" : "Estimated (+6 h rule)";
+}
+
+export function availabilityClass(t) {
+  return t && t.availability_basis === "observed" ? "sig" : "ns";
+}
+
+function timingTable(g) {
+  if (!g.timing || !g.timing.length) return null;
+  return el("div", {},
+    el("h3", { text: "Information age at the cutoff" }),
+    el("p", { class: "small muted", text: "Hours from the latest model run each forecast used to the start of the rain-day "
+      + "window. Competitors share the lead group and cutoff, but not the age of their information. Availability of "
+      + "archived runs is estimated (run start + 6 h): the archive does not record when each run was published." }),
+    el("div", { class: "scroll" }, el("table", { class: "fit" },
+      el("thead", {}, el("tr", {}, ...["Forecast", "Median age", "Range", "Availability"].map((h, i) =>
+        el("th", { class: i === 1 || i === 2 ? "n" : null, text: h })))),
+      el("tbody", {}, g.timing.map((t) => el("tr", {},
+        el("td", { text: t.competitor }), el("td", { class: "n", text: `${t.median_age_h} h` }),
+        el("td", { class: "n", text: `${t.min_age_h}–${t.max_age_h} h` }),
+        el("td", { class: "ns", text: "Estimated (+6 h rule)" })))))));
+}
+
 function coverageLine(g) {
   return el("p", { class: "small muted", text: "Coverage of eligible windows: " +
     g.coverage.map((c) => `${c.competitor} ${c.with_forecast}/${c.eligible_windows}`).join(" · ") +
@@ -127,7 +153,7 @@ function trackView(rep, emptyText) {
         el("span", {}, "Gauge distance ", el("b", { text: g.distances.map((d) => `${d.location} ${d.distance_km} km`).join(", ") })),
         el("span", {}, "Our model ", el("b", { text: `${g.champion_model || "—"} (${g.champion_run_id || "—"})` }))),
       g.common_days < 60 ? el("p", { class: "banner stale", text: "Insufficient evidence: fewer than 60 common days. Rankings here are descriptive only." }) : null,
-      coverageLine(g),
+      coverageLine(g), timingTable(g),
       el("h3", { text: "Rain amount leaderboard (mm per rain day)" }), amountTable(g),
       el("h3", { text: "Rain probability scores" }), probTable(g), crpsLine(g), reliabilityBlock(g),
       el("h3", { text: "Paired comparisons" }), pairedBlock(g))));
@@ -147,11 +173,14 @@ function liveView(live) {
         el("h3", { text: `${dayLabel(r.label_date)} · ${LEAD[r.lead]}` }),
         el("p", { class: "small muted", text: r.observed_mm === null || r.observed_mm === undefined ? "Gauge reading: not yet available" : `Gauge reading: ${mm(r.observed_mm)} mm` }),
         el("div", { class: "scroll" }, el("table", { class: "fit" },
-          el("thead", {}, el("tr", {}, ...["Forecast", "Amount (mm)", "Chance ≥ 0.2 mm", "Status"].map((h, i) => el("th", { class: i === 1 || i === 2 ? "n" : null, text: h })))),
+          el("thead", {}, el("tr", {}, ...["Forecast", "Amount (mm)", "Chance ≥ 0.2 mm", "Model run (UTC)", "Information age", "Availability", "Status"].map((h, i) => el("th", { class: i === 1 || i === 2 || i === 4 ? "n" : null, text: h })))),
           el("tbody", {}, r.competitors.map((c) => el("tr", { class: c.key === "champion" ? "cal" : "raw" },
             el("td", { text: c.competitor + (c.key === "champion" ? " (expected total)" : "") }),
             el("td", { class: "n", text: c.status === "ok" ? mm(c.amount_mm) : "—" }),
             el("td", { class: "n", text: c.key === "champion" && c.status === "ok" ? pct(c.probabilities?.["ge_0.2"]) : c.status === "ok" ? "n/a (amount only)" : "—" }),
+            el("td", { text: c.timing?.run_init_utc ? c.timing.run_init_utc.replace("T", " ") : "—" }),
+            el("td", { class: "n", text: c.timing?.info_age_h != null ? `${c.timing.info_age_h} h` : "—" }),
+            el("td", { class: availabilityClass(c.timing), text: availabilityText(c.timing) }),
             el("td", { class: c.status === "ok" ? "" : "ns", text: c.status === "ok" ? "issued" : `missing: ${c.missing_reason}` })))))))))));
 }
 

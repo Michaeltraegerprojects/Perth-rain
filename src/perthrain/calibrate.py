@@ -668,15 +668,26 @@ def run_calibration(cfg, wide_path: Path | None = None, use_climate: bool = Fals
     except BaseException:
         shutil.rmtree(stage, ignore_errors=True)
         raise
-    # ---- swap: old artifacts are MOVED aside (never overwritten), then the validated ones move in
-    prev = provenance.move_aside(final_dir, provenance.archive_root(cfg) / "superseded_models" / Path(cfg.data_dir).name,
-                                 f"{final_dir.name}_before_{meta['run_id']}")
-    if prev:
-        log.info("%s: previous artifacts moved to %s", cfg.location_name, prev)
-    final_dir.mkdir(parents=True, exist_ok=True)
-    for f in sorted(stage.iterdir()):
-        os.replace(f, final_dir / f.name)
-    stage.rmdir()
+    # ---- promotion: two whole-directory renames (each atomic on one volume), so the live directory is always a
+    # complete set: either the previous one or the new one, never a mixture. Any failure restores the previous set.
+    backup = final_dir.with_name(f".{final_dir.name}_previous_{meta['run_id']}")
+    had_live = final_dir.exists()
+    if had_live:
+        os.replace(final_dir, backup)                 # 1: withdraw the previous set as a whole
+    try:
+        os.replace(stage, final_dir)                  # 2: promote the validated set as a whole
+    except BaseException:
+        if had_live and not final_dir.exists():
+            os.replace(backup, final_dir)             # roll back to the previous set
+        shutil.rmtree(stage, ignore_errors=True)
+        raise
+    if had_live:                                      # the previous set is moved to the archive, never overwritten
+        try:
+            prev = provenance.archive_dir(backup, provenance.archive_root(cfg) / "superseded_models" /
+                                          Path(cfg.data_dir).name, f"{final_dir.name}_before_{meta['run_id']}")
+            log.info("%s: previous artifacts moved to %s", cfg.location_name, prev)
+        except Exception as exc:                      # promotion succeeded; keep the previous set where it is
+            log.warning("%s: previous model set kept at %s (archiving failed: %s)", cfg.location_name, backup, exc)
     from .predict import load_bundles, routing_table
     suffix = "_enso_experimental" if use_climate else ""
     rt = routing_table(load_bundles(cfg, experimental=use_climate))     # reloads + re-validates the final files

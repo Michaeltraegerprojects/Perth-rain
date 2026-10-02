@@ -51,3 +51,24 @@ def clean_bundles(clean_fits):
     return {"day1": make_bundle({"ecmwf_ifs_sr": clean_fits["ecmwf_ifs_sr"]}, "day1"),
             "day2": make_bundle({n: clean_fits[n] for n in order23}, "day2", order23),
             "day3": make_bundle({n: clean_fits[n] for n in order23}, "day3", order23)}
+
+
+def write_manifest(models_dir, run_id="noenso-test-00000000"):
+    """manifest.json listing the hurdle files currently in ``models_dir`` with their SHA-256 (as calibration does)."""
+    import hashlib
+    import json
+    from pathlib import Path
+    arts = [{"lead": p.stem.split("_")[1], "file": p.name, "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
+            for p in sorted(Path(models_dir).glob("hurdle_*.joblib"))]
+    (Path(models_dir) / "manifest.json").write_text(json.dumps({"meta": {"run_id": run_id}, "artifacts": arts}),
+                                                    encoding="utf-8")
+
+
+def install_models(models_dir, bundles: dict):
+    """Write a complete model set (one artifact per lead) plus its manifest."""
+    import joblib
+    from pathlib import Path
+    Path(models_dir).mkdir(parents=True, exist_ok=True)
+    for lead, b in bundles.items():
+        joblib.dump(b, Path(models_dir) / f"hurdle_{lead}.joblib")
+    write_manifest(models_dir)

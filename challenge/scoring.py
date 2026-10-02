@@ -12,16 +12,28 @@ Fairness rules applied here:
 """
 from __future__ import annotations
 
+import tomllib
+from math import erf, sqrt
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
-from math import erf, sqrt
-
 THRESHOLDS = (0.2, 1.0, 5.0, 10.0)
 WET = 0.2
-MIN_DAYS = 60
-MIN_WET_DAYS = 15
-ALPHA = 0.05
+SETTINGS = Path(__file__).resolve().parent / "settings.toml"
+
+
+def load_rules(path: Path | None = None) -> dict:
+    """The verdict rules, read and validated from settings.toml [verdicts] (the single source of truth)."""
+    raw = tomllib.loads(Path(path or SETTINGS).read_text(encoding="utf-8")).get("verdicts", {})
+    rules = {"min_days": raw.get("min_days"), "min_wet_days": raw.get("min_wet_days"), "alpha": raw.get("alpha")}
+    for k in ("min_days", "min_wet_days"):
+        if not isinstance(rules[k], int) or isinstance(rules[k], bool) or rules[k] < 1:
+            raise ValueError(f"[verdicts] {k} must be a positive integer, got {rules[k]!r}")
+    if not isinstance(rules["alpha"], (int, float)) or not 0 < rules["alpha"] < 1:
+        raise ValueError(f"[verdicts] alpha must be between 0 and 1, got {rules['alpha']!r}")
+    return rules
 LABELS = {
     "champion_median": "Our forecast (median)", "champion_expected": "Our forecast (expected total)",
     "sr_ecmwf_ifs": "ECMWF IFS (raw)", "pr_ecmwf_ifs025": "ECMWF IFS 0.25° (raw)", "pr_jma_gsm": "JMA GSM (raw)",
@@ -47,8 +59,14 @@ def block_bootstrap(diff: np.ndarray, block: int = 7, B: int = 2000, seed: int =
     idx = ((starts[:, :, None] + np.arange(block)[None, None, :]) % n).reshape(B, nb * block)[:, :n]
     means = diff[idx].mean(axis=1)
     se = float(means.std(ddof=1))
-    z = abs(diff.mean()) / se if se > 0 else np.inf
-    p = 2 * (1 - 0.5 * (1 + erf(z / sqrt(2)))) if np.isfinite(z) else 0.0
+    mean = float(diff.mean())
+    if se > 0:
+        z = abs(mean) / se
+        p = 2 * (1 - 0.5 * (1 + erf(z / sqrt(2))))
+    elif mean == 0.0:
+        p = 1.0                 # identical errors on every day: a tie, never a significant difference
+    else:
+        p = 0.0                 # the same non-zero difference on every day
     lo, hi = np.percentile(means, [2.5, 97.5])
     return {"mean_diff": float(diff.mean()), "ci95_lo": float(lo), "ci95_hi": float(hi), "se": se, "p": float(p)}
 
@@ -166,14 +184,16 @@ def paired(common: pd.DataFrame, cols: dict, keys=("window_start_utc",)) -> pd.D
         r = block_bootstrap(d)
         p = r["p"]
         rows.append({"first": LABELS.get(a, a), "second": LABELS.get(b, b), "first_key": a, "second_key": b,
+                     "mean_diff_exact": float(r["mean_diff"]),     # unrounded: verdicts use this, never the display value
                      "score": "CRPS" if a == "champion_distribution" else "absolute error",
                      "n_days": len(y), "n_wet_days": int((y >= WET).sum()), "mean_abs_error_diff": _r(r["mean_diff"], 4),
                      "ci95": [_r(r["ci95_lo"], 4), _r(r["ci95_hi"], 4)], "p_bootstrap": float(p)})
     return pd.DataFrame(rows)
 
 
-def holm(df: pd.DataFrame) -> pd.DataFrame:
-    """Holm step-down adjustment across all rows; adds verdicts."""
+def holm(df: pd.DataFrame, rules: dict | None = None) -> pd.DataFrame:
+    """Holm step-down adjustment across all rows; adds verdicts using the rules from settings.toml."""
+    rules = rules or load_rules()
     if df.empty:
         return df
     df = df.copy()
@@ -187,10 +207,11 @@ def holm(df: pd.DataFrame) -> pd.DataFrame:
     df["p_holm"] = adj
 
     def verdict(r):
-        if r.n_days < MIN_DAYS or r.n_wet_days < MIN_WET_DAYS:
+        if r.n_days < rules["min_days"] or r.n_wet_days < rules["min_wet_days"]:
             return "insufficient evidence"
-        if r.p_holm < ALPHA:
-            return "first better" if r.mean_abs_error_diff < 0 else "second better"
+        d = r.mean_diff_exact if "mean_diff_exact" in r and pd.notna(r.mean_diff_exact) else r.mean_abs_error_diff
+        if r.p_holm < rules["alpha"] and d != 0:
+            return "first better" if d < 0 else "second better"
         return "inconclusive"
     df["verdict"] = df.apply(verdict, axis=1)
     return df

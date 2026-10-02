@@ -211,10 +211,10 @@ def _cfg(tmp_path):
 
 def test_loader_refuses_byte_identical_copy_of_a_quarantined_file(tmp_path, clean_bundles):
     import csv
+    from conftest import install_models
     cfg = _cfg(tmp_path)
-    (cfg.data_dir / "models").mkdir(parents=True)
+    install_models(cfg.data_dir / "models", clean_bundles)
     art = cfg.data_dir / "models" / "hurdle_day1.joblib"
-    joblib.dump(clean_bundles["day1"], art)
     q = tmp_path / "archive" / "INVALIDATED_test"
     q.mkdir(parents=True)
     from perthrain.provenance import sha256_file
@@ -227,29 +227,37 @@ def test_loader_refuses_byte_identical_copy_of_a_quarantined_file(tmp_path, clea
 
 
 def test_loader_rejects_corrupt_foreign_and_mislabelled_artifacts(tmp_path, clean_bundles):
+    from conftest import install_models, write_manifest
     cfg = _cfg(tmp_path)
     mdir = cfg.data_dir / "models"
-    mdir.mkdir(parents=True)
+    install_models(mdir, clean_bundles)
+    # each bad file is listed in a matching manifest, so the CONTENT checks (not the manifest check) must catch it
     (mdir / "hurdle_day1.joblib").write_bytes(b"\x80\x04 this is not a pickle")
+    write_manifest(mdir)
     with pytest.raises(G.EnsoGuardError, match="unreadable or corrupt"):
         load_bundles(cfg)
     joblib.dump(["not", "an", "artifact"], mdir / "hurdle_day1.joblib")
+    write_manifest(mdir)
     with pytest.raises(G.EnsoGuardError, match="not a perthrain artifact"):
         load_bundles(cfg)
     joblib.dump(clean_bundles["day3"], mdir / "hurdle_day1.joblib")         # day-3 artifact in the day-1 slot
+    write_manifest(mdir)
     with pytest.raises(G.EnsoGuardError, match="lead mismatch"):
         load_bundles(cfg)
     joblib.dump(clean_bundles["day1"], mdir / "hurdle_day1.joblib")
-    assert set(load_bundles(cfg)) == {"day1"}                               # clean artifact loads
+    write_manifest(mdir)
+    assert set(load_bundles(cfg)) == {"day1", "day2", "day3"}               # clean set loads
 
 
-def test_loader_rejects_a_quarantined_pre_audit_artifact_copied_back(tmp_path):
+def test_loader_rejects_a_quarantined_pre_audit_artifact_copied_back(tmp_path, clean_bundles):
     src = sorted(ROOT.glob("archive/INVALIDATED_*/model_artifacts/perth/hurdle_day3.joblib"))
     if not src:
         pytest.skip("quarantined artifact not present")
+    from conftest import install_models, write_manifest
     cfg = _cfg(tmp_path)          # separate project: its quarantine manifest does not list this file
-    (cfg.data_dir / "models").mkdir(parents=True)
+    install_models(cfg.data_dir / "models", clean_bundles)
     (cfg.data_dir / "models" / "hurdle_day3.joblib").write_bytes(src[0].read_bytes())
+    write_manifest(cfg.data_dir / "models")       # listed, so the CONTENT check must reject it
     with pytest.raises(G.EnsoGuardError, match="no 'meta' block|trained with climate"):
         load_bundles(cfg)         # rejected on CONTENT even without the hash list
 

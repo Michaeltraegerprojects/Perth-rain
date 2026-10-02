@@ -37,6 +37,44 @@ SOURCE_NOTES = {
 }
 
 
+import re
+
+_RUN = re.compile(r"(\w+): (?:run|runs up to) (\d{4}-\d{2}-\d{2} \d{2})Z \((explicit|inferred)\)")
+ESTIMATED = "estimated (initialisation + 6 h)"
+
+
+def competitor_timing(r: dict) -> dict:
+    """Model-run start, information age at issue, and whether availability was OBSERVED (the run answered an
+    explicit request, or the model's metadata reported it available) or only ESTIMATED from the fixed 6-hour rule."""
+    issued = pd.Timestamp(r["issued_at_utc"])
+    comp = r.get("competitor", "")
+    ev = r.get("availability_evidence") or ""
+    if comp == "champion":
+        runs = [(c, pd.Timestamp(t + ":00", tz="UTC"), kind) for c, t, kind in _RUN.findall(r.get("inputs") or "")]
+        if not runs:
+            return {"run_init_utc": None, "info_age_h": None, "availability_basis": None, "evidence": ""}
+        latest = max(t for _, t, _ in runs)
+        explicit = all(kind == "explicit" for _, _, kind in runs)
+        basis = r.get("availability_basis") or ("observed" if explicit else ESTIMATED)
+        ev = r.get("availability_evidence") or ("explicit runs requested" if explicit else
+                                                "Previous Runs inputs: run inferred from the offset rule")
+    else:
+        t = r.get("latest_run_utc") or r.get("named_run_utc")
+        if not t or str(t) in ("None", "NaT", "nan"):
+            return {"run_init_utc": None, "info_age_h": None, "availability_basis": None, "evidence": ev}
+        latest = pd.Timestamp(t)
+        latest = latest.tz_localize("UTC") if latest.tzinfo is None else latest.tz_convert("UTC")
+        if r.get("availability_basis"):
+            basis = r["availability_basis"]
+        elif "HTTP 200" in ev or "model metadata" in ev or comp.startswith("sr_"):
+            basis = "observed"
+        else:
+            basis = ESTIMATED
+    return {"run_init_utc": f"{latest:%Y-%m-%dT%H:%MZ}",
+            "info_age_h": round((issued - latest).total_seconds() / 3600, 1),
+            "availability_basis": basis, "evidence": ev}
+
+
 def _load(name):
     p = REP / f"{name}.json"
     return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
@@ -87,7 +125,8 @@ def live_view() -> dict:
                          "median_mm": getattr(r, "median_mm", None) if r.competitor == "champion" else None,
                          "probabilities": r.probabilities if r.competitor == "champion" else None,
                          "latest_run_utc": getattr(r, "latest_run_utc", None),
-                         "lead_hours": getattr(r, "lead_hours_to_window_start", None)})
+                         "lead_hours": getattr(r, "lead_hours_to_window_start", None),
+                         "timing": competitor_timing(r._asdict()) if r.status == "ok" else None})
         first = g.iloc[0]
         rows.append({"location": loc, "gauge_id": first.gauge_id, "gauge_name": first.gauge_name,
                      "gauge_distance_km": first.gauge_distance_km, "label_date": label, "lead": lead,
@@ -115,6 +154,7 @@ def export() -> Path:
                             "selected": {lead: d["selected"]["feature_set"] for lead, d in L["leads"].items()}}
                         for s, L in freeze["locations"].items()},
            "sources": sources_table(), "historical": _load("historical"), "prospective": _load("prospective"),
+           "ledger_head": ledger.head() if ledger.LEDGER.exists() else None,
            "live": live_view(),
            "rules": {"fair_contest": "Same gauge, same 9am-9am window, same lead group and the same as-of rule (a "
                                      "forecast counts only if its model run was published before the cutoff). "
@@ -123,7 +163,12 @@ def export() -> Path:
                      "probabilities": "Only our forecast issues probabilities. Raw model amounts are deterministic, "
                                       "so their probability scores are unavailable. CRPS of a point forecast equals "
                                       "its absolute error.",
-                     "satellite": "Satellite cloud images are never used to verify rainfall; only gauge readings are."}}
+                     "satellite": "Satellite cloud images are never used to verify rainfall; only gauge readings are.",
+                     "timing": "Competitors share the lead group and the as-of cutoff, but not the age of their "
+                               "information: explicit 12 UTC single runs, and Previous Runs inputs stitched from several "
+                               "runs, can start at different times. The tables show the latest model run used and its "
+                               "age. Observed availability means the run answered an explicit request or the model's own "
+                               "metadata listed it at issue time; estimated means only the fixed 6-hour rule was used."}}
     REP.mkdir(parents=True, exist_ok=True)
     p = REP / "challenge_site.json"
     p.write_text(json.dumps(_clean(out), indent=1, default=str, ensure_ascii=False, allow_nan=False), encoding="utf-8")
