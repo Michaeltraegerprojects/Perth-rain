@@ -98,15 +98,41 @@ export function medianNote(f) {
 
 export function verificationChip(v) {
   if (v === "verified") return { cls: "ok", text: "Verified inputs" };
+  if (v === "checked_at_issue") return { cls: "info", text: "Inputs checked at issue" };
   if (v === "unverified") return { cls: "warn", text: "Unverified inputs" };
   if (v === "failed") return { cls: "stale", text: "Verification failed" };
   return { cls: "na", text: "Not checked" };
 }
 
+/** Chip for forecasts that do not come from the main (held-out-scored) model; null for the main model. */
+export function routeChip(f) {
+  if (!f.is_fallback) return null;
+  return f.heldout_scored === false
+    ? { cls: "warn", text: "Backup model · accuracy not yet measured" }
+    : { cls: "warn", text: "Backup model" };
+}
+
+export function routeNote(f) {
+  if (f.is_fallback && f.heldout_scored === false) {
+    return "This forecast comes from a backup model, used because the inputs for the main model are not available yet. "
+      + "The backup model's accuracy on past days has not been measured; the figures on the Performance page are for "
+      + "the main model only.";
+  }
+  return "";
+}
+
+export const VERIFICATION_NOTE = {
+  verified: "Every input came from an explicitly requested model run.",
+  checked_at_issue: "When this forecast was made, each input was compared with the archived model run it should come "
+    + "from. The downloaded data that was checked is not kept, so the check cannot be repeated later.",
+  unverified: "At least one input depends on a model run that is not in the public archive, so it could not be checked.",
+  failed: "At least one input did not match the model run it should come from.",
+};
+
 export function routeText(f) {
   if (f.route === "primary") return "Selected model";
   const m = /^fallback#(\d+)$/.exec(f.route || "");
-  return m ? `Fallback model (choice ${Number(m[1]) + 1})` : f.route || "—";
+  return m ? `Backup model (choice ${Number(m[1]) + 1})` : f.route || "—";
 }
 
 export const LEAD_NAME = { day1: "1-day lead", day2: "2-day lead", day3: "3-day lead" };

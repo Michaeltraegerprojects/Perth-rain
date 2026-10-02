@@ -60,7 +60,10 @@ def test_unavailable_days_carry_no_numbers_and_probabilities_are_ordered():
             for f in d["forecasts"]:
                 p = f["probabilities"]
                 assert p["ge_0_2mm"] >= p["ge_1mm"] >= p["ge_5mm"] >= p["ge_10mm"]
-                assert f["verification"] in {"verified", "unverified", "failed"}
+                assert f["verification"] in {"verified", "checked_at_issue", "unverified", "failed"}
+                assert isinstance(f["heldout_scored"], bool)
+                if f["is_fallback"] and not f["heldout_scored"]:
+                    pass   # the card must say the backup model is unscored (format.test.mjs covers the wording)
                 assert f["lead_hours_to_window_start"] > 0
 
 
@@ -154,3 +157,27 @@ def test_validator_rejects_nan_which_browsers_cannot_parse(tmp_path):
     d = _copy_public(tmp_path)
     (d / "manifest.json").write_text('{"schema_version": 1, "x": NaN}', encoding="utf-8")
     assert any("invalid JSON for browsers" in p for p in X.validate(d))
+
+
+def test_outlook_keeps_raw_guidance_apart_from_calibrated_chances(tmp_path):
+    p = PUBLIC / "outlook.json"
+    if not p.exists():
+        pytest.skip("outlook.json not exported yet")
+    o = json.loads(p.read_text(encoding="utf-8"))
+    assert o["days"] and all(isinstance(d["calibrated"], bool) for d in o["days"])
+    assert all("%" not in d["rain"] for d in o["days"] if not d["calibrated"])
+    assert "Not an official forecast" in o["sources"]
+    d = _copy_public(tmp_path)
+    o["days"][0]["calibrated"] = False
+    o["days"][0]["rain"] = "Rain: 60% chance"
+    (d / "outlook.json").write_text(json.dumps(o), encoding="utf-8")
+    assert any("raw model guidance shown as a percentage" in x for x in X.validate(d))
+
+
+def test_failed_forecasts_are_withdrawn_not_published():
+    fc = json.loads((PUBLIC / "forecast.json").read_text(encoding="utf-8"))
+    for loc in fc["locations"]:
+        for day in loc["days"]:
+            assert all(f["verification"] != "failed" for f in day["forecasts"])
+            if day.get("withdrawn") and not day["forecasts"]:
+                assert day["availability"] == "unavailable" and "withdrawn" in day["unavailable_reason"]

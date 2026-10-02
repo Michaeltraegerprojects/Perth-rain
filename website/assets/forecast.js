@@ -1,6 +1,6 @@
 import {
   pct, mm, rangeText, dayLabel, windowText, stamp, leadText, freshness, windowState,
-  primaryForecast, medianNote, verificationChip, routeText, LEAD_NAME,
+  primaryForecast, medianNote, verificationChip, routeText, routeChip, routeNote, VERIFICATION_NOTE, LEAD_NAME,
 } from "./format.js";
 
 const DATA = "data/v1/";
@@ -29,7 +29,7 @@ function forecastBody(f) {
     el("div", { class: "chips" },
       chip(v.cls, v.text),
       chip("info", LEAD_NAME[f.lead_group] || f.lead_group),
-      f.is_fallback ? chip("warn", "Fallback model") : null),
+      routeChip(f) ? chip(routeChip(f).cls, routeChip(f).text) : null),
     el("div", { class: "headline" },
       el("span", { class: "big", text: pct(p.ge_0_2mm) }),
       el("span", { class: "big-label", text: "chance of at least 0.2 mm (measurable rain)" })),
@@ -41,6 +41,7 @@ function forecastBody(f) {
       ...[["≥ 0.2 mm", p.ge_0_2mm], ["≥ 1 mm", p.ge_1mm], ["≥ 5 mm", p.ge_5mm], ["≥ 10 mm", p.ge_10mm]]
         .map(([k, x]) => el("div", {}, el("dt", { text: k }), el("dd", { text: pct(x) })))),
     medianNote(f) ? el("p", { class: "note", text: medianNote(f) }) : null,
+    routeNote(f) ? el("p", { class: "note", text: routeNote(f) }) : null,
     el("details", { class: "more" },
       el("summary", { text: "Raw model totals (uncalibrated)" }),
       el("div", { class: "body" },
@@ -58,6 +59,7 @@ function forecastBody(f) {
           ["Calibration", `${f.calibrated_model_label || f.calibrated_model} · ${routeText(f)}`],
           ["Models available", f.models_available.join(", ") || "—"],
           ["Inputs not yet usable", f.inputs_blocked_by_timing.join(", ") || "none"],
+          ["Input check status", VERIFICATION_NOTE[f.verification] || "Not checked."],
           ["Input check", el("span", {}, ...f.verification_detail.map((x) => el("div", { text: `${x.input}: ${x.status} — ${x.detail}` })))],
           ["Inputs fetched", f.inputs_retrieved_utc ? stamp(f.inputs_retrieved_utc) : "—"],
           ["Model trained on", f.model_training_days ? `${f.model_training_days} days up to ${f.model_trained_to}` : "—"],
@@ -73,9 +75,10 @@ function dayCard(day, nowMs) {
     el("h3", { class: "day", text: dayLabel(day.label_date) }),
     el("p", { class: "window", text: `Rain from ${windowText(day.window_start_local, day.window_end_local)}` }));
   if (day.availability !== "available") {
+    const withdrawn = (day.withdrawn || []).length > 0;
     return el("article", { class: "card unavailable" }, head,
-      el("div", { class: "chips" }, chip("na", "Unavailable")),
-      el("p", { class: "unavail-big", text: "Not available yet" }),
+      el("div", { class: "chips" }, chip("na", withdrawn ? "Withdrawn" : "Unavailable")),
+      el("p", { class: "unavail-big", text: withdrawn ? "Forecast withdrawn" : "Not available yet" }),
       el("p", { class: "small muted", text: day.unavailable_reason }),
       el("p", { class: "note", text: "Unavailable is not a forecast of zero rain. Check again after the next data export." }));
   }

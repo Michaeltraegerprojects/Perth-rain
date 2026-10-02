@@ -79,15 +79,34 @@ function reliabilityBlock(g) {
       g.interval && g.interval.n_days ? el("p", { class: "note", text: `Range check: the observed total was above our 90th percentile on ${pct(g.interval.above_90th)} of days (should be about 10%).` }) : null));
 }
 
-function pairedBlock(g) {
-  if (!g.paired.length) return el("p", { class: "small muted", text: "No paired comparisons (too few common days)." });
+/** Split paired comparisons by the score they use: rain-amount error vs whole-distribution score (CRPS). */
+export function splitPaired(paired) {
+  const crps = paired.filter((p) => p.score === "CRPS");
+  const amount = paired.filter((p) => p.score !== "CRPS");
+  return { amount, crps };
+}
+
+function pairedTable(rows, header) {
   return el("div", { class: "scroll" }, el("table", {},
-    el("thead", {}, el("tr", {}, ...["Comparison", "Error difference (mm)", "95% interval", "Result"].map((h, i) =>
+    el("thead", {}, el("tr", {}, ...["Comparison", header, "95% interval", "Result"].map((h, i) =>
       el("th", { class: i === 1 || i === 2 ? "n" : null, text: h })))),
-    el("tbody", {}, g.paired.map((p) => el("tr", {},
+    el("tbody", {}, rows.map((p) => el("tr", {},
       el("td", { text: `${p.first} vs ${p.second}` }), el("td", { class: "n", text: sgn(p.mean_abs_error_diff, 3) }),
       el("td", { class: "n", text: `${sgn(p.ci95[0], 3)} to ${sgn(p.ci95[1], 3)}` }),
       el("td", { class: verdictClass(p), text: verdictText(p) }))))));
+}
+
+function pairedBlock(g) {
+  if (!g.paired.length) return el("p", { class: "small muted", text: "No paired comparisons (too few common days)." });
+  const { amount, crps } = splitPaired(g.paired);
+  return el("div", {},
+    el("h4", { text: "Rain-amount error (absolute error, mm per rain day)" }),
+    amount.length ? pairedTable(amount, "Error difference (mm)") : el("p", { class: "small muted", text: "None." }),
+    crps.length ? el("h4", { text: "Whole-distribution score (CRPS): our full forecast vs single-number forecasts" }) : null,
+    crps.length ? el("p", { class: "note", text: "This compares our full range of possible outcomes with a single number. "
+      + "A forecast that expresses uncertainty usually scores better than a single number on this measure, so a win "
+      + "here does not mean our rain amounts are more accurate; see the rain-amount table above for that." }) : null,
+    crps.length ? pairedTable(crps, "CRPS difference (mm)") : null);
 }
 
 function coverageLine(g) {
@@ -116,7 +135,7 @@ function trackView(rep, emptyText) {
 
 function liveView(live) {
   if (!live || !live.rows || !live.rows.length) {
-    return el("p", { class: "banner stale", text: "No forecasts collected yet. Run `python -m challenge collect` at the scheduled time." });
+    return el("p", { class: "banner stale", text: "No forecasts have been collected for the challenge yet." });
   }
   const byLoc = {};
   for (const r of live.rows) (byLoc[r.location] ||= []).push(r);

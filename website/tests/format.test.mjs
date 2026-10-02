@@ -58,7 +58,7 @@ test("status chips and routes are labelled", () => {
   assert.equal(F.verificationChip("verified").cls, "ok");
   assert.equal(F.verificationChip("unverified").text, "Unverified inputs");
   assert.equal(F.routeText({ route: "primary" }), "Selected model");
-  assert.equal(F.routeText({ route: "fallback#4" }), "Fallback model (choice 5)");
+  assert.equal(F.routeText({ route: "fallback#4" }), "Backup model (choice 5)");
   assert.equal(F.leadText({ lead_hours_to_window_start: 37, lead_hours_to_window_end: 61 }), "37–61 h after model run");
 });
 
@@ -92,4 +92,34 @@ test("challenge verdicts never declare a winner without evidence", async () => {
   assert.equal(verdictText({ ...base, verdict: "first better" }), "Our forecast (median) better");
   assert.equal(verdictClass({ ...base, verdict: "second better" }), "worse");
   assert.equal(verdictClass({ ...base, verdict: "inconclusive" }), "ns");
+});
+
+test("backup-model forecasts say their accuracy has not been measured", () => {
+  const unscored = { is_fallback: true, heldout_scored: false };
+  assert.equal(F.routeChip(unscored).text, "Backup model · accuracy not yet measured");
+  assert.match(F.routeNote(unscored), /has not been measured/);
+  assert.equal(F.routeChip({ is_fallback: false, heldout_scored: true }), null);
+  assert.equal(F.routeNote({ is_fallback: false, heldout_scored: true }), "");
+  assert.equal(F.routeChip({ is_fallback: true, heldout_scored: true }).text, "Backup model");
+});
+
+test("inputs checked only at issue are not labelled as verified", () => {
+  const c = F.verificationChip("checked_at_issue");
+  assert.equal(c.text, "Inputs checked at issue");
+  assert.notEqual(c.cls, "ok");
+  assert.match(F.VERIFICATION_NOTE.checked_at_issue, /cannot be repeated/);
+});
+
+test("CRPS comparisons are separated from rain-amount comparisons", async () => {
+  const { splitPaired } = await import("../assets/challenge.js");
+  const rows = [{ score: "absolute error" }, { score: "CRPS" }, { score: "absolute error" }];
+  const { amount, crps } = splitPaired(rows);
+  assert.equal(amount.length, 2);
+  assert.equal(crps.length, 1);
+});
+
+test("outlook lines say whether they are calibrated or raw guidance", async () => {
+  const { sourceLabel } = await import("../assets/outlook.js");
+  assert.equal(sourceLabel({ calibrated: true }), "Our calibrated forecast");
+  assert.equal(sourceLabel({ calibrated: false }), "Raw model guidance");
 });

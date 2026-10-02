@@ -6,6 +6,6 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/format.test.mjs",
-    "check": "node --check assets/format.js && node --check assets/forecast.js && node --check assets/performance.js"
+    "check": "node --check assets/format.js && node --check assets/forecast.js && node --check assets/performance.js && node --check assets/challenge.js && node --check assets/map.js && node --check assets/outlook.js"
   }
 }

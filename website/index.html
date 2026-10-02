@@ -14,6 +14,7 @@
     <a class="brand" href="index.html">Perth <span>Rain Gauges</span></a>
     <nav class="primary" aria-label="Pages">
       <a href="index.html" aria-current="page">Forecast</a>
+      <a href="outlook.html">7-day</a>
       <a href="challenge.html">Challenge</a>
       <a href="map.html">Map</a>
       <a href="performance.html">Performance</a>
@@ -36,12 +37,15 @@
       80% of outcomes.</p>
       <p><b>Lead time.</b> Hours from the weather-model run the forecast is based on to the start and end of the window.
       A forecast is only issued when every model run it needs had been published before the forecast was made.</p>
-      <p><b>Status.</b> <i>Verified</i>: every model input was checked against the exact model run in the public archive.
+      <p><b>Status.</b> <i>Verified</i>: every input came from an explicitly requested model run. <i>Checked at
+      issue</i>: when the forecast was made, each input was compared with the archived model run it should come from;
+      the downloaded data that was checked is not kept, so that check cannot be repeated later.
       <i>Unverified</i>: at least one run could not be checked because it is not archived. <i>Unavailable</i>: the needed
       model runs had not been published yet, which is not a forecast of zero rain. <i>Stale</i>: the exported forecast is
       old; this site cannot refresh it.</p>
-      <p><b>Fallback model.</b> When the preferred combination of models is not available yet, a simpler calibrated model
-      that needs fewer inputs is used. The card says when this happens.</p>
+      <p><b>Backup model.</b> When the inputs for the main model are not available yet, a simpler calibrated backup model
+      that needs fewer inputs is used, and the card says so. In this release only the main model's accuracy on past
+      days has been measured; the backup models' accuracy has not, so the Performance page does not describe them.</p>
     </div>
   </details>
 </main>

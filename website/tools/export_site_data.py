@@ -86,12 +86,15 @@ def export_location(name, s, status, verif):
                           columns=["label_date_local", "observed_precip_mm", "retrieved_at_utc"])
     have = obs[obs.observed_precip_mm.notna()]
     manifest = json.loads((ROOT / "data" / s / "models" / "manifest.json").read_text())["meta"]
+    # the fit selected for each lead is the only one with a held-out score in this release
+    selection = json.loads((ROOT / "data" / s / "models" / "selection.json").read_text())
+    scored_fit = {lead: selection[lead]["selected"]["feature_set"] for lead in ("day1", "day2", "day3") if lead in selection}
 
     days = []
     for day, grp in pred.groupby("label_date_local", sort=True):
         w = grp.iloc[0]
         ws, we = pd.Timestamp(w.window_start_utc), pd.Timestamp(w.window_end_utc)
-        forecasts = []
+        forecasts, withdrawn = [], []
         for _, r in grp.sort_values("lead_group").iterrows():
             if r.status != "ok":
                 continue
@@ -100,6 +103,16 @@ def export_location(name, s, status, verif):
             vs = status[(status.location == name) & (status.gauge_day == day) & (status.lead == r.lead_group)]
             vstat = vs.row_status.iloc[0] if len(vs) else "UNVERIFIED"
             vd = verif[(verif.location == name) & (verif.gauge_day == day) & (verif.lead == r.lead_group)]
+            # Previous Runs inputs were checked against the archived run when the forecast was made, but the
+            # downloaded response that was checked is not retained, so the check cannot be repeated later.
+            if vstat == "VERIFIED" and (vd.input.astype(str).str.startswith("pr_") & (vd.status == "VERIFIED")).any():
+                vstat = "CHECKED_AT_ISSUE"
+            if vstat == "FAILED":
+                # never publish numbers from a forecast whose inputs failed verification (e.g. an input credited to a
+                # model run that had not been published when the forecast was made)
+                withdrawn.append({"lead_group": r.lead_group,
+                                  "reason": "; ".join(f"{x.input}: {x.detail}" for x in vd.itertuples() if x.status == "FAILED")})
+                continue
             raw = [{"input": c[len("input_"):-len("_mm")], "model": MODEL_LABEL.get(c[len("input_"):-len("_mm")]),
                     "total_mm": num(r[c], 2)} for c in pred.columns if c.startswith("input_") and pd.notna(r[c])]
             forecasts.append({
@@ -116,6 +129,7 @@ def export_location(name, s, status, verif):
                                "p10": num(r.q10_mm, 2), "p25": num(r.q25_mm, 2), "p75": num(r.q75_mm, 2),
                                "p90": num(r.q90_mm, 2)},
                 "route": r.route, "is_fallback": str(r.route).startswith("fallback"),
+                "heldout_scored": scored_fit.get(r.lead_group) == r.feature_set_used,
                 "calibrated_model": r.feature_set_used, "calibrated_model_label": FEATURE_LABEL.get(r.feature_set_used),
                 "models_available": [m for m in str(r.models_available).split(",") if m and m != "nan"],
                 "inputs_blocked_by_timing": [m for m in str(r.inputs_blocked_by_timing).split(",") if m and m != "nan"],
@@ -128,8 +142,11 @@ def export_location(name, s, status, verif):
                      "window_start_utc": iso(ws), "window_end_utc": iso(we),
                      "availability": "available" if forecasts else "unavailable",
                      "unavailable_reason": None if forecasts else
-                     "The model runs needed for a calibrated forecast of this window had not been published when "
-                     "the forecast was made.",
+                     ("A forecast was made but withdrawn: one of its inputs was credited to a model run that had not "
+                      "been published when the forecast was made." if withdrawn else
+                      "The model runs needed for a calibrated forecast of this window had not been published when "
+                      "the forecast was made."),
+                     "withdrawn": withdrawn,
                      "inputs_blocked_by_timing": blocked, "forecasts": forecasts})
     return {"id": s, "name": name,
             "gauge": {"id": st["station_id"], "name": st["station_name"].title(),
@@ -270,8 +287,23 @@ def validate(folder: Path) -> list[str]:
                 pr = f["probabilities"]
                 if any(v is None or not 0 <= v <= 1 for v in pr.values()):
                     problems.append(f"{loc['id']} {d['label_date']}: probability out of range")
+                if f.get("verification") not in {"verified", "checked_at_issue", "unverified", "failed"}:
+                    problems.append(f"{loc['id']} {d['label_date']}: unknown verification state {f.get('verification')!r}")
+                if not isinstance(f.get("heldout_scored"), bool):
+                    problems.append(f"{loc['id']} {d['label_date']}: heldout_scored missing")
                 if not pr["ge_0_2mm"] >= pr["ge_1mm"] >= pr["ge_5mm"] >= pr["ge_10mm"]:
                     problems.append(f"{loc['id']} {d['label_date']}: probabilities not decreasing")
+    ol = folder / "outlook.json"
+    if ol.exists():
+        o = json.loads(ol.read_text(encoding="utf-8"))
+        for day in o.get("days", []):
+            if not day.get("calibrated") and "%" in day.get("rain", ""):
+                problems.append(f"outlook.json {day.get('date')}: raw model guidance shown as a percentage chance")
+            if not isinstance(day.get("calibrated"), bool):
+                problems.append(f"outlook.json {day.get('date')}: missing calibrated flag")
+        for k in ("generated_utc", "model_guidance_retrieved_utc", "headline", "method", "sources"):
+            if not o.get(k):
+                problems.append(f"outlook.json: missing {k}")
     return problems
 
 
@@ -311,6 +343,10 @@ def main(argv=None):
     if challenge_src.exists():
         extra = [("challenge.json", json.loads(challenge_src.read_text(encoding="utf-8")))]
         manifest["files"].append("challenge.json")
+    outlook_src = ROOT / "reports" / "outlook" / "outlook_site.json"        # written by scripts/seven_day_outlook.py
+    if outlook_src.exists():
+        extra.append(("outlook.json", json.loads(outlook_src.read_text(encoding="utf-8"))))
+        manifest["files"].append("outlook.json")
     for n, obj in (("manifest.json", manifest), ("forecast.json", forecast), ("performance.json", performance),
                    ("map.json", mapdata), *extra):
         (PENDING / n).write_text(json.dumps(obj, indent=1, ensure_ascii=False, allow_nan=False), encoding="utf-8")

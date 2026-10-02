@@ -35,10 +35,28 @@ def single_run(model, lat, lon, run):
     key = (model, round(lat, 4), round(lon, 4), run)
     if key not in _runs:
         p = forecasts.single_run_params(lat, lon, model, run, 6)
-        res = F.get_json(forecasts.SINGLE_RUNS_URL, p, "open_meteo/verify_live", label=f"verify {model} {run}")
+        res = F.get_json(forecasts.SINGLE_RUNS_URL, p, "open_meteo/verify_live", label=f"verify {model} {run}",
+                       retry_failed=True)   # a run requested before it was published must be asked again
         _runs[key] = (forecasts.parse_single_run(res.body, model, run, res.url, res.params, res.retrieved_at_utc)
                       .set_index("valid_end_utc").precip_mm if res.ok else None)
     return _runs[key]
+
+
+META_ID = {"jma_gsm": "jma_gsm", "ecmwf_ifs025": "ecmwf_ifs025", "ncep_gfs_global": "ncep_gfs013"}
+_meta = {}
+
+
+def last_run_init(model):
+    """Latest run the model's own Open-Meteo metadata reports as available (checked now, after the issue)."""
+    if model not in _meta:
+        import requests
+        try:
+            j = requests.get(f"https://api.open-meteo.com/data/{META_ID.get(model, model)}/static/meta.json",
+                             headers={"User-Agent": cfgs[0].user_agent}, timeout=30).json()
+            _meta[model] = pd.Timestamp(j["last_run_initialisation_time"], unit="s", tz="UTC")
+        except Exception:
+            _meta[model] = None
+    return _meta[model]
 
 
 def live_response(model, lat, retrieved):
@@ -82,20 +100,29 @@ for cfg in cfgs:
                 for t in hours:
                     sr = single_run(model, lat, lon, rule[t])
                     if sr is None or t not in sr.index or pd.isna(sr[t]):
-                        missing.add(f"{rule[t]:%d %b %HZ}")
+                        missing.add(rule[t])
                         continue
                     tested += 1
                     matched += bool(np.isclose(h.loc[t, f"precipitation_previous_day{n}"], sr[t], atol=TOL))
                 runs = sorted({f"{x:%d %b %HZ}" for x in rule})
+                latest = last_run_init(model) if missing else None
+                unpublished = sorted(x for x in missing if latest is not None and x > latest)
                 if tested and matched < tested:
+                    st, why = "FAILED", ""
+                elif unpublished:
+                    # the named run is still not published now, after the forecast was made, so the API must have
+                    # served values from an older run: the input does not have the trained lead time
                     st = "FAILED"
+                    why = (f"; named run {', '.join(f'{x:%d %b %HZ}' for x in unpublished)} was not yet published "
+                           f"(model's latest run {latest:%d %b %HZ} when checked)")
                 elif missing:
-                    st = "UNVERIFIED"
+                    st, why = "UNVERIFIED", ""
                 else:
-                    st = "VERIFIED"
+                    st, why = "VERIFIED", ""
                 r.update(status=st, how="hourly values vs the rule-named Single Runs archive",
                          detail=f"runs {', '.join(runs)}; {matched}/{tested} hours equal"
-                                + (f"; not archived: {', '.join(sorted(missing))}" if missing else ""))
+                                + (f"; not archived: {', '.join(f'{x:%d %b %HZ}' for x in sorted(set(missing) - set(unpublished)))}"
+                                   if set(missing) - set(unpublished) else "") + why)
             rows.append(r)
 
 V = pd.DataFrame(rows)

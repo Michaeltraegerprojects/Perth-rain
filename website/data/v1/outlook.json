@@ -1,0 +1,88 @@
+{
+ "schema_version": 1,
+ "generated_utc": "2026-10-02T14:00:34Z",
+ "model_guidance_retrieved_utc": "2026-10-02T14:00:34Z",
+ "calibrated_forecast_made_utc": "2026-10-02T13:54:00Z",
+ "headline": "Warm Tuesday for Perth before rain and a cooler change",
+ "standfirst": "Plenty of sunshine for most of the week, with the city climbing to about 26°C on Tuesday. Most of the weather models then bring rain from Wednesday, heaviest on Thursday, with the top easing to around 16°C.",
+ "location": "Perth",
+ "days": [
+  {
+   "date": "2026-10-03",
+   "condition": "Sunny",
+   "temps": "12–24°C",
+   "gust": "",
+   "rain": "Rain from 9am today to 9am tomorrow: our calibrated chance of rain at the gauge is 12%.",
+   "calibrated": true,
+   "models_with_1mm": 0,
+   "models_total": 5
+  },
+  {
+   "date": "2026-10-04",
+   "condition": "Mostly sunny",
+   "temps": "10–21°C",
+   "gust": "",
+   "rain": "Rain from 9am today to 9am tomorrow: none of the models show a meaningful fall.",
+   "calibrated": false,
+   "models_with_1mm": 0,
+   "models_total": 5
+  },
+  {
+   "date": "2026-10-05",
+   "condition": "Mostly sunny",
+   "temps": "12–22°C",
+   "gust": "",
+   "rain": "Rain from 9am today to 9am tomorrow: none of the models show a meaningful fall.",
+   "calibrated": false,
+   "models_with_1mm": 0,
+   "models_total": 5
+  },
+  {
+   "date": "2026-10-06",
+   "condition": "Partly cloudy",
+   "temps": "13–26°C",
+   "gust": "",
+   "rain": "Rain from 9am today to 9am tomorrow: none of the models show a meaningful fall.",
+   "calibrated": false,
+   "models_with_1mm": 0,
+   "models_total": 5
+  },
+  {
+   "date": "2026-10-07",
+   "condition": "Rain",
+   "temps": "12–21°C",
+   "gust": "",
+   "rain": "Rain from 9am today to 9am tomorrow: 5 of 5 models show 1 mm or more (middle estimate 9 mm).",
+   "calibrated": false,
+   "models_with_1mm": 5,
+   "models_total": 5
+  },
+  {
+   "date": "2026-10-08",
+   "condition": "Rain",
+   "temps": "14–16°C",
+   "gust": "Gusts to about 61 km/h.",
+   "rain": "Rain from 9am today to 9am tomorrow: 5 of 5 models show 1 mm or more (middle estimate 13 mm).",
+   "calibrated": false,
+   "models_with_1mm": 5,
+   "models_total": 5
+  },
+  {
+   "date": "2026-10-09",
+   "condition": "Cloudy, chance of a shower",
+   "temps": "13–18°C",
+   "gust": "",
+   "rain": "Rain from 9am today to 9am tomorrow: only 2 of 4 models show 1 mm or more.",
+   "calibrated": false,
+   "models_with_1mm": 2,
+   "models_total": 4
+  }
+ ],
+ "suburbs": [
+  "Clarkson: models agree on rain Wednesday, Thursday. (Rain gauge used for our calibrated forecast: Gingin Aero, 27.8 km away.)",
+  "Ocean Reef: models agree on rain Wednesday, Thursday. (Rain gauge used for our calibrated forecast: Perth Metro, 22.0 km away.)",
+  "Fremantle: models agree on rain Wednesday, Thursday. (Rain gauge used for our calibrated forecast: Swanbourne, 11.3 km away.)"
+ ],
+ "method": "Our own calibrated rain chances cover only the days the pipeline could issue (Saturday), from the forecast made at 9:54pm Friday (Perth time), and describe the Bureau of Meteorology gauge, not your backyard. Every other figure is raw guidance from five global weather models (ECMWF, ECMWF AI, German ICON, US GFS, Japanese JMA) via Open-Meteo, retrieved at 10:00pm Friday, taken at each suburb. Temperatures are the middle value across the models. Model agreement is not a probability. Rain is measured 9am to 9am, as the Bureau reports it; each day's rain line covers 9am that day to 9am the next. This is not an official forecast: for warnings, use the Bureau of Meteorology.",
+ "sources": "Forecast data: Open-Meteo.com (CC BY 4.0), ECMWF, DWD, NOAA, JMA. Observations: Bureau of Meteorology. Not an official forecast."
+}

@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "exported_utc": "2026-10-01T04:00:52Z",
+ "exported_utc": "2026-10-02T14:01:21Z",
  "timezone": "Australia/Perth",
  "locations": [
   {
@@ -11,7 +11,7 @@
     "name": "Perth Metro",
     "distance_km": 3.8
    },
-   "forecast_made_utc": "2026-10-01T02:29:00Z",
+   "forecast_made_utc": "2026-10-02T13:54:00Z",
    "latest_observation": {
     "label_date": "2026-09-29",
     "retrieved_utc": "2026-09-30T13:45:35Z"
@@ -23,13 +23,19 @@
    },
    "days": [
     {
-     "label_date": "2026-10-03",
-     "window_start_local": "2026-10-02T09:00:00+08:00",
-     "window_end_local": "2026-10-03T09:00:00+08:00",
-     "window_start_utc": "2026-10-02T01:00:00Z",
-     "window_end_utc": "2026-10-03T01:00:00Z",
+     "label_date": "2026-10-04",
+     "window_start_local": "2026-10-03T09:00:00+08:00",
+     "window_end_local": "2026-10-04T09:00:00+08:00",
+     "window_start_utc": "2026-10-03T01:00:00Z",
+     "window_end_utc": "2026-10-04T01:00:00Z",
      "availability": "available",
      "unavailable_reason": null,
+     "withdrawn": [
+      {
+       "lead_group": "day2",
+       "reason": "pr_jma_gsm: runs 01 Oct 06Z, 01 Oct 12Z, 01 Oct 18Z, 02 Oct 00Z, 02 Oct 06Z; 23/23 hours equal; named run 02 Oct 06Z was not yet published (model's latest run 02 Oct 00Z when checked)"
+      }
+     ],
      "inputs_blocked_by_timing": [
       "pr_ecmwf_ifs025",
       "pr_jma_gsm",
@@ -37,93 +43,32 @@
      ],
      "forecasts": [
       {
-       "lead_group": "day2",
+       "lead_group": "day3",
        "status": "ok",
-       "verification": "verified",
+       "verification": "checked_at_issue",
        "verification_detail": [
         {
          "input": "sr_ecmwf_ifs",
          "status": "verified",
          "detail": "sr_ecmwf_ifs: run 2026-09-30 12Z (explicit)"
-        }
-       ],
-       "latest_model_run_utc": "2026-09-30T12:00:00Z",
-       "lead_hours_to_window_start": 37.0,
-       "lead_hours_to_window_end": 61.0,
-       "probabilities": {
-        "ge_0_2mm": 0.1387,
-        "ge_1mm": 0.0524,
-        "ge_5mm": 0.0035,
-        "ge_10mm": 0.0035
-       },
-       "amounts_mm": {
-        "median": 0.0,
-        "expected": 0.14,
-        "p10": 0.0,
-        "p25": 0.0,
-        "p75": 0.0,
-        "p90": 0.2
-       },
-       "route": "fallback#4",
-       "is_fallback": true,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
-       "models_available": [
-        "sr_ecmwf_ifs"
-       ],
-       "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
-       ],
-       "input_runs": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-09-30T12:00Z",
-         "run_identification": "explicit run requested"
-        }
-       ],
-       "raw_model_totals_uncalibrated": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "total_mm": 0.0
-        }
-       ],
-       "model_trained_to": "2026-09-29",
-       "model_training_days": 912,
-       "model_run_id": "noenso-20260930T155128Z-a716ab4d",
-       "artifact_sha256": "1d14400331c25b98ec6b783dcb4686a73072b6bc22a470acf0df8cc2cbe22bc8",
-       "inputs_retrieved_utc": "2026-10-01T02:29:59Z"
-      },
-      {
-       "lead_group": "day3",
-       "status": "ok",
-       "verification": "unverified",
-       "verification_detail": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-09-29 12Z (explicit)"
         },
         {
          "input": "pr_jma_gsm",
-         "status": "unverified",
-         "detail": "runs 29 Sep 06Z, 29 Sep 12Z, 29 Sep 18Z, 30 Sep 00Z, 30 Sep 06Z; 23/23 hours equal; not archived: 30 Sep 06Z"
+         "status": "verified",
+         "detail": "runs 01 Oct 00Z, 01 Oct 06Z, 30 Sep 06Z, 30 Sep 12Z, 30 Sep 18Z; 24/24 hours equal"
         },
         {
          "input": "pr_ncep_gfs_global",
          "status": "verified",
-         "detail": "runs 29 Sep 00Z, 29 Sep 06Z, 29 Sep 12Z, 29 Sep 18Z, 30 Sep 00Z; 24/24 hours equal"
+         "detail": "runs 01 Oct 00Z, 30 Sep 00Z, 30 Sep 06Z, 30 Sep 12Z, 30 Sep 18Z; 24/24 hours equal"
         },
         {
          "input": "pr_ecmwf_ifs025",
          "status": "verified",
-         "detail": "runs 29 Sep 00Z, 29 Sep 06Z, 29 Sep 12Z, 29 Sep 18Z, 30 Sep 00Z; 24/24 hours equal"
+         "detail": "runs 01 Oct 00Z, 30 Sep 00Z, 30 Sep 06Z, 30 Sep 12Z, 30 Sep 18Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-09-30T06:00:00Z",
+       "latest_model_run_utc": "2026-10-01T06:00:00Z",
        "lead_hours_to_window_start": 43.0,
        "lead_hours_to_window_end": 67.0,
        "probabilities": {
@@ -142,6 +87,7 @@
        },
        "route": "primary",
        "is_fallback": false,
+       "heldout_scored": true,
        "calibrated_model": "all_composite",
        "calibrated_model_label": "All-model composite",
        "models_available": [
@@ -155,25 +101,25 @@
         {
          "input": "pr_ecmwf_ifs025",
          "model": "ECMWF IFS 0.25°",
-         "run_init_utc": "2026-09-30T00:00Z",
+         "run_init_utc": "2026-10-01T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_jma_gsm",
          "model": "JMA GSM",
-         "run_init_utc": "2026-09-30T06:00Z",
+         "run_init_utc": "2026-10-01T06:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_ncep_gfs_global",
          "model": "NOAA GFS",
-         "run_init_utc": "2026-09-30T00:00Z",
+         "run_init_utc": "2026-10-01T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-09-29T12:00Z",
+         "run_init_utc": "2026-09-30T12:00Z",
          "run_identification": "explicit run requested"
         }
        ],
@@ -203,84 +149,7 @@
        "model_training_days": 894,
        "model_run_id": "noenso-20260930T155128Z-a716ab4d",
        "artifact_sha256": "b944ffe392febc7dbb8481cdffdefa73c2346e8a78ddb94b5f5dd98cdd8c490d",
-       "inputs_retrieved_utc": "2026-10-01T02:30:01Z"
-      }
-     ]
-    },
-    {
-     "label_date": "2026-10-04",
-     "window_start_local": "2026-10-03T09:00:00+08:00",
-     "window_end_local": "2026-10-04T09:00:00+08:00",
-     "window_start_utc": "2026-10-03T01:00:00Z",
-     "window_end_utc": "2026-10-04T01:00:00Z",
-     "availability": "available",
-     "unavailable_reason": null,
-     "inputs_blocked_by_timing": [
-      "pr_ecmwf_ifs025",
-      "pr_jma_gsm",
-      "pr_ncep_gfs_global"
-     ],
-     "forecasts": [
-      {
-       "lead_group": "day3",
-       "status": "ok",
-       "verification": "verified",
-       "verification_detail": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-09-30 12Z (explicit)"
-        }
-       ],
-       "latest_model_run_utc": "2026-09-30T12:00:00Z",
-       "lead_hours_to_window_start": 61.0,
-       "lead_hours_to_window_end": 85.0,
-       "probabilities": {
-        "ge_0_2mm": 0.1552,
-        "ge_1mm": 0.0629,
-        "ge_5mm": 0.0039,
-        "ge_10mm": 0.0039
-       },
-       "amounts_mm": {
-        "median": 0.0,
-        "expected": 0.166,
-        "p10": 0.0,
-        "p25": 0.0,
-        "p75": 0.0,
-        "p90": 0.33
-       },
-       "route": "fallback#4",
-       "is_fallback": true,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
-       "models_available": [
-        "sr_ecmwf_ifs"
-       ],
-       "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
-       ],
-       "input_runs": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-09-30T12:00Z",
-         "run_identification": "explicit run requested"
-        }
-       ],
-       "raw_model_totals_uncalibrated": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "total_mm": 0.0
-        }
-       ],
-       "model_trained_to": "2026-09-29",
-       "model_training_days": 910,
-       "model_run_id": "noenso-20260930T155128Z-a716ab4d",
-       "artifact_sha256": "b944ffe392febc7dbb8481cdffdefa73c2346e8a78ddb94b5f5dd98cdd8c490d",
-       "inputs_retrieved_utc": "2026-10-01T02:29:59Z"
+       "inputs_retrieved_utc": "2026-10-02T13:54:19Z"
       }
      ]
     },
@@ -291,7 +160,13 @@
      "window_start_utc": "2026-10-04T01:00:00Z",
      "window_end_utc": "2026-10-05T01:00:00Z",
      "availability": "unavailable",
-     "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
+     "unavailable_reason": "A forecast was made but withdrawn: one of its inputs was credited to a model run that had not been published when the forecast was made.",
+     "withdrawn": [
+      {
+       "lead_group": "day3",
+       "reason": "pr_jma_gsm: runs 01 Oct 06Z, 01 Oct 12Z, 01 Oct 18Z, 02 Oct 00Z, 02 Oct 06Z; 23/23 hours equal; named run 02 Oct 06Z was not yet published (model's latest run 02 Oct 00Z when checked)"
+      }
+     ],
      "inputs_blocked_by_timing": [
       "pr_ecmwf_ifs025",
       "pr_jma_gsm",
@@ -307,6 +182,23 @@
      "window_end_utc": "2026-10-06T01:00:00Z",
      "availability": "unavailable",
      "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
+     "withdrawn": [],
+     "inputs_blocked_by_timing": [
+      "pr_ecmwf_ifs025",
+      "pr_jma_gsm",
+      "pr_ncep_gfs_global"
+     ],
+     "forecasts": []
+    },
+    {
+     "label_date": "2026-10-07",
+     "window_start_local": "2026-10-06T09:00:00+08:00",
+     "window_end_local": "2026-10-07T09:00:00+08:00",
+     "window_start_utc": "2026-10-06T01:00:00Z",
+     "window_end_utc": "2026-10-07T01:00:00Z",
+     "availability": "unavailable",
+     "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
+     "withdrawn": [],
      "inputs_blocked_by_timing": [
       "pr_ecmwf_ifs025",
       "pr_jma_gsm",
@@ -324,7 +216,7 @@
     "name": "Gingin Aero",
     "distance_km": 27.8
    },
-   "forecast_made_utc": "2026-10-01T02:30:00Z",
+   "forecast_made_utc": "2026-10-02T13:54:00Z",
    "latest_observation": {
     "label_date": "2026-09-29",
     "retrieved_utc": "2026-09-30T13:48:56Z"
@@ -336,13 +228,19 @@
    },
    "days": [
     {
-     "label_date": "2026-10-03",
-     "window_start_local": "2026-10-02T09:00:00+08:00",
-     "window_end_local": "2026-10-03T09:00:00+08:00",
-     "window_start_utc": "2026-10-02T01:00:00Z",
-     "window_end_utc": "2026-10-03T01:00:00Z",
+     "label_date": "2026-10-04",
+     "window_start_local": "2026-10-03T09:00:00+08:00",
+     "window_end_local": "2026-10-04T09:00:00+08:00",
+     "window_start_utc": "2026-10-03T01:00:00Z",
+     "window_end_utc": "2026-10-04T01:00:00Z",
      "availability": "available",
      "unavailable_reason": null,
+     "withdrawn": [
+      {
+       "lead_group": "day2",
+       "reason": "pr_jma_gsm: runs 01 Oct 06Z, 01 Oct 12Z, 01 Oct 18Z, 02 Oct 00Z, 02 Oct 06Z; 23/23 hours equal; named run 02 Oct 06Z was not yet published (model's latest run 02 Oct 00Z when checked)"
+      }
+     ],
      "inputs_blocked_by_timing": [
       "pr_ecmwf_ifs025",
       "pr_jma_gsm",
@@ -350,93 +248,32 @@
      ],
      "forecasts": [
       {
-       "lead_group": "day2",
+       "lead_group": "day3",
        "status": "ok",
-       "verification": "verified",
+       "verification": "checked_at_issue",
        "verification_detail": [
         {
          "input": "sr_ecmwf_ifs",
          "status": "verified",
          "detail": "sr_ecmwf_ifs: run 2026-09-30 12Z (explicit)"
-        }
-       ],
-       "latest_model_run_utc": "2026-09-30T12:00:00Z",
-       "lead_hours_to_window_start": 37.0,
-       "lead_hours_to_window_end": 61.0,
-       "probabilities": {
-        "ge_0_2mm": 0.1446,
-        "ge_1mm": 0.0447,
-        "ge_5mm": 0.0036,
-        "ge_10mm": 0.0036
-       },
-       "amounts_mm": {
-        "median": 0.0,
-        "expected": 0.121,
-        "p10": 0.0,
-        "p25": 0.0,
-        "p75": 0.0,
-        "p90": 0.22
-       },
-       "route": "fallback#4",
-       "is_fallback": true,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
-       "models_available": [
-        "sr_ecmwf_ifs"
-       ],
-       "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
-       ],
-       "input_runs": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-09-30T12:00Z",
-         "run_identification": "explicit run requested"
-        }
-       ],
-       "raw_model_totals_uncalibrated": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "total_mm": 0.0
-        }
-       ],
-       "model_trained_to": "2026-09-29",
-       "model_training_days": 915,
-       "model_run_id": "noenso-20260930T155208Z-373e8cf3",
-       "artifact_sha256": "0b258083e60f7f61ea13b424fd39a6c7ef6babdc7e07d98fade3ed4c66865960",
-       "inputs_retrieved_utc": "2026-10-01T02:30:03Z"
-      },
-      {
-       "lead_group": "day3",
-       "status": "ok",
-       "verification": "unverified",
-       "verification_detail": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-09-29 12Z (explicit)"
         },
         {
          "input": "pr_jma_gsm",
-         "status": "unverified",
-         "detail": "runs 29 Sep 06Z, 29 Sep 12Z, 29 Sep 18Z, 30 Sep 00Z, 30 Sep 06Z; 23/23 hours equal; not archived: 30 Sep 06Z"
+         "status": "verified",
+         "detail": "runs 01 Oct 00Z, 01 Oct 06Z, 30 Sep 06Z, 30 Sep 12Z, 30 Sep 18Z; 24/24 hours equal"
         },
         {
          "input": "pr_ncep_gfs_global",
          "status": "verified",
-         "detail": "runs 29 Sep 00Z, 29 Sep 06Z, 29 Sep 12Z, 29 Sep 18Z, 30 Sep 00Z; 24/24 hours equal"
+         "detail": "runs 01 Oct 00Z, 30 Sep 00Z, 30 Sep 06Z, 30 Sep 12Z, 30 Sep 18Z; 24/24 hours equal"
         },
         {
          "input": "pr_ecmwf_ifs025",
          "status": "verified",
-         "detail": "runs 29 Sep 00Z, 29 Sep 06Z, 29 Sep 12Z, 29 Sep 18Z, 30 Sep 00Z; 24/24 hours equal"
+         "detail": "runs 01 Oct 00Z, 30 Sep 00Z, 30 Sep 06Z, 30 Sep 12Z, 30 Sep 18Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-09-30T06:00:00Z",
+       "latest_model_run_utc": "2026-10-01T06:00:00Z",
        "lead_hours_to_window_start": 43.0,
        "lead_hours_to_window_end": 67.0,
        "probabilities": {
@@ -455,6 +292,7 @@
        },
        "route": "primary",
        "is_fallback": false,
+       "heldout_scored": true,
        "calibrated_model": "all_composite",
        "calibrated_model_label": "All-model composite",
        "models_available": [
@@ -468,25 +306,25 @@
         {
          "input": "pr_ecmwf_ifs025",
          "model": "ECMWF IFS 0.25°",
-         "run_init_utc": "2026-09-30T00:00Z",
+         "run_init_utc": "2026-10-01T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_jma_gsm",
          "model": "JMA GSM",
-         "run_init_utc": "2026-09-30T06:00Z",
+         "run_init_utc": "2026-10-01T06:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_ncep_gfs_global",
          "model": "NOAA GFS",
-         "run_init_utc": "2026-09-30T00:00Z",
+         "run_init_utc": "2026-10-01T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-09-29T12:00Z",
+         "run_init_utc": "2026-09-30T12:00Z",
          "run_identification": "explicit run requested"
         }
        ],
@@ -516,84 +354,7 @@
        "model_training_days": 894,
        "model_run_id": "noenso-20260930T155208Z-373e8cf3",
        "artifact_sha256": "887e67bf27401047d75cdd596438178ec9faa22cba263dcd38f0cbbb9a874c38",
-       "inputs_retrieved_utc": "2026-10-01T02:30:06Z"
-      }
-     ]
-    },
-    {
-     "label_date": "2026-10-04",
-     "window_start_local": "2026-10-03T09:00:00+08:00",
-     "window_end_local": "2026-10-04T09:00:00+08:00",
-     "window_start_utc": "2026-10-03T01:00:00Z",
-     "window_end_utc": "2026-10-04T01:00:00Z",
-     "availability": "available",
-     "unavailable_reason": null,
-     "inputs_blocked_by_timing": [
-      "pr_ecmwf_ifs025",
-      "pr_jma_gsm",
-      "pr_ncep_gfs_global"
-     ],
-     "forecasts": [
-      {
-       "lead_group": "day3",
-       "status": "ok",
-       "verification": "verified",
-       "verification_detail": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-09-30 12Z (explicit)"
-        }
-       ],
-       "latest_model_run_utc": "2026-09-30T12:00:00Z",
-       "lead_hours_to_window_start": 61.0,
-       "lead_hours_to_window_end": 85.0,
-       "probabilities": {
-        "ge_0_2mm": 0.1485,
-        "ge_1mm": 0.0469,
-        "ge_5mm": 0.0037,
-        "ge_10mm": 0.0037
-       },
-       "amounts_mm": {
-        "median": 0.0,
-        "expected": 0.139,
-        "p10": 0.0,
-        "p25": 0.0,
-        "p75": 0.0,
-        "p90": 0.24
-       },
-       "route": "fallback#4",
-       "is_fallback": true,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
-       "models_available": [
-        "sr_ecmwf_ifs"
-       ],
-       "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
-       ],
-       "input_runs": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-09-30T12:00Z",
-         "run_identification": "explicit run requested"
-        }
-       ],
-       "raw_model_totals_uncalibrated": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "total_mm": 0.0
-        }
-       ],
-       "model_trained_to": "2026-09-29",
-       "model_training_days": 913,
-       "model_run_id": "noenso-20260930T155208Z-373e8cf3",
-       "artifact_sha256": "887e67bf27401047d75cdd596438178ec9faa22cba263dcd38f0cbbb9a874c38",
-       "inputs_retrieved_utc": "2026-10-01T02:30:03Z"
+       "inputs_retrieved_utc": "2026-10-02T13:54:27Z"
       }
      ]
     },
@@ -604,7 +365,13 @@
      "window_start_utc": "2026-10-04T01:00:00Z",
      "window_end_utc": "2026-10-05T01:00:00Z",
      "availability": "unavailable",
-     "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
+     "unavailable_reason": "A forecast was made but withdrawn: one of its inputs was credited to a model run that had not been published when the forecast was made.",
+     "withdrawn": [
+      {
+       "lead_group": "day3",
+       "reason": "pr_jma_gsm: runs 01 Oct 06Z, 01 Oct 12Z, 01 Oct 18Z, 02 Oct 00Z, 02 Oct 06Z; 23/23 hours equal; named run 02 Oct 06Z was not yet published (model's latest run 02 Oct 00Z when checked)"
+      }
+     ],
      "inputs_blocked_by_timing": [
       "pr_ecmwf_ifs025",
       "pr_jma_gsm",
@@ -620,6 +387,23 @@
      "window_end_utc": "2026-10-06T01:00:00Z",
      "availability": "unavailable",
      "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
+     "withdrawn": [],
+     "inputs_blocked_by_timing": [
+      "pr_ecmwf_ifs025",
+      "pr_jma_gsm",
+      "pr_ncep_gfs_global"
+     ],
+     "forecasts": []
+    },
+    {
+     "label_date": "2026-10-07",
+     "window_start_local": "2026-10-06T09:00:00+08:00",
+     "window_end_local": "2026-10-07T09:00:00+08:00",
+     "window_start_utc": "2026-10-06T01:00:00Z",
+     "window_end_utc": "2026-10-07T01:00:00Z",
+     "availability": "unavailable",
+     "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
+     "withdrawn": [],
      "inputs_blocked_by_timing": [
       "pr_ecmwf_ifs025",
       "pr_jma_gsm",
@@ -637,7 +421,7 @@
     "name": "Perth Metro",
     "distance_km": 22.0
    },
-   "forecast_made_utc": "2026-10-01T02:30:00Z",
+   "forecast_made_utc": "2026-10-02T13:54:00Z",
    "latest_observation": {
     "label_date": "2026-09-29",
     "retrieved_utc": "2026-09-30T14:01:02Z"
@@ -649,13 +433,19 @@
    },
    "days": [
     {
-     "label_date": "2026-10-03",
-     "window_start_local": "2026-10-02T09:00:00+08:00",
-     "window_end_local": "2026-10-03T09:00:00+08:00",
-     "window_start_utc": "2026-10-02T01:00:00Z",
-     "window_end_utc": "2026-10-03T01:00:00Z",
+     "label_date": "2026-10-04",
+     "window_start_local": "2026-10-03T09:00:00+08:00",
+     "window_end_local": "2026-10-04T09:00:00+08:00",
+     "window_start_utc": "2026-10-03T01:00:00Z",
+     "window_end_utc": "2026-10-04T01:00:00Z",
      "availability": "available",
      "unavailable_reason": null,
+     "withdrawn": [
+      {
+       "lead_group": "day2",
+       "reason": "pr_jma_gsm: runs 01 Oct 06Z, 01 Oct 12Z, 01 Oct 18Z, 02 Oct 00Z, 02 Oct 06Z; 23/23 hours equal; named run 02 Oct 06Z was not yet published (model's latest run 02 Oct 00Z when checked)"
+      }
+     ],
      "inputs_blocked_by_timing": [
       "pr_ecmwf_ifs025",
       "pr_jma_gsm",
@@ -663,93 +453,32 @@
      ],
      "forecasts": [
       {
-       "lead_group": "day2",
+       "lead_group": "day3",
        "status": "ok",
-       "verification": "verified",
+       "verification": "checked_at_issue",
        "verification_detail": [
         {
          "input": "sr_ecmwf_ifs",
          "status": "verified",
          "detail": "sr_ecmwf_ifs: run 2026-09-30 12Z (explicit)"
-        }
-       ],
-       "latest_model_run_utc": "2026-09-30T12:00:00Z",
-       "lead_hours_to_window_start": 37.0,
-       "lead_hours_to_window_end": 61.0,
-       "probabilities": {
-        "ge_0_2mm": 0.1387,
-        "ge_1mm": 0.0524,
-        "ge_5mm": 0.0035,
-        "ge_10mm": 0.0035
-       },
-       "amounts_mm": {
-        "median": 0.0,
-        "expected": 0.14,
-        "p10": 0.0,
-        "p25": 0.0,
-        "p75": 0.0,
-        "p90": 0.2
-       },
-       "route": "fallback#4",
-       "is_fallback": true,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
-       "models_available": [
-        "sr_ecmwf_ifs"
-       ],
-       "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
-       ],
-       "input_runs": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-09-30T12:00Z",
-         "run_identification": "explicit run requested"
-        }
-       ],
-       "raw_model_totals_uncalibrated": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "total_mm": 0.0
-        }
-       ],
-       "model_trained_to": "2026-09-29",
-       "model_training_days": 912,
-       "model_run_id": "noenso-20260930T155246Z-a716ab4d",
-       "artifact_sha256": "addf2ee385cf6f7eac820b7814cce505883f157841af0132f10425d126130694",
-       "inputs_retrieved_utc": "2026-10-01T02:30:08Z"
-      },
-      {
-       "lead_group": "day3",
-       "status": "ok",
-       "verification": "unverified",
-       "verification_detail": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-09-29 12Z (explicit)"
         },
         {
          "input": "pr_jma_gsm",
-         "status": "unverified",
-         "detail": "runs 29 Sep 06Z, 29 Sep 12Z, 29 Sep 18Z, 30 Sep 00Z, 30 Sep 06Z; 23/23 hours equal; not archived: 30 Sep 06Z"
+         "status": "verified",
+         "detail": "runs 01 Oct 00Z, 01 Oct 06Z, 30 Sep 06Z, 30 Sep 12Z, 30 Sep 18Z; 24/24 hours equal"
         },
         {
          "input": "pr_ncep_gfs_global",
          "status": "verified",
-         "detail": "runs 29 Sep 00Z, 29 Sep 06Z, 29 Sep 12Z, 29 Sep 18Z, 30 Sep 00Z; 24/24 hours equal"
+         "detail": "runs 01 Oct 00Z, 30 Sep 00Z, 30 Sep 06Z, 30 Sep 12Z, 30 Sep 18Z; 24/24 hours equal"
         },
         {
          "input": "pr_ecmwf_ifs025",
          "status": "verified",
-         "detail": "runs 29 Sep 00Z, 29 Sep 06Z, 29 Sep 12Z, 29 Sep 18Z, 30 Sep 00Z; 24/24 hours equal"
+         "detail": "runs 01 Oct 00Z, 30 Sep 00Z, 30 Sep 06Z, 30 Sep 12Z, 30 Sep 18Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-09-30T06:00:00Z",
+       "latest_model_run_utc": "2026-10-01T06:00:00Z",
        "lead_hours_to_window_start": 43.0,
        "lead_hours_to_window_end": 67.0,
        "probabilities": {
@@ -768,6 +497,7 @@
        },
        "route": "primary",
        "is_fallback": false,
+       "heldout_scored": true,
        "calibrated_model": "all_composite",
        "calibrated_model_label": "All-model composite",
        "models_available": [
@@ -781,25 +511,25 @@
         {
          "input": "pr_ecmwf_ifs025",
          "model": "ECMWF IFS 0.25°",
-         "run_init_utc": "2026-09-30T00:00Z",
+         "run_init_utc": "2026-10-01T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_jma_gsm",
          "model": "JMA GSM",
-         "run_init_utc": "2026-09-30T06:00Z",
+         "run_init_utc": "2026-10-01T06:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_ncep_gfs_global",
          "model": "NOAA GFS",
-         "run_init_utc": "2026-09-30T00:00Z",
+         "run_init_utc": "2026-10-01T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-09-29T12:00Z",
+         "run_init_utc": "2026-09-30T12:00Z",
          "run_identification": "explicit run requested"
         }
        ],
@@ -829,84 +559,7 @@
        "model_training_days": 894,
        "model_run_id": "noenso-20260930T155246Z-a716ab4d",
        "artifact_sha256": "adb8d694c86ef46926475b5b3b5d585c0a6c334d1aeb4708e8d6c49967351fe6",
-       "inputs_retrieved_utc": "2026-10-01T02:30:11Z"
-      }
-     ]
-    },
-    {
-     "label_date": "2026-10-04",
-     "window_start_local": "2026-10-03T09:00:00+08:00",
-     "window_end_local": "2026-10-04T09:00:00+08:00",
-     "window_start_utc": "2026-10-03T01:00:00Z",
-     "window_end_utc": "2026-10-04T01:00:00Z",
-     "availability": "available",
-     "unavailable_reason": null,
-     "inputs_blocked_by_timing": [
-      "pr_ecmwf_ifs025",
-      "pr_jma_gsm",
-      "pr_ncep_gfs_global"
-     ],
-     "forecasts": [
-      {
-       "lead_group": "day3",
-       "status": "ok",
-       "verification": "verified",
-       "verification_detail": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-09-30 12Z (explicit)"
-        }
-       ],
-       "latest_model_run_utc": "2026-09-30T12:00:00Z",
-       "lead_hours_to_window_start": 61.0,
-       "lead_hours_to_window_end": 85.0,
-       "probabilities": {
-        "ge_0_2mm": 0.1552,
-        "ge_1mm": 0.0629,
-        "ge_5mm": 0.0039,
-        "ge_10mm": 0.0039
-       },
-       "amounts_mm": {
-        "median": 0.0,
-        "expected": 0.166,
-        "p10": 0.0,
-        "p25": 0.0,
-        "p75": 0.0,
-        "p90": 0.33
-       },
-       "route": "fallback#4",
-       "is_fallback": true,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
-       "models_available": [
-        "sr_ecmwf_ifs"
-       ],
-       "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
-       ],
-       "input_runs": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-09-30T12:00Z",
-         "run_identification": "explicit run requested"
-        }
-       ],
-       "raw_model_totals_uncalibrated": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "total_mm": 0.0
-        }
-       ],
-       "model_trained_to": "2026-09-29",
-       "model_training_days": 910,
-       "model_run_id": "noenso-20260930T155246Z-a716ab4d",
-       "artifact_sha256": "adb8d694c86ef46926475b5b3b5d585c0a6c334d1aeb4708e8d6c49967351fe6",
-       "inputs_retrieved_utc": "2026-10-01T02:30:08Z"
+       "inputs_retrieved_utc": "2026-10-02T13:54:39Z"
       }
      ]
     },
@@ -917,7 +570,13 @@
      "window_start_utc": "2026-10-04T01:00:00Z",
      "window_end_utc": "2026-10-05T01:00:00Z",
      "availability": "unavailable",
-     "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
+     "unavailable_reason": "A forecast was made but withdrawn: one of its inputs was credited to a model run that had not been published when the forecast was made.",
+     "withdrawn": [
+      {
+       "lead_group": "day3",
+       "reason": "pr_jma_gsm: runs 01 Oct 06Z, 01 Oct 12Z, 01 Oct 18Z, 02 Oct 00Z, 02 Oct 06Z; 23/23 hours equal; named run 02 Oct 06Z was not yet published (model's latest run 02 Oct 00Z when checked)"
+      }
+     ],
      "inputs_blocked_by_timing": [
       "pr_ecmwf_ifs025",
       "pr_jma_gsm",
@@ -933,6 +592,23 @@
      "window_end_utc": "2026-10-06T01:00:00Z",
      "availability": "unavailable",
      "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
+     "withdrawn": [],
+     "inputs_blocked_by_timing": [
+      "pr_ecmwf_ifs025",
+      "pr_jma_gsm",
+      "pr_ncep_gfs_global"
+     ],
+     "forecasts": []
+    },
+    {
+     "label_date": "2026-10-07",
+     "window_start_local": "2026-10-06T09:00:00+08:00",
+     "window_end_local": "2026-10-07T09:00:00+08:00",
+     "window_start_utc": "2026-10-06T01:00:00Z",
+     "window_end_utc": "2026-10-07T01:00:00Z",
+     "availability": "unavailable",
+     "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
+     "withdrawn": [],
      "inputs_blocked_by_timing": [
       "pr_ecmwf_ifs025",
       "pr_jma_gsm",
@@ -950,7 +626,7 @@
     "name": "Swanbourne",
     "distance_km": 11.3
    },
-   "forecast_made_utc": "2026-10-01T02:30:00Z",
+   "forecast_made_utc": "2026-10-02T13:54:00Z",
    "latest_observation": {
     "label_date": "2026-09-29",
     "retrieved_utc": "2026-09-30T14:04:57Z"
@@ -962,13 +638,19 @@
    },
    "days": [
     {
-     "label_date": "2026-10-03",
-     "window_start_local": "2026-10-02T09:00:00+08:00",
-     "window_end_local": "2026-10-03T09:00:00+08:00",
-     "window_start_utc": "2026-10-02T01:00:00Z",
-     "window_end_utc": "2026-10-03T01:00:00Z",
+     "label_date": "2026-10-04",
+     "window_start_local": "2026-10-03T09:00:00+08:00",
+     "window_end_local": "2026-10-04T09:00:00+08:00",
+     "window_start_utc": "2026-10-03T01:00:00Z",
+     "window_end_utc": "2026-10-04T01:00:00Z",
      "availability": "available",
      "unavailable_reason": null,
+     "withdrawn": [
+      {
+       "lead_group": "day2",
+       "reason": "pr_jma_gsm: runs 01 Oct 06Z, 01 Oct 12Z, 01 Oct 18Z, 02 Oct 00Z, 02 Oct 06Z; 23/23 hours equal; named run 02 Oct 06Z was not yet published (model's latest run 02 Oct 00Z when checked)"
+      }
+     ],
      "inputs_blocked_by_timing": [
       "pr_ecmwf_ifs025",
       "pr_jma_gsm",
@@ -976,93 +658,32 @@
      ],
      "forecasts": [
       {
-       "lead_group": "day2",
+       "lead_group": "day3",
        "status": "ok",
-       "verification": "verified",
+       "verification": "checked_at_issue",
        "verification_detail": [
         {
          "input": "sr_ecmwf_ifs",
          "status": "verified",
          "detail": "sr_ecmwf_ifs: run 2026-09-30 12Z (explicit)"
-        }
-       ],
-       "latest_model_run_utc": "2026-09-30T12:00:00Z",
-       "lead_hours_to_window_start": 37.0,
-       "lead_hours_to_window_end": 61.0,
-       "probabilities": {
-        "ge_0_2mm": 0.1372,
-        "ge_1mm": 0.0343,
-        "ge_5mm": 0.0034,
-        "ge_10mm": 0.0034
-       },
-       "amounts_mm": {
-        "median": 0.0,
-        "expected": 0.086,
-        "p10": 0.0,
-        "p25": 0.0,
-        "p75": 0.0,
-        "p90": 0.2
-       },
-       "route": "fallback#4",
-       "is_fallback": true,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
-       "models_available": [
-        "sr_ecmwf_ifs"
-       ],
-       "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
-       ],
-       "input_runs": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-09-30T12:00Z",
-         "run_identification": "explicit run requested"
-        }
-       ],
-       "raw_model_totals_uncalibrated": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "total_mm": 0.0
-        }
-       ],
-       "model_trained_to": "2026-09-29",
-       "model_training_days": 915,
-       "model_run_id": "noenso-20260930T155325Z-6521c3bf",
-       "artifact_sha256": "b34df760e6fa61741e396f49f8a38eabf365e651ccfe3f7eeb3f2d9a094eefc4",
-       "inputs_retrieved_utc": "2026-10-01T02:30:13Z"
-      },
-      {
-       "lead_group": "day3",
-       "status": "ok",
-       "verification": "unverified",
-       "verification_detail": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-09-29 12Z (explicit)"
         },
         {
          "input": "pr_jma_gsm",
-         "status": "unverified",
-         "detail": "runs 29 Sep 06Z, 29 Sep 12Z, 29 Sep 18Z, 30 Sep 00Z, 30 Sep 06Z; 23/23 hours equal; not archived: 30 Sep 06Z"
+         "status": "verified",
+         "detail": "runs 01 Oct 00Z, 01 Oct 06Z, 30 Sep 06Z, 30 Sep 12Z, 30 Sep 18Z; 24/24 hours equal"
         },
         {
          "input": "pr_ncep_gfs_global",
          "status": "verified",
-         "detail": "runs 29 Sep 00Z, 29 Sep 06Z, 29 Sep 12Z, 29 Sep 18Z, 30 Sep 00Z; 24/24 hours equal"
+         "detail": "runs 01 Oct 00Z, 30 Sep 00Z, 30 Sep 06Z, 30 Sep 12Z, 30 Sep 18Z; 24/24 hours equal"
         },
         {
          "input": "pr_ecmwf_ifs025",
          "status": "verified",
-         "detail": "runs 29 Sep 00Z, 29 Sep 06Z, 29 Sep 12Z, 29 Sep 18Z, 30 Sep 00Z; 24/24 hours equal"
+         "detail": "runs 01 Oct 00Z, 30 Sep 00Z, 30 Sep 06Z, 30 Sep 12Z, 30 Sep 18Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-09-30T06:00:00Z",
+       "latest_model_run_utc": "2026-10-01T06:00:00Z",
        "lead_hours_to_window_start": 43.0,
        "lead_hours_to_window_end": 67.0,
        "probabilities": {
@@ -1081,6 +702,7 @@
        },
        "route": "primary",
        "is_fallback": false,
+       "heldout_scored": true,
        "calibrated_model": "all_composite",
        "calibrated_model_label": "All-model composite",
        "models_available": [
@@ -1094,25 +716,25 @@
         {
          "input": "pr_ecmwf_ifs025",
          "model": "ECMWF IFS 0.25°",
-         "run_init_utc": "2026-09-30T00:00Z",
+         "run_init_utc": "2026-10-01T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_jma_gsm",
          "model": "JMA GSM",
-         "run_init_utc": "2026-09-30T06:00Z",
+         "run_init_utc": "2026-10-01T06:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_ncep_gfs_global",
          "model": "NOAA GFS",
-         "run_init_utc": "2026-09-30T00:00Z",
+         "run_init_utc": "2026-10-01T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-09-29T12:00Z",
+         "run_init_utc": "2026-09-30T12:00Z",
          "run_identification": "explicit run requested"
         }
        ],
@@ -1142,84 +764,7 @@
        "model_training_days": 897,
        "model_run_id": "noenso-20260930T155325Z-6521c3bf",
        "artifact_sha256": "d3730c83c195b1bea843a1be878b4a8e476cd8d7fcf10113b0d7ab9c07ade75e",
-       "inputs_retrieved_utc": "2026-10-01T02:30:15Z"
-      }
-     ]
-    },
-    {
-     "label_date": "2026-10-04",
-     "window_start_local": "2026-10-03T09:00:00+08:00",
-     "window_end_local": "2026-10-04T09:00:00+08:00",
-     "window_start_utc": "2026-10-03T01:00:00Z",
-     "window_end_utc": "2026-10-04T01:00:00Z",
-     "availability": "available",
-     "unavailable_reason": null,
-     "inputs_blocked_by_timing": [
-      "pr_ecmwf_ifs025",
-      "pr_jma_gsm",
-      "pr_ncep_gfs_global"
-     ],
-     "forecasts": [
-      {
-       "lead_group": "day3",
-       "status": "ok",
-       "verification": "verified",
-       "verification_detail": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-09-30 12Z (explicit)"
-        }
-       ],
-       "latest_model_run_utc": "2026-09-30T12:00:00Z",
-       "lead_hours_to_window_start": 61.0,
-       "lead_hours_to_window_end": 85.0,
-       "probabilities": {
-        "ge_0_2mm": 0.1509,
-        "ge_1mm": 0.0435,
-        "ge_5mm": 0.0038,
-        "ge_10mm": 0.0038
-       },
-       "amounts_mm": {
-        "median": 0.0,
-        "expected": 0.126,
-        "p10": 0.0,
-        "p25": 0.0,
-        "p75": 0.0,
-        "p90": 0.2
-       },
-       "route": "fallback#4",
-       "is_fallback": true,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
-       "models_available": [
-        "sr_ecmwf_ifs"
-       ],
-       "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
-       ],
-       "input_runs": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-09-30T12:00Z",
-         "run_identification": "explicit run requested"
-        }
-       ],
-       "raw_model_totals_uncalibrated": [
-        {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "total_mm": 0.0
-        }
-       ],
-       "model_trained_to": "2026-09-29",
-       "model_training_days": 913,
-       "model_run_id": "noenso-20260930T155325Z-6521c3bf",
-       "artifact_sha256": "d3730c83c195b1bea843a1be878b4a8e476cd8d7fcf10113b0d7ab9c07ade75e",
-       "inputs_retrieved_utc": "2026-10-01T02:30:13Z"
+       "inputs_retrieved_utc": "2026-10-02T13:54:48Z"
       }
      ]
     },
@@ -1230,7 +775,13 @@
      "window_start_utc": "2026-10-04T01:00:00Z",
      "window_end_utc": "2026-10-05T01:00:00Z",
      "availability": "unavailable",
-     "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
+     "unavailable_reason": "A forecast was made but withdrawn: one of its inputs was credited to a model run that had not been published when the forecast was made.",
+     "withdrawn": [
+      {
+       "lead_group": "day3",
+       "reason": "pr_jma_gsm: runs 01 Oct 06Z, 01 Oct 12Z, 01 Oct 18Z, 02 Oct 00Z, 02 Oct 06Z; 23/23 hours equal; named run 02 Oct 06Z was not yet published (model's latest run 02 Oct 00Z when checked)"
+      }
+     ],
      "inputs_blocked_by_timing": [
       "pr_ecmwf_ifs025",
       "pr_jma_gsm",
@@ -1246,6 +797,23 @@
      "window_end_utc": "2026-10-06T01:00:00Z",
      "availability": "unavailable",
      "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
+     "withdrawn": [],
+     "inputs_blocked_by_timing": [
+      "pr_ecmwf_ifs025",
+      "pr_jma_gsm",
+      "pr_ncep_gfs_global"
+     ],
+     "forecasts": []
+    },
+    {
+     "label_date": "2026-10-07",
+     "window_start_local": "2026-10-06T09:00:00+08:00",
+     "window_end_local": "2026-10-07T09:00:00+08:00",
+     "window_start_utc": "2026-10-06T01:00:00Z",
+     "window_end_utc": "2026-10-07T01:00:00Z",
+     "availability": "unavailable",
+     "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
+     "withdrawn": [],
      "inputs_blocked_by_timing": [
       "pr_ecmwf_ifs025",
       "pr_jma_gsm",
