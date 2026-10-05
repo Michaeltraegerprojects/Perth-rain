@@ -1,8 +1,8 @@
 {
  "schema_version": 1,
- "exported_utc": "2026-10-02T14:38:05Z",
+ "exported_utc": "2026-10-05T02:30:12Z",
  "release": "Frozen audited release (no El Niño input), models trained 2026-09-30",
- "forecast_made_utc": "2026-10-02T13:54:00Z",
+ "forecast_made_utc": "2026-10-05T02:18:00Z",
  "files": [
   "forecast.json",
   "performance.json",
