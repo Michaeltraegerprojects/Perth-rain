@@ -185,3 +185,26 @@ def test_failed_forecasts_are_withdrawn_not_published():
             assert all(f["verification"] != "failed" for f in day["forecasts"])
             if day.get("withdrawn") and not day["forecasts"]:
                 assert day["availability"] == "unavailable" and "withdrawn" in day["unavailable_reason"]
+
+
+# ------------------------------------------------------------------- empty verification detail (found 2026-10-05)
+def test_missing_verification_detail_never_becomes_nan_or_the_word_nan():
+    """A row the verifier could not check has an empty detail, which pandas reads back as NaN. The first export of
+    real data after PR #1 crashed on it (json refuses NaN)."""
+    import math
+    for empty in (float("nan"), None, ""):
+        text = X.detail_text(empty, "live response not found in cache")
+        assert isinstance(text, str) and text and "nan" not in text.lower()
+        assert not (isinstance(text, float) and math.isnan(text))
+    assert X.detail_text("sr_ecmwf_ifs: run 2026-10-04 12Z (explicit)", "x") == "sr_ecmwf_ifs: run 2026-10-04 12Z (explicit)"
+    assert "could not be checked" in X.detail_text(float("nan"), float("nan"))
+
+
+@pytest.mark.local_data
+def test_every_location_exports_to_strict_json_from_the_local_outputs():
+    import tomllib
+    import pandas as pd
+    status = pd.read_csv(X.ROOT / "reports" / "served_row_status.csv")
+    verif = pd.read_csv(X.ROOT / "reports" / "served_row_verification.csv")
+    for e in tomllib.loads((X.ROOT / "config.toml").read_text())["locations"]:
+        json.dumps(X.export_location(e["name"], X.slug(e["name"]), status, verif), allow_nan=False)

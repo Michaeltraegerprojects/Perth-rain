@@ -155,3 +155,34 @@ def test_stale_lock_is_refused_with_instructions_and_removal_restores_appends(tm
     ledger.lock_path(p).unlink()
     ledger.append([_rec(1)], p)
     assert len(ledger.read_ledger(p)) == 2
+
+
+# ------------------------------------------------------------------------- R-7: records loaded from the real ledger
+NAN = float("nan")
+
+
+def test_timing_handles_records_without_availability_fields():
+    """Found on the first export of real data after PR #1: pandas loads absent fields as NaN, which is truthy and
+    not iterable, so competitor_timing crashed (unit tests had only used plain dicts)."""
+    issued = "2026-10-01T21:00:00Z"
+    old_raw = {"competitor": "pr_jma_gsm", "issued_at_utc": issued, "latest_run_utc": "2026-10-01 06:00:00+00:00",
+               "availability_evidence": NAN, "availability_basis": NAN}
+    t = export.competitor_timing(old_raw)
+    assert t["availability_basis"] == ESTIMATED and t["info_age_h"] == 15.0
+    old_champ = {"competitor": "champion", "issued_at_utc": issued, "availability_basis": NAN, "availability_evidence": NAN,
+                 "inputs": "pr_jma_gsm: runs up to 2026-10-01 06Z (inferred)", "latest_run_utc": NAN}
+    assert export.competitor_timing(old_champ)["availability_basis"] == ESTIMATED
+    no_run = {"competitor": "icon_global", "issued_at_utc": issued, "latest_run_utc": NAN, "named_run_utc": None,
+              "availability_evidence": NAN, "availability_basis": None}
+    assert export.competitor_timing(no_run)["info_age_h"] is None
+
+
+def test_timing_works_on_rows_built_the_way_live_view_builds_them():
+    df = pd.DataFrame([{"competitor": "pr_jma_gsm", "issued_at_utc": "2026-10-01T21:00:00Z", "status": "ok",
+                        "latest_run_utc": "2026-10-01 06:00:00+00:00"},
+                       {"competitor": "icon_global", "issued_at_utc": "2026-10-04T21:00:00Z", "status": "ok",
+                        "latest_run_utc": "2026-10-04 00:00:00+00:00", "availability_basis": "observed",
+                        "availability_evidence": "explicit run requested; HTTP 200 at issue time"}])
+    out = [export.competitor_timing(r._asdict()) for r in df.itertuples(index=False)]
+    assert [o["availability_basis"] for o in out] == [ESTIMATED, "observed"]
+    json.dumps(out, allow_nan=False)                      # the export refuses NaN

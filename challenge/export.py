@@ -43,9 +43,18 @@ _RUN = re.compile(r"(\w+): (?:run|runs up to) (\d{4}-\d{2}-\d{2} \d{2})Z \((expl
 ESTIMATED = "estimated (initialisation + 6 h)"
 
 
+def _present(v):
+    """None for a value that is absent: None, NaN or NaT (what pandas gives a field an older record lacks), or the
+    strings 'nan', 'None', 'NaT'. NaN is truthy and not iterable, so it must never reach an `or` or an `in`."""
+    if v is None or (isinstance(v, float) and v != v) or v is pd.NaT:
+        return None
+    return None if isinstance(v, str) and v.strip() in ("", "nan", "NaN", "None", "NaT") else v
+
+
 def competitor_timing(r: dict) -> dict:
     """Model-run start, information age at issue, and whether availability was OBSERVED (the run answered an
     explicit request, or the model's metadata reported it available) or only ESTIMATED from the fixed 6-hour rule."""
+    r = {k: _present(v) for k, v in r.items()}
     issued = pd.Timestamp(r["issued_at_utc"])
     comp = r.get("competitor", "")
     ev = r.get("availability_evidence") or ""
