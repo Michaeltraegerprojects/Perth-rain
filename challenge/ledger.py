@@ -29,7 +29,7 @@ from perthrain import observations
 from perthrain.calibrate import THRESHOLDS
 from perthrain.config import load_configs
 from perthrain.pipeline import ftp_month_url, make_fetcher
-from perthrain.predict import compute_predictions
+from perthrain.predict import ESTIMATED, compute_predictions
 from perthrain.stations import STATE_FOLDERS, ftp_folder_name
 from challenge import champion, sources
 
@@ -292,6 +292,7 @@ def _challenger_records(base, st, w, n, now, metas) -> list[dict]:
                 else:
                     t = sources.window_totals_single_run(sr, win, 1).iloc[0]
                     rec.update(_fill(t, "explicit run requested; HTTP 200 at issue time"))
+                    rec["availability_basis"] = "observed" if rec["status"] == "ok" else None
         else:
             pr = sources.fetch_previous_runs(model, float(st["latitude"]), float(st["longitude"]),
                                              win.window_start_utc[0].tz_localize(None).normalize(),
@@ -302,12 +303,22 @@ def _challenger_records(base, st, w, n, now, metas) -> list[dict]:
                 rec["missing_reason"] = "no response"
             else:
                 rec["named_run_utc"] = str(t.latest_run_utc)
-                after_meta = mm["last_run_init_utc"] is not None and t.latest_run_utc > mm["last_run_init_utc"]
-                if not t.published_before_cutoff or after_meta:
+                init, avail = mm["last_run_init_utc"], mm.get("last_run_available_utc")
+                if not t.published_before_cutoff:
                     rec["missing_reason"] = "required run not issued/published before the issue time"
+                elif init is not None and t.latest_run_utc > init:
+                    rec["missing_reason"] = f"named run not yet published (model's latest run {init})"
+                elif init is not None and t.latest_run_utc == init and (avail is None or avail > now):
+                    rec["missing_reason"] = (f"named run published at {avail}, after the issue time" if avail is not None
+                                             else "named run is the latest and its publication time is unknown")
+                elif init is not None:
+                    rec.update(_fill(t, f"run named by the offset rule; model metadata: latest run {init}, published "
+                                        f"{avail} (checked {mm['retrieved_at_utc']})"))
+                    rec["availability_basis"] = "observed" if rec["status"] == "ok" else None
                 else:
-                    rec.update(_fill(t, f"run named by the offset rule; model metadata last run "
-                                        f"{mm['last_run_init_utc']} (checked {mm['retrieved_at_utc']})"))
+                    rec.update(_fill(t, "run named by the offset rule; model metadata unavailable, so availability "
+                                        "is the 6-hour estimate"))
+                    rec["availability_basis"] = ESTIMATED if rec["status"] == "ok" else None
         out.append(rec)
         if n > 1:                                   # same 12 UTC single-run rule as the champion's sr input
             r12 = {**base, "competitor": f"{model}_12z", "kind": "challenger", "status": "missing", "total_mm": None}
@@ -323,6 +334,7 @@ def _challenger_records(base, st, w, n, now, metas) -> list[dict]:
                 else:
                     r12.update(_fill(sources.window_totals_single_run(sr, win, n).iloc[0],
                                      "explicit run requested; HTTP 200 at issue time"))
+                    r12["availability_basis"] = "observed" if r12["status"] == "ok" else None
             out.append(r12)
     return out
 

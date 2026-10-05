@@ -13,7 +13,7 @@ Fairness rules applied here:
 from __future__ import annotations
 
 import tomllib
-from math import erf, sqrt
+from math import comb, erf, sqrt
 from pathlib import Path
 
 import numpy as np
@@ -60,13 +60,14 @@ def block_bootstrap(diff: np.ndarray, block: int = 7, B: int = 2000, seed: int =
     means = diff[idx].mean(axis=1)
     se = float(means.std(ddof=1))
     mean = float(diff.mean())
-    if se > 0:
+    if se > 1e-12 * max(1.0, float(np.abs(diff).max())):
         z = abs(mean) / se
         p = 2 * (1 - 0.5 * (1 + erf(z / sqrt(2))))
-    elif mean == 0.0:
-        p = 1.0                 # identical errors on every day: a tie, never a significant difference
     else:
-        p = 0.0                 # the same non-zero difference on every day
+        # no resampling variability: identical errors, the same difference every day, or fewer days than one
+        # block (every resample is then the whole series). The normal approximation is undefined; use the exact
+        # two-sided sign test, which gives a tie p = 1 and one day p = 1.
+        p = sign_test_p(diff)
     lo, hi = np.percentile(means, [2.5, 97.5])
     return {"mean_diff": float(diff.mean()), "ci95_lo": float(lo), "ci95_hi": float(hi), "se": se, "p": float(p)}
 
@@ -189,6 +190,18 @@ def paired(common: pd.DataFrame, cols: dict, keys=("window_start_utc",)) -> pd.D
                      "n_days": len(y), "n_wet_days": int((y >= WET).sum()), "mean_abs_error_diff": _r(r["mean_diff"], 4),
                      "ci95": [_r(r["ci95_lo"], 4), _r(r["ci95_hi"], 4)], "p_bootstrap": float(p)})
     return pd.DataFrame(rows)
+
+
+def sign_test_p(diff: np.ndarray) -> float:
+    """Exact two-sided sign test on the non-zero daily differences (zero differences are ties and dropped)."""
+    diff = np.asarray(diff, float)
+    nz = diff[np.abs(diff) > 1e-12 * max(1.0, float(np.abs(diff).max()) if len(diff) else 1.0)]
+    m = len(nz)
+    if m == 0:
+        return 1.0
+    k = int((nz > 0).sum())
+    tail = sum(comb(m, i) for i in range(min(k, m - k) + 1)) / 2 ** m
+    return float(min(1.0, 2 * tail))
 
 
 def holm(df: pd.DataFrame, rules: dict | None = None) -> pd.DataFrame:

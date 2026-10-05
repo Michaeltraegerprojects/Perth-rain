@@ -34,6 +34,12 @@ def main(argv=None):
     a = ap.parse_args(argv)
     from challenge import champion
     if a.command == "freeze":
+        if not champion.FREEZE.exists():      # a new champion: its per-row references are recorded with it
+            from challenge import historical
+            snap = champion.snapshot()
+            for g in historical.unique_gauges():
+                for lead in ("day1", "day2", "day3"):
+                    historical.champion_holdout(g["slug"], lead, snap, create_reference=True)
         print(champion.freeze())
     elif a.command == "verify":
         champion.verify()
@@ -42,9 +48,12 @@ def main(argv=None):
         from challenge import historical
         # behavioural evidence first: every gauge x lead must still reproduce the audited held-out evaluation
         rec = json.loads(champion.FREEZE.read_text())
+        champion.check_references(rec)        # recorded references: present and unchanged, before anything runs
+        recorded = set(rec.get("holdout_references") or {})
         for g in historical.unique_gauges():
             for lead in ("day1", "day2", "day3"):
-                historical.champion_holdout(g["slug"], lead, rec)
+                name = historical.reference_path(g["slug"], lead).name
+                historical.champion_holdout(g["slug"], lead, rec, create_reference=name not in recorded)
         print(champion.refreeze(a.reason))
     elif a.command == "checkpoint":
         from challenge import ledger

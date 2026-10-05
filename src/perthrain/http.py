@@ -15,7 +15,7 @@ import threading
 import time
 import urllib.request
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -69,9 +69,11 @@ class FetchResult:
 
 
 class Fetcher:
-    #: a cached HTTP 400 ("run not available") is trusted for this long, then asked again: the run may have been
-    #: published since (a request made before publication must not stay "not archived" forever)
+    #: a cached HTTP 400 ("run not available") for a RECENT run is trusted for this long, then asked again: the run
+    #: may have been published since (a request made before publication must not stay "not archived" forever)
     FAILURE_TTL_HOURS = 6.0
+    #: a 400 given more than this long after the latest model time the request covers is final, never re-asked
+    RECENT_RUN_HOURS = 48.0
 
     def __init__(self, raw_dir: Path, *, rate_per_second: float = 1.0, connect_timeout: float = 20,
                  read_timeout: float = 120, max_retries: int = 6, user_agent: str = "perthrain"):
@@ -107,12 +109,11 @@ class Fetcher:
         if meta_path.exists() and not refresh:
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
             cached_ok = meta.get("status") == 200 and body_path.exists()
-            fresh_failure = False
-            if meta.get("status") == 400 and meta.get("retrieved_at_utc"):
-                age_h = (datetime.now(timezone.utc) - datetime.fromisoformat(
-                    meta["retrieved_at_utc"].replace("Z", "+00:00"))).total_seconds() / 3600
-                fresh_failure = age_h < self.FAILURE_TTL_HOURS
-            if cached_ok or (not retry_failed and fresh_failure):
+            # a cached 400 is reused offline (a replay must not depend on the clock), and otherwise unless the caller
+            # asks again or it may have been answered before the run was published
+            reuse_400 = meta.get("status") == 400 and (
+                self.offline or (not retry_failed and not self._maybe_premature(meta, params)))
+            if cached_ok or reuse_400:
                 self.stats["cache_hits"] += 1
                 body = json.loads(body_path.read_text(encoding="utf-8")) if body_path.exists() else None
                 return FetchResult(url, params, meta.get("status"), body, body_path, True,
@@ -163,6 +164,25 @@ class Fetcher:
         else:
             log.info("downloaded %s (%s attempt%s)", label or url, attempts, "s" if attempts > 1 else "")
         return FetchResult(url, params, status, body, body_path, False, retrieved, error)
+
+    def _maybe_premature(self, meta: dict, params: dict) -> bool:
+        """True if a cached 400 is older than FAILURE_TTL_HOURS and was answered within RECENT_RUN_HOURS of the
+        latest model time the request covers (an explicit ``run``, or the end of the ``end_date`` day): the run
+        may not have been published yet then. A 400 about a long-archived run, or a request without either
+        parameter, is final."""
+        try:
+            got = datetime.fromisoformat(meta["retrieved_at_utc"].replace("Z", "+00:00"))
+            if params.get("run"):
+                asked = datetime.fromisoformat(str(params["run"])).replace(tzinfo=timezone.utc)
+            elif params.get("end_date"):
+                asked = datetime.fromisoformat(str(params["end_date"])).replace(tzinfo=timezone.utc) + timedelta(days=1)
+            else:
+                return False
+        except (KeyError, TypeError, ValueError):
+            return False
+        recent = (got - asked).total_seconds() / 3600 < self.RECENT_RUN_HOURS
+        stale = (datetime.now(timezone.utc) - got).total_seconds() / 3600 >= self.FAILURE_TTL_HOURS
+        return recent and stale
 
     def _backoff(self, attempt: int, label: str, error: str, retry_after: float | None = None) -> None:
         if attempt >= self.max_retries:

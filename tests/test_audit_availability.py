@@ -43,7 +43,8 @@ def test_stale_run_not_available_answer_is_asked_again(tmp_path):
     f = Fetcher(tmp_path, rate_per_second=0)
     f.session = _Session([_Resp(400, '{"error":true,"reason":"The requested model run is not available."}'),
                           _Resp(200, '{"hourly": {"time": [], "precipitation": []}}')])
-    url, params = "https://example.invalid/single", {"run": "2026-09-30T12:00"}
+    run = (pd.Timestamp.now(tz="UTC") - pd.Timedelta(days=1)).floor("6h")      # a recent run, asked about early
+    url, params = "https://example.invalid/single", {"run": f"{run:%Y-%m-%dT%H:%M}"}
     assert f.get_json(url, params, "sub").status == 400
     _age_cached_failure(tmp_path, hours=30)
     r = f.get_json(url, params, "sub")

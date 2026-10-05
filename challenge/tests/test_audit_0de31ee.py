@@ -206,7 +206,7 @@ def _tamper(root, lead, **changes):
 
 def test_reproduction_passes_on_untouched_outputs(synthetic_project):
     rec = champion.verify() if champion.FREEZE.exists() else json.loads(champion.freeze().read_text())
-    tab, meta = historical.champion_holdout("perth", "day2", rec)
+    tab, meta = historical.champion_holdout("perth", "day2", rec, create_reference=True)
     assert meta["n"] == len(tab) > 0
 
 
@@ -228,7 +228,7 @@ def test_reproduction_checks_more_than_one_aggregate(synthetic_project):
 
 def test_reproduction_checks_every_row_against_the_saved_reference(synthetic_project):
     rec = json.loads(champion.freeze().read_text())
-    historical.champion_holdout("perth", "day1", rec)            # writes/validates the per-row reference
+    historical.champion_holdout("perth", "day1", rec, create_reference=True)   # writes the per-row reference
     ref = historical.reference_path("perth", "day1")
     r = pd.read_parquet(ref)
     r.loc[r.index[5], "champion_p_ge_0.2"] += 0.02               # a per-row change no aggregate check would see

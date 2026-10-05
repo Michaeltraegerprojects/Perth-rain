@@ -66,7 +66,7 @@ def competitor_timing(r: dict) -> dict:
         latest = latest.tz_localize("UTC") if latest.tzinfo is None else latest.tz_convert("UTC")
         if r.get("availability_basis"):
             basis = r["availability_basis"]
-        elif "HTTP 200" in ev or "model metadata" in ev or comp.startswith("sr_"):
+        elif "HTTP 200" in ev or re.search(r"model metadata last run \d", ev) or comp.startswith("sr_"):
             basis = "observed"
         else:
             basis = ESTIMATED

@@ -37,20 +37,29 @@ META_URL = "https://api.open-meteo.com/data/{}/static/meta.json"
 
 
 def fetch_model_meta(fetcher, refresh: bool = True) -> dict:
-    """Latest run each live Previous Runs model has actually published, from Open-Meteo's model metadata. A model
-    whose metadata cannot be read is left out (its inputs then fall back to the labelled 6-hour estimate)."""
+    """Latest run each live Previous Runs model has actually published, and when it became available, from
+    Open-Meteo's model metadata. Read BEFORE the forecast data, so a run published while the data are being fetched
+    is never credited. A model whose metadata cannot be read is left out (its inputs then fall back to the labelled
+    6-hour estimate). With several domains (GFS) the earliest latest-run counts, and its availability is the latest
+    availability among the domains whose latest run it is; an unknown availability time stays None."""
     out = {}
     for model, ids in MODEL_META_IDS.items():
-        lasts, checked = [], None
+        doms, checked = [], None
         for mid in ids:
             res = fetcher.get_json(META_URL.format(mid), {}, "open_meteo/live/meta", refresh=refresh,
                                    label=f"LIVE meta {mid}")
-            t = (res.body or {}).get("last_run_initialisation_time") if res.ok else None
-            if t:
-                lasts.append(pd.Timestamp(t, unit="s", tz="UTC"))
+            b = (res.body or {}) if res.ok else {}
+            if b.get("last_run_initialisation_time"):
+                avail = b.get("last_run_availability_time")
+                doms.append((pd.Timestamp(b["last_run_initialisation_time"], unit="s", tz="UTC"),
+                             pd.Timestamp(avail, unit="s", tz="UTC") if avail else None))
                 checked = res.retrieved_at_utc
-        if lasts and len(lasts) == len(ids):
-            out[model] = {"last_run_init_utc": min(lasts), "checked_utc": checked}
+        if doms and len(doms) == len(ids):
+            last = min(i for i, _ in doms)
+            avails = [a for i, a in doms if i == last]
+            out[model] = {"last_run_init_utc": last,
+                          "last_run_available_utc": None if any(a is None for a in avails) else max(avails),
+                          "checked_utc": checked}
     return out
 LEADS = {"day1": 1, "day2": 2, "day3": 3}
 ALL_MODEL_COLS = ["sr_ecmwf_ifs", "pr_ecmwf_ifs025", "pr_jma_gsm", "pr_ncep_gfs_global"]
@@ -144,18 +153,27 @@ def live_feature_table(cfg, sr: pd.DataFrame, pr: pd.DataFrame, windows: pd.Data
     fw["timing_reason"] = np.where(fw.timing_ok, "",
                                    "required run not issued/published before the prediction time")
     # Availability evidence. Single runs were fetched by explicit run= and answered: observed. Previous Runs inputs
-    # are checked against the latest run the model's own metadata lists as published; without metadata they rely on
-    # the fixed 6-hour estimate, and say so.
+    # are checked against the model's own metadata: a named run newer than its latest published run is not usable,
+    # and the latest run itself only if it became available by the forecast time. Without metadata the fixed 6-hour
+    # estimate applies, and the row says so.
     fw["availability_basis"] = np.where(fw.source_api == "single_runs", "observed", ESTIMATED)
     for model, m in (model_meta or {}).items():
         sel = (fw.source_api == "previous_runs") & (fw.model == model)
         if not sel.any():
             continue
         fw.loc[sel, "availability_basis"] = "observed"
-        late = sel & (fw.latest_issue_utc > m["last_run_init_utc"])
+        last, avail = m["last_run_init_utc"], m.get("last_run_available_utc")
+        late = sel & (fw.latest_issue_utc > last)
         fw.loc[late, "timing_ok"] = False
         fw.loc[late, "timing_reason"] = (f"named run not yet published (model's latest published run "
-                                         f"{m['last_run_init_utc']:%Y-%m-%d %HZ}, checked {m.get('checked_utc')})")
+                                         f"{last:%Y-%m-%d %HZ}, checked {m.get('checked_utc')})")
+        if avail is None or avail > now:
+            newest = sel & (fw.latest_issue_utc == last)
+            fw.loc[newest, "timing_ok"] = False
+            fw.loc[newest, "timing_reason"] = (
+                f"named run {last:%Y-%m-%d %HZ} became available {avail:%Y-%m-%d %H:%M:%SZ}, after the forecast time"
+                if avail is not None else
+                f"named run {last:%Y-%m-%d %HZ} is the model's latest and its availability time is unknown")
     fw["usable"] = ok & fw.timing_ok
     return fw
 
@@ -415,8 +433,10 @@ def compute_predictions(cfg, horizon_days: int = 4, now: pd.Timestamp | None = N
     st = station_info(cfg)
     windows = future_windows(now, cfg.timezone, horizon_days)
     fetcher = make_fetcher(cfg)
-    sr, pr, problems = _fetch_live(cfg, fetcher, st["latitude"], st["longitude"], windows, now, refresh_live)
+    fetcher.offline = not refresh_live          # a replay reads the cache only, metadata included
+    # metadata FIRST: a run published while the forecast data are fetched is then not credited (errs safe)
     model_meta = fetch_model_meta(fetcher, refresh_live)
+    sr, pr, problems = _fetch_live(cfg, fetcher, st["latitude"], st["longitude"], windows, now, refresh_live)
     for m in MODEL_META_IDS:
         if m not in model_meta:
             problems.append(f"model metadata for {m} unavailable: its availability is the 6-hour estimate")

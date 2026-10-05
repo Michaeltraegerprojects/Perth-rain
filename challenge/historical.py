@@ -39,8 +39,9 @@ def unique_gauges():
     return out
 
 
-def champion_holdout(slug: str, lead: str, freeze: dict):
-    """Reproduce the champion's held-out forecasts for one gauge and lead (frozen config, original split)."""
+def champion_holdout(slug: str, lead: str, freeze: dict, *, create_reference: bool = False):
+    """Reproduce the champion's held-out forecasts for one gauge and lead (frozen config, original split).
+    ``create_reference`` only for `freeze`/`refreeze` of a reference the freeze record does not list yet."""
     wide = pd.read_parquet(ROOT / "data" / slug / "joined" / "training_wide.parquet")
     wide = wide.drop(columns=[c for c in wide.columns if c.startswith("clim_")])
     cands = C._candidates(wide, lead)
@@ -83,7 +84,7 @@ def champion_holdout(slug: str, lead: str, freeze: dict):
     out["champion_run_id"] = freeze["locations"][slug]["run_id"]
     out["champion_trained_to"] = str(train.label_date_local.max().date())
     out = out.reset_index(drop=True)
-    _check_against_reference(slug, lead, out)
+    _check_against_reference(slug, lead, out, create=create_reference)
     return out, {"hold_start": str(pd.Timestamp(hold_start).date()), "n": len(y)}
 
 
@@ -129,12 +130,18 @@ def _row_keys(df: pd.DataFrame) -> pd.Series:
     return raw.map(lambda x: hashlib.sha256(x.encode()).hexdigest())
 
 
-def _check_against_reference(slug, lead, out):
-    """Per-row check against the saved reference (written on the first verified run, then frozen by `refreeze`).
-    Aggregates can agree while individual forecasts differ; this catches that."""
+def _check_against_reference(slug, lead, out, create: bool = False):
+    """Per-row check against the saved reference. Aggregates can agree while individual forecasts differ; this
+    catches that. A missing reference is an error: it is written only when ``create`` is set (by `freeze`, or by
+    `refreeze` for a gauge the freeze record does not list yet), so a recorded reference is never silently rebuilt
+    from whatever the current code produces."""
     ref_p = reference_path(slug, lead)
     cur = pd.DataFrame({"row_key": _row_keys(out), **{c: out[c].to_numpy(float) for c in REFERENCE_COLUMNS}})
     if not ref_p.exists():
+        if not create:
+            raise champion.ChampionChanged(
+                f"{slug} {lead}: per-row reference challenge/reference/{ref_p.name} is missing. Restore it from a "
+                "backup; references are created only by `freeze` or `refreeze` for a gauge not yet recorded")
         ref_p.parent.mkdir(parents=True, exist_ok=True)
         cur.to_parquet(ref_p, index=False)
         return

@@ -126,6 +126,19 @@ def holdout_references() -> dict:
     return {p.name: _sha(p) for p in sorted(ref.glob("*.parquet"))} if ref.exists() else {}
 
 
+def check_references(rec: dict) -> None:
+    """Every per-row reference a record lists must exist with its recorded hash. Run before any reproduction in
+    `refreeze`, so a deleted or edited reference is reported instead of being rebuilt from the current code."""
+    ref = ROOT / "challenge" / "reference"
+    for name, digest in sorted((rec.get("holdout_references") or {}).items()):
+        p = ref / name
+        if not p.exists():
+            raise ChampionChanged(f"challenge/reference/{name} is recorded in the freeze but missing; restore it from "
+                                  "a backup (a recorded reference is never recreated)")
+        if _sha(p) != digest:
+            raise ChampionChanged(f"challenge/reference/{name} differs from the hash recorded in the freeze")
+
+
 def snapshot() -> dict:
     """Current state, from file bytes and manifests only (nothing is unpickled)."""
     return {"schema_version": SCHEMA,
@@ -205,6 +218,7 @@ def refreeze(reason: str) -> Path:
     if not FREEZE.exists():
         raise ChampionChanged("nothing to refreeze; run `freeze` first")
     old = json.loads(FREEZE.read_text())
+    check_references(old)                # the per-row evidence the old record relied on must be intact
     cur = _current_state()
     for s, L in old["locations"].items():
         c = cur["locations"].get(s)

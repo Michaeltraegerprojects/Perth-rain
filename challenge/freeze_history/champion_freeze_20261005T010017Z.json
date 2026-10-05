@@ -8,10 +8,10 @@
   "src/perthrain/config.py": "2460dcfa1d6ae275795e5ef3fa59e90ad9cafb8b6f9cb42f101c4723aa55e259",
   "src/perthrain/enso_guard.py": "f379292e81358a8c0802bed98743699ab1f877f528b2db397c10a8da3c722ac1",
   "src/perthrain/forecasts.py": "370eda58d3ae25e520ccd10c7114007d4ad8e97cd733daf974556acbde308bd8",
-  "src/perthrain/http.py": "17bead9fd7cc967ab1525511f9c9e1d864acfc61cf818a824eb6034b1da45b64",
+  "src/perthrain/http.py": "dc9b3c8823c5bb457d53b96d21df1979cc7d5c935e4173576af8f79518a6afe7",
   "src/perthrain/observations.py": "ec533d079c23186fc7c2a64c4aed1e8e012cfd2ec9b00bd65370697b5088ca80",
   "src/perthrain/pipeline.py": "1ce0e74c44e6fbddea82c78371a2e434d8b5eb4776118c0a63545b39e48867e6",
-  "src/perthrain/predict.py": "9665c7a845831bdbb916c147ecbd39d39ffedb760fa2296cae4378a3dd97ab14",
+  "src/perthrain/predict.py": "f560655de98e32a1c6fac5c756bdcb55358e201e34be90458ba697f747192f7b",
   "src/perthrain/provenance.py": "67c1423997b7a2cc1e1cd6a9f1cc00783d843560c3ec0459726cd120fc84bc9b",
   "src/perthrain/stations.py": "c308d310705498dc9d6546f80ff56aabbb3fbc3a4b5f0e5f25466a48ef42ed6f"
  },
@@ -484,8 +484,8 @@
    }
   }
  },
- "created_utc": "2026-10-05T01:00:17Z",
- "reason": "Second review of fix/audit-0de31ee: live timing gate reads model metadata before the forecast data and requires the latest run to be available by the forecast time; cached HTTP 400 reuse fixed for offline replays and archived runs. Model artifacts, manifests and selections unchanged.",
+ "created_utc": "2026-10-02T18:44:52Z",
+ "reason": "Audit of 0de31ee (findings 3, 4, 7): schema 2 record adds config.toml, the inference import graph, runtime versions and per-row held-out references; model artifacts, manifests and selections unchanged",
  "history": [
   {
    "replaced_utc": "20261002T184452Z",
@@ -494,16 +494,6 @@
    "schema_version": 1,
    "changed": [
     "schema 1 -> 2: added config, inference modules, runtime"
-   ]
-  },
-  {
-   "replaced_utc": "20261005T010017Z",
-   "record_file": "freeze_history/champion_freeze_20261005T010017Z.json",
-   "record_sha256": "bf5b81d00fd5aa3abd51093bb1a67942fa6d2fc668390e44f230ab52ec3fb651",
-   "schema_version": 2,
-   "changed": [
-    "src/perthrain/http.py",
-    "src/perthrain/predict.py"
    ]
   }
  ]

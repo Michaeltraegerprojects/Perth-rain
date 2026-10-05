@@ -30,8 +30,9 @@ use, no key).
   same lead group, under the same as-of rule. A forecast counts only if its model run was available before the
   cutoff: the window start (historical) or the issue time (prospective).
 - **Availability evidence:** each forecast records how its availability was established.
-  - **Observed:** the explicit run was fetched (HTTP 200) at issue time, or the model's published metadata showed the
-    run as its latest or an earlier one.
+  - **Observed:** the explicit run was fetched (HTTP 200) at issue time, or the model's metadata, read before the
+    forecast data, showed the run as published by the issue time. That means either a later run exists, or it is the
+    latest run and its availability time is before the issue time.
   - **Estimated:** neither is available, so availability is assumed at initialisation + 6 h. This is a fixed
     estimate; JMA was measured at about 9.6 h.
   - The Challenge tab shows each competitor's run initialisation, information age (hours from initialisation to
@@ -46,7 +47,8 @@ use, no key).
 - **Probabilities:** only the champion issues probabilities. Raw models are deterministic, so their Brier scores are
   "unavailable". For a point forecast the CRPS equals its absolute error.
 - **Uncertainty:** paired 7-day block bootstrap. P-values are Holm-adjusted across every comparison in a report.
-  Identical errors are a tie (p = 1), never a win.
+  When the bootstrap has no variability, p comes from an exact sign test. That happens with identical errors,
+  the same difference every day, or fewer than 7 days. Identical errors are a tie (p = 1), never a win.
 - **Verdicts:** the thresholds come from `[verdicts]` in `challenge/settings.toml` (currently ≥ 60 common days,
   ≥ 15 wet days and an adjusted p < 0.05). Otherwise the result is "insufficient evidence" or "inconclusive".
 
@@ -60,8 +62,14 @@ use, no key).
 - the per-row held-out reference files.
 
 `verify` compares bytes and versions only and never unpickles an artifact. `refreeze --reason` writes a new record
-after a reviewed code, config or runtime change. It first re-checks every gauge × lead reproduction, refuses if any
-artifact, manifest or selection changed, and keeps the old record in `challenge/freeze_history/`.
+after a reviewed code, config or runtime change. It works in this order:
+
+- refuses if a recorded per-row reference is missing or changed (references are never recreated);
+- re-checks every gauge × lead reproduction;
+- refuses if any artifact, manifest or selection changed;
+- keeps the old record in `challenge/freeze_history/`.
+
+`freeze` records the references for a new champion; nothing else creates them.
 
 ## Tracks
 
