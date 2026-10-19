@@ -23,7 +23,8 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install "pandas==2.3.3" "numpy==2.5.3" "pytest==8.4.2"
-      - run: python -m pytest -q website/tests
+      # unit tests only: the local_data tests need data/ and reports/, which are never in the repository
+      - run: python -m pytest -q -m "not local_data" website/tests
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020        # v4
         with:
           node-version: "22"

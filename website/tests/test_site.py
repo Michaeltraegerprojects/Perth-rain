@@ -164,12 +164,16 @@ def test_outlook_keeps_raw_guidance_apart_from_calibrated_chances(tmp_path):
     if not p.exists():
         pytest.skip("outlook.json not exported yet")
     o = json.loads(p.read_text(encoding="utf-8"))
-    assert o["days"] and all(isinstance(d["calibrated"], bool) for d in o["days"])
-    assert all("%" not in d["rain"] for d in o["days"] if not d["calibrated"])
-    assert "Not an official forecast" in o["sources"]
+    assert len(o["days"]) == 7 and all(isinstance(d["calibrated"], bool) for d in o["days"])
+    for day in o["days"]:
+        if day["calibrated"]:
+            assert day["chance_of_any_rain"]
+        else:
+            assert day["chance_of_any_rain"] is None and "%" not in (day["model_agreement"] or "")
+    assert "Not an official forecast" in o["sources"] and o["findings"]
     d = _copy_public(tmp_path)
     o["days"][0]["calibrated"] = False
-    o["days"][0]["rain"] = "Rain: 60% chance"
+    o["days"][0]["chance_of_any_rain"] = "60%"
     (d / "outlook.json").write_text(json.dumps(o), encoding="utf-8")
     assert any("raw model guidance shown as a percentage" in x for x in X.validate(d))
 
@@ -181,3 +185,26 @@ def test_failed_forecasts_are_withdrawn_not_published():
             assert all(f["verification"] != "failed" for f in day["forecasts"])
             if day.get("withdrawn") and not day["forecasts"]:
                 assert day["availability"] == "unavailable" and "withdrawn" in day["unavailable_reason"]
+
+
+# ------------------------------------------------------------------- empty verification detail (found 2026-10-05)
+def test_missing_verification_detail_never_becomes_nan_or_the_word_nan():
+    """A row the verifier could not check has an empty detail, which pandas reads back as NaN. The first export of
+    real data after PR #1 crashed on it (json refuses NaN)."""
+    import math
+    for empty in (float("nan"), None, ""):
+        text = X.detail_text(empty, "live response not found in cache")
+        assert isinstance(text, str) and text and "nan" not in text.lower()
+        assert not (isinstance(text, float) and math.isnan(text))
+    assert X.detail_text("sr_ecmwf_ifs: run 2026-10-04 12Z (explicit)", "x") == "sr_ecmwf_ifs: run 2026-10-04 12Z (explicit)"
+    assert "could not be checked" in X.detail_text(float("nan"), float("nan"))
+
+
+@pytest.mark.local_data
+def test_every_location_exports_to_strict_json_from_the_local_outputs():
+    import tomllib
+    import pandas as pd
+    status = pd.read_csv(X.ROOT / "reports" / "served_row_status.csv")
+    verif = pd.read_csv(X.ROOT / "reports" / "served_row_verification.csv")
+    for e in tomllib.loads((X.ROOT / "config.toml").read_text())["locations"]:
+        json.dumps(X.export_location(e["name"], X.slug(e["name"]), status, verif), allow_nan=False)

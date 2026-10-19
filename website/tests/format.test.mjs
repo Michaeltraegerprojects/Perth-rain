@@ -130,3 +130,13 @@ test("availability is labelled observed only with evidence, otherwise as the 6-h
   assert.equal(availabilityText({ availability_basis: "estimated (initialisation + 6 h)" }), "Estimated (+6 h rule)");
   assert.equal(availabilityText(null), "—");
 });
+
+test("7-day rain lines: percentages only from the calibrated forecast", async () => {
+  const { rainLines } = await import("../assets/outlook.js");
+  const cal = rainLines({ calibrated: true, chance_of_any_rain: "10%", possible_rainfall: "0 mm" });
+  assert.deepEqual(cal.map((x) => x[0]), ["Chance of any rain", "Possible rainfall"]);
+  const raw = rainLines({ calibrated: false, model_agreement: "5 of 5 weather models show 1 mm or more",
+    possible_rainfall: "the models range from 6 to 15 mm" });
+  assert.deepEqual(raw, [["Rain", "5 of 5 weather models show 1 mm or more"], ["Model range", "6 to 15 mm"]]);
+  assert.ok(raw.every(([, v]) => !v.includes("%")));
+});
