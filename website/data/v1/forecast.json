@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "exported_utc": "2026-10-05T02:30:12Z",
+ "exported_utc": "2026-10-19T15:00:53Z",
  "timezone": "Australia/Perth",
  "locations": [
   {
@@ -11,7 +11,7 @@
     "name": "Perth Metro",
     "distance_km": 3.8
    },
-   "forecast_made_utc": "2026-10-05T02:18:00Z",
+   "forecast_made_utc": "2026-10-19T14:59:00Z",
    "latest_observation": {
     "label_date": "2026-09-29",
     "retrieved_utc": "2026-09-30T13:45:35Z"
@@ -23,11 +23,11 @@
    },
    "days": [
     {
-     "label_date": "2026-10-07",
-     "window_start_local": "2026-10-06T09:00:00+08:00",
-     "window_end_local": "2026-10-07T09:00:00+08:00",
-     "window_start_utc": "2026-10-06T01:00:00Z",
-     "window_end_utc": "2026-10-07T01:00:00Z",
+     "label_date": "2026-10-21",
+     "window_start_local": "2026-10-20T09:00:00+08:00",
+     "window_end_local": "2026-10-21T09:00:00+08:00",
+     "window_start_utc": "2026-10-20T01:00:00Z",
+     "window_end_utc": "2026-10-21T01:00:00Z",
      "availability": "available",
      "unavailable_reason": null,
      "withdrawn": [],
@@ -40,64 +40,64 @@
       {
        "lead_group": "day2",
        "status": "ok",
-       "verification": "verified",
+       "verification": "checked_at_issue",
        "verification_detail": [
         {
-         "input": "sr_ecmwf_ifs",
+         "input": "pr_ecmwf_ifs025",
          "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-10-04 12Z (explicit)"
+         "detail": "runs 18 Oct 00Z, 18 Oct 06Z, 18 Oct 12Z, 18 Oct 18Z, 19 Oct 00Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-10-04T12:00:00Z",
-       "lead_hours_to_window_start": 37.0,
-       "lead_hours_to_window_end": 61.0,
+       "latest_model_run_utc": "2026-10-19T00:00:00Z",
+       "lead_hours_to_window_start": 25.0,
+       "lead_hours_to_window_end": 49.0,
        "probabilities": {
-        "ge_0_2mm": 0.1387,
-        "ge_1mm": 0.0524,
-        "ge_5mm": 0.0035,
-        "ge_10mm": 0.0035
+        "ge_0_2mm": 0.1286,
+        "ge_1mm": 0.045,
+        "ge_5mm": 0.0032,
+        "ge_10mm": 0.0032
        },
        "amounts_mm": {
         "median": 0.0,
-        "expected": 0.14,
+        "expected": 0.118,
         "p10": 0.0,
         "p25": 0.0,
         "p75": 0.0,
         "p90": 0.2
        },
-       "route": "fallback#4",
+       "route": "fallback#2",
        "is_fallback": true,
        "heldout_scored": false,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
+       "calibrated_model": "ecmwf_ifs025_pr",
+       "calibrated_model_label": "ECMWF IFS 0.25° only",
        "models_available": [
+        "pr_ecmwf_ifs025",
+        "pr_ncep_gfs_global",
         "sr_ecmwf_ifs"
        ],
        "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
+        "pr_jma_gsm"
        ],
        "input_runs": [
         {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-10-04T12:00Z",
-         "run_identification": "explicit run requested"
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "run_init_utc": "2026-10-19T00:00Z",
+         "run_identification": "latest contributing run, inferred from the offset rule"
         }
        ],
        "raw_model_totals_uncalibrated": [
         {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
          "total_mm": 0.0
         }
        ],
        "model_trained_to": "2026-09-29",
-       "model_training_days": 912,
+       "model_training_days": 957,
        "model_run_id": "noenso-20260930T155128Z-a716ab4d",
        "artifact_sha256": "1d14400331c25b98ec6b783dcb4686a73072b6bc22a470acf0df8cc2cbe22bc8",
-       "inputs_retrieved_utc": "2026-10-05T02:18:34Z"
+       "inputs_retrieved_utc": "2026-10-19T14:59:17Z"
       },
       {
        "lead_group": "day3",
@@ -107,25 +107,25 @@
         {
          "input": "sr_ecmwf_ifs",
          "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-10-03 12Z (explicit)"
+         "detail": "sr_ecmwf_ifs: run 2026-10-17 12Z (explicit)"
         },
         {
          "input": "pr_jma_gsm",
          "status": "verified",
-         "detail": "runs 03 Oct 06Z, 03 Oct 12Z, 03 Oct 18Z, 04 Oct 00Z, 04 Oct 06Z; 24/24 hours equal"
+         "detail": "runs 17 Oct 06Z, 17 Oct 12Z, 17 Oct 18Z, 18 Oct 00Z, 18 Oct 06Z; 24/24 hours equal"
         },
         {
          "input": "pr_ncep_gfs_global",
          "status": "verified",
-         "detail": "runs 03 Oct 00Z, 03 Oct 06Z, 03 Oct 12Z, 03 Oct 18Z, 04 Oct 00Z; 24/24 hours equal"
+         "detail": "runs 17 Oct 00Z, 17 Oct 06Z, 17 Oct 12Z, 17 Oct 18Z, 18 Oct 00Z; 24/24 hours equal"
         },
         {
          "input": "pr_ecmwf_ifs025",
          "status": "verified",
-         "detail": "runs 03 Oct 00Z, 03 Oct 06Z, 03 Oct 12Z, 03 Oct 18Z, 04 Oct 00Z; 24/24 hours equal"
+         "detail": "runs 17 Oct 00Z, 17 Oct 06Z, 17 Oct 12Z, 17 Oct 18Z, 18 Oct 00Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-10-04T06:00:00Z",
+       "latest_model_run_utc": "2026-10-18T06:00:00Z",
        "lead_hours_to_window_start": 43.0,
        "lead_hours_to_window_end": 67.0,
        "probabilities": {
@@ -158,30 +158,35 @@
         {
          "input": "pr_ecmwf_ifs025",
          "model": "ECMWF IFS 0.25°",
-         "run_init_utc": "2026-10-04T00:00Z",
+         "run_init_utc": "2026-10-18T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_jma_gsm",
          "model": "JMA GSM",
-         "run_init_utc": "2026-10-04T06:00Z",
+         "run_init_utc": "2026-10-18T06:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_ncep_gfs_global",
          "model": "NOAA GFS",
-         "run_init_utc": "2026-10-04T00:00Z",
+         "run_init_utc": "2026-10-18T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-10-03T12:00Z",
+         "run_init_utc": "2026-10-17T12:00Z",
          "run_identification": "explicit run requested"
         }
        ],
        "raw_model_totals_uncalibrated": [
         {
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "total_mm": 0.0
+        },
+        {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
          "total_mm": 0.0
@@ -194,11 +199,6 @@
         {
          "input": "pr_ncep_gfs_global",
          "model": "NOAA GFS",
-         "total_mm": 0.0
-        },
-        {
-         "input": "pr_ecmwf_ifs025",
-         "model": "ECMWF IFS 0.25°",
          "total_mm": 0.0
         }
        ],
@@ -206,16 +206,16 @@
        "model_training_days": 894,
        "model_run_id": "noenso-20260930T155128Z-a716ab4d",
        "artifact_sha256": "b944ffe392febc7dbb8481cdffdefa73c2346e8a78ddb94b5f5dd98cdd8c490d",
-       "inputs_retrieved_utc": "2026-10-05T02:18:37Z"
+       "inputs_retrieved_utc": "2026-10-19T14:59:17Z"
       }
      ]
     },
     {
-     "label_date": "2026-10-08",
-     "window_start_local": "2026-10-07T09:00:00+08:00",
-     "window_end_local": "2026-10-08T09:00:00+08:00",
-     "window_start_utc": "2026-10-07T01:00:00Z",
-     "window_end_utc": "2026-10-08T01:00:00Z",
+     "label_date": "2026-10-22",
+     "window_start_local": "2026-10-21T09:00:00+08:00",
+     "window_end_local": "2026-10-22T09:00:00+08:00",
+     "window_start_utc": "2026-10-21T01:00:00Z",
+     "window_end_utc": "2026-10-22T01:00:00Z",
      "availability": "available",
      "unavailable_reason": null,
      "withdrawn": [],
@@ -228,73 +228,89 @@
       {
        "lead_group": "day3",
        "status": "ok",
-       "verification": "verified",
+       "verification": "checked_at_issue",
        "verification_detail": [
         {
          "input": "sr_ecmwf_ifs",
          "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-10-04 12Z (explicit)"
+         "detail": "sr_ecmwf_ifs: run 2026-10-18 12Z (explicit)"
+        },
+        {
+         "input": "pr_ecmwf_ifs025",
+         "status": "verified",
+         "detail": "runs 18 Oct 00Z, 18 Oct 06Z, 18 Oct 12Z, 18 Oct 18Z, 19 Oct 00Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-10-04T12:00:00Z",
-       "lead_hours_to_window_start": 61.0,
-       "lead_hours_to_window_end": 85.0,
+       "latest_model_run_utc": "2026-10-19T00:00:00Z",
+       "lead_hours_to_window_start": 49.0,
+       "lead_hours_to_window_end": 73.0,
        "probabilities": {
-        "ge_0_2mm": 0.9645,
-        "ge_1mm": 0.9323,
-        "ge_5mm": 0.6503,
-        "ge_10mm": 0.3559
+        "ge_0_2mm": 0.6413,
+        "ge_1mm": 0.4181,
+        "ge_5mm": 0.0909,
+        "ge_10mm": 0.016
        },
        "amounts_mm": {
-        "median": 7.8,
-        "expected": 8.716,
-        "p10": 2.37,
-        "p25": 3.77,
-        "p75": 12.43,
-        "p90": 17.15
+        "median": 0.68,
+        "expected": 1.521,
+        "p10": 0.0,
+        "p25": 0.0,
+        "p75": 2.51,
+        "p90": 4.8
        },
-       "route": "fallback#4",
+       "route": "fallback#1",
        "is_fallback": true,
        "heldout_scored": false,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
+       "calibrated_model": "ecmwf_composite",
+       "calibrated_model_label": "ECMWF composite",
        "models_available": [
+        "pr_ecmwf_ifs025",
+        "pr_ncep_gfs_global",
         "sr_ecmwf_ifs"
        ],
        "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
+        "pr_jma_gsm"
        ],
        "input_runs": [
         {
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "run_init_utc": "2026-10-19T00:00Z",
+         "run_identification": "latest contributing run, inferred from the offset rule"
+        },
+        {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-10-04T12:00Z",
+         "run_init_utc": "2026-10-18T12:00Z",
          "run_identification": "explicit run requested"
         }
        ],
        "raw_model_totals_uncalibrated": [
         {
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "total_mm": 2.7
+        },
+        {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "total_mm": 9.0
+         "total_mm": 0.9
         }
        ],
        "model_trained_to": "2026-09-29",
        "model_training_days": 910,
        "model_run_id": "noenso-20260930T155128Z-a716ab4d",
        "artifact_sha256": "b944ffe392febc7dbb8481cdffdefa73c2346e8a78ddb94b5f5dd98cdd8c490d",
-       "inputs_retrieved_utc": "2026-10-05T02:18:34Z"
+       "inputs_retrieved_utc": "2026-10-19T14:59:17Z"
       }
      ]
     },
     {
-     "label_date": "2026-10-09",
-     "window_start_local": "2026-10-08T09:00:00+08:00",
-     "window_end_local": "2026-10-09T09:00:00+08:00",
-     "window_start_utc": "2026-10-08T01:00:00Z",
-     "window_end_utc": "2026-10-09T01:00:00Z",
+     "label_date": "2026-10-23",
+     "window_start_local": "2026-10-22T09:00:00+08:00",
+     "window_end_local": "2026-10-23T09:00:00+08:00",
+     "window_start_utc": "2026-10-22T01:00:00Z",
+     "window_end_utc": "2026-10-23T01:00:00Z",
      "availability": "unavailable",
      "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
      "withdrawn": [],
@@ -306,11 +322,11 @@
      "forecasts": []
     },
     {
-     "label_date": "2026-10-10",
-     "window_start_local": "2026-10-09T09:00:00+08:00",
-     "window_end_local": "2026-10-10T09:00:00+08:00",
-     "window_start_utc": "2026-10-09T01:00:00Z",
-     "window_end_utc": "2026-10-10T01:00:00Z",
+     "label_date": "2026-10-24",
+     "window_start_local": "2026-10-23T09:00:00+08:00",
+     "window_end_local": "2026-10-24T09:00:00+08:00",
+     "window_start_utc": "2026-10-23T01:00:00Z",
+     "window_end_utc": "2026-10-24T01:00:00Z",
      "availability": "unavailable",
      "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
      "withdrawn": [],
@@ -331,7 +347,7 @@
     "name": "Gingin Aero",
     "distance_km": 27.8
    },
-   "forecast_made_utc": "2026-10-05T02:18:00Z",
+   "forecast_made_utc": "2026-10-19T14:59:00Z",
    "latest_observation": {
     "label_date": "2026-09-29",
     "retrieved_utc": "2026-09-30T13:48:56Z"
@@ -343,11 +359,11 @@
    },
    "days": [
     {
-     "label_date": "2026-10-07",
-     "window_start_local": "2026-10-06T09:00:00+08:00",
-     "window_end_local": "2026-10-07T09:00:00+08:00",
-     "window_start_utc": "2026-10-06T01:00:00Z",
-     "window_end_utc": "2026-10-07T01:00:00Z",
+     "label_date": "2026-10-21",
+     "window_start_local": "2026-10-20T09:00:00+08:00",
+     "window_end_local": "2026-10-21T09:00:00+08:00",
+     "window_start_utc": "2026-10-20T01:00:00Z",
+     "window_end_utc": "2026-10-21T01:00:00Z",
      "availability": "available",
      "unavailable_reason": null,
      "withdrawn": [],
@@ -360,64 +376,64 @@
       {
        "lead_group": "day2",
        "status": "ok",
-       "verification": "verified",
+       "verification": "checked_at_issue",
        "verification_detail": [
         {
-         "input": "sr_ecmwf_ifs",
+         "input": "pr_ecmwf_ifs025",
          "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-10-04 12Z (explicit)"
+         "detail": "runs 18 Oct 00Z, 18 Oct 06Z, 18 Oct 12Z, 18 Oct 18Z, 19 Oct 00Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-10-04T12:00:00Z",
-       "lead_hours_to_window_start": 37.0,
-       "lead_hours_to_window_end": 61.0,
+       "latest_model_run_utc": "2026-10-19T00:00:00Z",
+       "lead_hours_to_window_start": 25.0,
+       "lead_hours_to_window_end": 49.0,
        "probabilities": {
-        "ge_0_2mm": 0.138,
-        "ge_1mm": 0.0421,
-        "ge_5mm": 0.0034,
-        "ge_10mm": 0.0034
+        "ge_0_2mm": 0.0923,
+        "ge_1mm": 0.0245,
+        "ge_5mm": 0.0023,
+        "ge_10mm": 0.0023
        },
        "amounts_mm": {
         "median": 0.0,
-        "expected": 0.114,
+        "expected": 0.063,
         "p10": 0.0,
         "p25": 0.0,
         "p75": 0.0,
-        "p90": 0.2
+        "p90": 0.0
        },
-       "route": "fallback#4",
+       "route": "fallback#1",
        "is_fallback": true,
        "heldout_scored": false,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
+       "calibrated_model": "ecmwf_ifs025_pr",
+       "calibrated_model_label": "ECMWF IFS 0.25° only",
        "models_available": [
+        "pr_ecmwf_ifs025",
+        "pr_ncep_gfs_global",
         "sr_ecmwf_ifs"
        ],
        "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
+        "pr_jma_gsm"
        ],
        "input_runs": [
         {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-10-04T12:00Z",
-         "run_identification": "explicit run requested"
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "run_init_utc": "2026-10-19T00:00Z",
+         "run_identification": "latest contributing run, inferred from the offset rule"
         }
        ],
        "raw_model_totals_uncalibrated": [
         {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
          "total_mm": 0.0
         }
        ],
        "model_trained_to": "2026-09-29",
-       "model_training_days": 915,
+       "model_training_days": 960,
        "model_run_id": "noenso-20260930T155208Z-373e8cf3",
        "artifact_sha256": "0b258083e60f7f61ea13b424fd39a6c7ef6babdc7e07d98fade3ed4c66865960",
-       "inputs_retrieved_utc": "2026-10-05T02:18:42Z"
+       "inputs_retrieved_utc": "2026-10-19T14:59:25Z"
       },
       {
        "lead_group": "day3",
@@ -427,25 +443,25 @@
         {
          "input": "sr_ecmwf_ifs",
          "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-10-03 12Z (explicit)"
+         "detail": "sr_ecmwf_ifs: run 2026-10-17 12Z (explicit)"
         },
         {
          "input": "pr_jma_gsm",
          "status": "verified",
-         "detail": "runs 03 Oct 06Z, 03 Oct 12Z, 03 Oct 18Z, 04 Oct 00Z, 04 Oct 06Z; 24/24 hours equal"
+         "detail": "runs 17 Oct 06Z, 17 Oct 12Z, 17 Oct 18Z, 18 Oct 00Z, 18 Oct 06Z; 24/24 hours equal"
         },
         {
          "input": "pr_ncep_gfs_global",
          "status": "verified",
-         "detail": "runs 03 Oct 00Z, 03 Oct 06Z, 03 Oct 12Z, 03 Oct 18Z, 04 Oct 00Z; 24/24 hours equal"
+         "detail": "runs 17 Oct 00Z, 17 Oct 06Z, 17 Oct 12Z, 17 Oct 18Z, 18 Oct 00Z; 24/24 hours equal"
         },
         {
          "input": "pr_ecmwf_ifs025",
          "status": "verified",
-         "detail": "runs 03 Oct 00Z, 03 Oct 06Z, 03 Oct 12Z, 03 Oct 18Z, 04 Oct 00Z; 24/24 hours equal"
+         "detail": "runs 17 Oct 00Z, 17 Oct 06Z, 17 Oct 12Z, 17 Oct 18Z, 18 Oct 00Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-10-04T06:00:00Z",
+       "latest_model_run_utc": "2026-10-18T06:00:00Z",
        "lead_hours_to_window_start": 43.0,
        "lead_hours_to_window_end": 67.0,
        "probabilities": {
@@ -478,30 +494,35 @@
         {
          "input": "pr_ecmwf_ifs025",
          "model": "ECMWF IFS 0.25°",
-         "run_init_utc": "2026-10-04T00:00Z",
+         "run_init_utc": "2026-10-18T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_jma_gsm",
          "model": "JMA GSM",
-         "run_init_utc": "2026-10-04T06:00Z",
+         "run_init_utc": "2026-10-18T06:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_ncep_gfs_global",
          "model": "NOAA GFS",
-         "run_init_utc": "2026-10-04T00:00Z",
+         "run_init_utc": "2026-10-18T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-10-03T12:00Z",
+         "run_init_utc": "2026-10-17T12:00Z",
          "run_identification": "explicit run requested"
         }
        ],
        "raw_model_totals_uncalibrated": [
         {
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "total_mm": 0.0
+        },
+        {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
          "total_mm": 0.0
@@ -514,11 +535,6 @@
         {
          "input": "pr_ncep_gfs_global",
          "model": "NOAA GFS",
-         "total_mm": 0.0
-        },
-        {
-         "input": "pr_ecmwf_ifs025",
-         "model": "ECMWF IFS 0.25°",
          "total_mm": 0.0
         }
        ],
@@ -526,16 +542,16 @@
        "model_training_days": 894,
        "model_run_id": "noenso-20260930T155208Z-373e8cf3",
        "artifact_sha256": "887e67bf27401047d75cdd596438178ec9faa22cba263dcd38f0cbbb9a874c38",
-       "inputs_retrieved_utc": "2026-10-05T02:18:44Z"
+       "inputs_retrieved_utc": "2026-10-19T14:59:25Z"
       }
      ]
     },
     {
-     "label_date": "2026-10-08",
-     "window_start_local": "2026-10-07T09:00:00+08:00",
-     "window_end_local": "2026-10-08T09:00:00+08:00",
-     "window_start_utc": "2026-10-07T01:00:00Z",
-     "window_end_utc": "2026-10-08T01:00:00Z",
+     "label_date": "2026-10-22",
+     "window_start_local": "2026-10-21T09:00:00+08:00",
+     "window_end_local": "2026-10-22T09:00:00+08:00",
+     "window_start_utc": "2026-10-21T01:00:00Z",
+     "window_end_utc": "2026-10-22T01:00:00Z",
      "availability": "available",
      "unavailable_reason": null,
      "withdrawn": [],
@@ -548,73 +564,73 @@
       {
        "lead_group": "day3",
        "status": "ok",
-       "verification": "verified",
+       "verification": "checked_at_issue",
        "verification_detail": [
         {
-         "input": "sr_ecmwf_ifs",
+         "input": "pr_ecmwf_ifs025",
          "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-10-04 12Z (explicit)"
+         "detail": "runs 18 Oct 00Z, 18 Oct 06Z, 18 Oct 12Z, 18 Oct 18Z, 19 Oct 00Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-10-04T12:00:00Z",
-       "lead_hours_to_window_start": 61.0,
-       "lead_hours_to_window_end": 85.0,
+       "latest_model_run_utc": "2026-10-19T00:00:00Z",
+       "lead_hours_to_window_start": 49.0,
+       "lead_hours_to_window_end": 73.0,
        "probabilities": {
-        "ge_0_2mm": 0.9955,
-        "ge_1mm": 0.9479,
-        "ge_5mm": 0.7058,
-        "ge_10mm": 0.3027
+        "ge_0_2mm": 0.2152,
+        "ge_1mm": 0.084,
+        "ge_5mm": 0.0054,
+        "ge_10mm": 0.0054
        },
        "amounts_mm": {
-        "median": 6.64,
-        "expected": 8.006,
-        "p10": 2.01,
-        "p25": 4.55,
-        "p75": 10.15,
-        "p90": 17.13
+        "median": 0.0,
+        "expected": 0.202,
+        "p10": 0.0,
+        "p25": 0.0,
+        "p75": 0.0,
+        "p90": 0.68
        },
-       "route": "fallback#4",
+       "route": "fallback#1",
        "is_fallback": true,
        "heldout_scored": false,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
+       "calibrated_model": "ecmwf_ifs025_pr",
+       "calibrated_model_label": "ECMWF IFS 0.25° only",
        "models_available": [
+        "pr_ecmwf_ifs025",
+        "pr_ncep_gfs_global",
         "sr_ecmwf_ifs"
        ],
        "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
+        "pr_jma_gsm"
        ],
        "input_runs": [
         {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-10-04T12:00Z",
-         "run_identification": "explicit run requested"
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "run_init_utc": "2026-10-19T00:00Z",
+         "run_identification": "latest contributing run, inferred from the offset rule"
         }
        ],
        "raw_model_totals_uncalibrated": [
         {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "total_mm": 11.1
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "total_mm": 0.3
         }
        ],
        "model_trained_to": "2026-09-29",
-       "model_training_days": 913,
+       "model_training_days": 959,
        "model_run_id": "noenso-20260930T155208Z-373e8cf3",
        "artifact_sha256": "887e67bf27401047d75cdd596438178ec9faa22cba263dcd38f0cbbb9a874c38",
-       "inputs_retrieved_utc": "2026-10-05T02:18:42Z"
+       "inputs_retrieved_utc": "2026-10-19T14:59:25Z"
       }
      ]
     },
     {
-     "label_date": "2026-10-09",
-     "window_start_local": "2026-10-08T09:00:00+08:00",
-     "window_end_local": "2026-10-09T09:00:00+08:00",
-     "window_start_utc": "2026-10-08T01:00:00Z",
-     "window_end_utc": "2026-10-09T01:00:00Z",
+     "label_date": "2026-10-23",
+     "window_start_local": "2026-10-22T09:00:00+08:00",
+     "window_end_local": "2026-10-23T09:00:00+08:00",
+     "window_start_utc": "2026-10-22T01:00:00Z",
+     "window_end_utc": "2026-10-23T01:00:00Z",
      "availability": "unavailable",
      "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
      "withdrawn": [],
@@ -626,11 +642,11 @@
      "forecasts": []
     },
     {
-     "label_date": "2026-10-10",
-     "window_start_local": "2026-10-09T09:00:00+08:00",
-     "window_end_local": "2026-10-10T09:00:00+08:00",
-     "window_start_utc": "2026-10-09T01:00:00Z",
-     "window_end_utc": "2026-10-10T01:00:00Z",
+     "label_date": "2026-10-24",
+     "window_start_local": "2026-10-23T09:00:00+08:00",
+     "window_end_local": "2026-10-24T09:00:00+08:00",
+     "window_start_utc": "2026-10-23T01:00:00Z",
+     "window_end_utc": "2026-10-24T01:00:00Z",
      "availability": "unavailable",
      "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
      "withdrawn": [],
@@ -651,7 +667,7 @@
     "name": "Perth Metro",
     "distance_km": 22.0
    },
-   "forecast_made_utc": "2026-10-05T02:18:00Z",
+   "forecast_made_utc": "2026-10-19T14:59:00Z",
    "latest_observation": {
     "label_date": "2026-09-29",
     "retrieved_utc": "2026-09-30T14:01:02Z"
@@ -663,11 +679,11 @@
    },
    "days": [
     {
-     "label_date": "2026-10-07",
-     "window_start_local": "2026-10-06T09:00:00+08:00",
-     "window_end_local": "2026-10-07T09:00:00+08:00",
-     "window_start_utc": "2026-10-06T01:00:00Z",
-     "window_end_utc": "2026-10-07T01:00:00Z",
+     "label_date": "2026-10-21",
+     "window_start_local": "2026-10-20T09:00:00+08:00",
+     "window_end_local": "2026-10-21T09:00:00+08:00",
+     "window_start_utc": "2026-10-20T01:00:00Z",
+     "window_end_utc": "2026-10-21T01:00:00Z",
      "availability": "available",
      "unavailable_reason": null,
      "withdrawn": [],
@@ -680,64 +696,64 @@
       {
        "lead_group": "day2",
        "status": "ok",
-       "verification": "verified",
+       "verification": "checked_at_issue",
        "verification_detail": [
         {
-         "input": "sr_ecmwf_ifs",
+         "input": "pr_ecmwf_ifs025",
          "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-10-04 12Z (explicit)"
+         "detail": "runs 18 Oct 00Z, 18 Oct 06Z, 18 Oct 12Z, 18 Oct 18Z, 19 Oct 00Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-10-04T12:00:00Z",
-       "lead_hours_to_window_start": 37.0,
-       "lead_hours_to_window_end": 61.0,
+       "latest_model_run_utc": "2026-10-19T00:00:00Z",
+       "lead_hours_to_window_start": 25.0,
+       "lead_hours_to_window_end": 49.0,
        "probabilities": {
-        "ge_0_2mm": 0.1387,
-        "ge_1mm": 0.0524,
-        "ge_5mm": 0.0035,
-        "ge_10mm": 0.0035
+        "ge_0_2mm": 0.1286,
+        "ge_1mm": 0.045,
+        "ge_5mm": 0.0032,
+        "ge_10mm": 0.0032
        },
        "amounts_mm": {
         "median": 0.0,
-        "expected": 0.14,
+        "expected": 0.118,
         "p10": 0.0,
         "p25": 0.0,
         "p75": 0.0,
         "p90": 0.2
        },
-       "route": "fallback#4",
+       "route": "fallback#2",
        "is_fallback": true,
        "heldout_scored": false,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
+       "calibrated_model": "ecmwf_ifs025_pr",
+       "calibrated_model_label": "ECMWF IFS 0.25° only",
        "models_available": [
+        "pr_ecmwf_ifs025",
+        "pr_ncep_gfs_global",
         "sr_ecmwf_ifs"
        ],
        "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
+        "pr_jma_gsm"
        ],
        "input_runs": [
         {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-10-04T12:00Z",
-         "run_identification": "explicit run requested"
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "run_init_utc": "2026-10-19T00:00Z",
+         "run_identification": "latest contributing run, inferred from the offset rule"
         }
        ],
        "raw_model_totals_uncalibrated": [
         {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
          "total_mm": 0.0
         }
        ],
        "model_trained_to": "2026-09-29",
-       "model_training_days": 912,
+       "model_training_days": 957,
        "model_run_id": "noenso-20260930T155246Z-a716ab4d",
        "artifact_sha256": "addf2ee385cf6f7eac820b7814cce505883f157841af0132f10425d126130694",
-       "inputs_retrieved_utc": "2026-10-05T02:18:50Z"
+       "inputs_retrieved_utc": "2026-10-19T14:59:33Z"
       },
       {
        "lead_group": "day3",
@@ -747,25 +763,25 @@
         {
          "input": "sr_ecmwf_ifs",
          "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-10-03 12Z (explicit)"
+         "detail": "sr_ecmwf_ifs: run 2026-10-17 12Z (explicit)"
         },
         {
          "input": "pr_jma_gsm",
          "status": "verified",
-         "detail": "runs 03 Oct 06Z, 03 Oct 12Z, 03 Oct 18Z, 04 Oct 00Z, 04 Oct 06Z; 24/24 hours equal"
+         "detail": "runs 17 Oct 06Z, 17 Oct 12Z, 17 Oct 18Z, 18 Oct 00Z, 18 Oct 06Z; 24/24 hours equal"
         },
         {
          "input": "pr_ncep_gfs_global",
          "status": "verified",
-         "detail": "runs 03 Oct 00Z, 03 Oct 06Z, 03 Oct 12Z, 03 Oct 18Z, 04 Oct 00Z; 24/24 hours equal"
+         "detail": "runs 17 Oct 00Z, 17 Oct 06Z, 17 Oct 12Z, 17 Oct 18Z, 18 Oct 00Z; 24/24 hours equal"
         },
         {
          "input": "pr_ecmwf_ifs025",
          "status": "verified",
-         "detail": "runs 03 Oct 00Z, 03 Oct 06Z, 03 Oct 12Z, 03 Oct 18Z, 04 Oct 00Z; 24/24 hours equal"
+         "detail": "runs 17 Oct 00Z, 17 Oct 06Z, 17 Oct 12Z, 17 Oct 18Z, 18 Oct 00Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-10-04T06:00:00Z",
+       "latest_model_run_utc": "2026-10-18T06:00:00Z",
        "lead_hours_to_window_start": 43.0,
        "lead_hours_to_window_end": 67.0,
        "probabilities": {
@@ -798,30 +814,35 @@
         {
          "input": "pr_ecmwf_ifs025",
          "model": "ECMWF IFS 0.25°",
-         "run_init_utc": "2026-10-04T00:00Z",
+         "run_init_utc": "2026-10-18T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_jma_gsm",
          "model": "JMA GSM",
-         "run_init_utc": "2026-10-04T06:00Z",
+         "run_init_utc": "2026-10-18T06:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_ncep_gfs_global",
          "model": "NOAA GFS",
-         "run_init_utc": "2026-10-04T00:00Z",
+         "run_init_utc": "2026-10-18T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-10-03T12:00Z",
+         "run_init_utc": "2026-10-17T12:00Z",
          "run_identification": "explicit run requested"
         }
        ],
        "raw_model_totals_uncalibrated": [
         {
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "total_mm": 0.0
+        },
+        {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
          "total_mm": 0.0
@@ -834,11 +855,6 @@
         {
          "input": "pr_ncep_gfs_global",
          "model": "NOAA GFS",
-         "total_mm": 0.0
-        },
-        {
-         "input": "pr_ecmwf_ifs025",
-         "model": "ECMWF IFS 0.25°",
          "total_mm": 0.0
         }
        ],
@@ -846,16 +862,16 @@
        "model_training_days": 894,
        "model_run_id": "noenso-20260930T155246Z-a716ab4d",
        "artifact_sha256": "adb8d694c86ef46926475b5b3b5d585c0a6c334d1aeb4708e8d6c49967351fe6",
-       "inputs_retrieved_utc": "2026-10-05T02:18:52Z"
+       "inputs_retrieved_utc": "2026-10-19T14:59:33Z"
       }
      ]
     },
     {
-     "label_date": "2026-10-08",
-     "window_start_local": "2026-10-07T09:00:00+08:00",
-     "window_end_local": "2026-10-08T09:00:00+08:00",
-     "window_start_utc": "2026-10-07T01:00:00Z",
-     "window_end_utc": "2026-10-08T01:00:00Z",
+     "label_date": "2026-10-22",
+     "window_start_local": "2026-10-21T09:00:00+08:00",
+     "window_end_local": "2026-10-22T09:00:00+08:00",
+     "window_start_utc": "2026-10-21T01:00:00Z",
+     "window_end_utc": "2026-10-22T01:00:00Z",
      "availability": "available",
      "unavailable_reason": null,
      "withdrawn": [],
@@ -868,73 +884,89 @@
       {
        "lead_group": "day3",
        "status": "ok",
-       "verification": "verified",
+       "verification": "checked_at_issue",
        "verification_detail": [
         {
          "input": "sr_ecmwf_ifs",
          "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-10-04 12Z (explicit)"
+         "detail": "sr_ecmwf_ifs: run 2026-10-18 12Z (explicit)"
+        },
+        {
+         "input": "pr_ecmwf_ifs025",
+         "status": "verified",
+         "detail": "runs 18 Oct 00Z, 18 Oct 06Z, 18 Oct 12Z, 18 Oct 18Z, 19 Oct 00Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-10-04T12:00:00Z",
-       "lead_hours_to_window_start": 61.0,
-       "lead_hours_to_window_end": 85.0,
+       "latest_model_run_utc": "2026-10-19T00:00:00Z",
+       "lead_hours_to_window_start": 49.0,
+       "lead_hours_to_window_end": 73.0,
        "probabilities": {
-        "ge_0_2mm": 0.9645,
-        "ge_1mm": 0.9323,
-        "ge_5mm": 0.6503,
-        "ge_10mm": 0.3559
+        "ge_0_2mm": 0.6413,
+        "ge_1mm": 0.4181,
+        "ge_5mm": 0.0909,
+        "ge_10mm": 0.016
        },
        "amounts_mm": {
-        "median": 7.8,
-        "expected": 8.716,
-        "p10": 2.37,
-        "p25": 3.77,
-        "p75": 12.43,
-        "p90": 17.15
+        "median": 0.68,
+        "expected": 1.521,
+        "p10": 0.0,
+        "p25": 0.0,
+        "p75": 2.51,
+        "p90": 4.8
        },
-       "route": "fallback#4",
+       "route": "fallback#1",
        "is_fallback": true,
        "heldout_scored": false,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
+       "calibrated_model": "ecmwf_composite",
+       "calibrated_model_label": "ECMWF composite",
        "models_available": [
+        "pr_ecmwf_ifs025",
+        "pr_ncep_gfs_global",
         "sr_ecmwf_ifs"
        ],
        "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
+        "pr_jma_gsm"
        ],
        "input_runs": [
         {
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "run_init_utc": "2026-10-19T00:00Z",
+         "run_identification": "latest contributing run, inferred from the offset rule"
+        },
+        {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-10-04T12:00Z",
+         "run_init_utc": "2026-10-18T12:00Z",
          "run_identification": "explicit run requested"
         }
        ],
        "raw_model_totals_uncalibrated": [
         {
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "total_mm": 2.7
+        },
+        {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "total_mm": 9.0
+         "total_mm": 0.9
         }
        ],
        "model_trained_to": "2026-09-29",
        "model_training_days": 910,
        "model_run_id": "noenso-20260930T155246Z-a716ab4d",
        "artifact_sha256": "adb8d694c86ef46926475b5b3b5d585c0a6c334d1aeb4708e8d6c49967351fe6",
-       "inputs_retrieved_utc": "2026-10-05T02:18:50Z"
+       "inputs_retrieved_utc": "2026-10-19T14:59:33Z"
       }
      ]
     },
     {
-     "label_date": "2026-10-09",
-     "window_start_local": "2026-10-08T09:00:00+08:00",
-     "window_end_local": "2026-10-09T09:00:00+08:00",
-     "window_start_utc": "2026-10-08T01:00:00Z",
-     "window_end_utc": "2026-10-09T01:00:00Z",
+     "label_date": "2026-10-23",
+     "window_start_local": "2026-10-22T09:00:00+08:00",
+     "window_end_local": "2026-10-23T09:00:00+08:00",
+     "window_start_utc": "2026-10-22T01:00:00Z",
+     "window_end_utc": "2026-10-23T01:00:00Z",
      "availability": "unavailable",
      "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
      "withdrawn": [],
@@ -946,11 +978,11 @@
      "forecasts": []
     },
     {
-     "label_date": "2026-10-10",
-     "window_start_local": "2026-10-09T09:00:00+08:00",
-     "window_end_local": "2026-10-10T09:00:00+08:00",
-     "window_start_utc": "2026-10-09T01:00:00Z",
-     "window_end_utc": "2026-10-10T01:00:00Z",
+     "label_date": "2026-10-24",
+     "window_start_local": "2026-10-23T09:00:00+08:00",
+     "window_end_local": "2026-10-24T09:00:00+08:00",
+     "window_start_utc": "2026-10-23T01:00:00Z",
+     "window_end_utc": "2026-10-24T01:00:00Z",
      "availability": "unavailable",
      "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
      "withdrawn": [],
@@ -971,7 +1003,7 @@
     "name": "Swanbourne",
     "distance_km": 11.3
    },
-   "forecast_made_utc": "2026-10-05T02:18:00Z",
+   "forecast_made_utc": "2026-10-19T14:59:00Z",
    "latest_observation": {
     "label_date": "2026-09-29",
     "retrieved_utc": "2026-09-30T14:04:57Z"
@@ -983,11 +1015,11 @@
    },
    "days": [
     {
-     "label_date": "2026-10-07",
-     "window_start_local": "2026-10-06T09:00:00+08:00",
-     "window_end_local": "2026-10-07T09:00:00+08:00",
-     "window_start_utc": "2026-10-06T01:00:00Z",
-     "window_end_utc": "2026-10-07T01:00:00Z",
+     "label_date": "2026-10-21",
+     "window_start_local": "2026-10-20T09:00:00+08:00",
+     "window_end_local": "2026-10-21T09:00:00+08:00",
+     "window_start_utc": "2026-10-20T01:00:00Z",
+     "window_end_utc": "2026-10-21T01:00:00Z",
      "availability": "available",
      "unavailable_reason": null,
      "withdrawn": [],
@@ -1000,92 +1032,92 @@
       {
        "lead_group": "day2",
        "status": "ok",
-       "verification": "verified",
+       "verification": "checked_at_issue",
        "verification_detail": [
         {
-         "input": "sr_ecmwf_ifs",
+         "input": "pr_ecmwf_ifs025",
          "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-10-04 12Z (explicit)"
+         "detail": "runs 18 Oct 00Z, 18 Oct 06Z, 18 Oct 12Z, 18 Oct 18Z, 19 Oct 00Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-10-04T12:00:00Z",
-       "lead_hours_to_window_start": 37.0,
-       "lead_hours_to_window_end": 61.0,
+       "latest_model_run_utc": "2026-10-19T00:00:00Z",
+       "lead_hours_to_window_start": 25.0,
+       "lead_hours_to_window_end": 49.0,
        "probabilities": {
-        "ge_0_2mm": 0.1762,
-        "ge_1mm": 0.0534,
-        "ge_5mm": 0.0044,
-        "ge_10mm": 0.0044
+        "ge_0_2mm": 0.1314,
+        "ge_1mm": 0.0321,
+        "ge_5mm": 0.0033,
+        "ge_10mm": 0.0033
        },
        "amounts_mm": {
         "median": 0.0,
-        "expected": 0.123,
+        "expected": 0.086,
         "p10": 0.0,
         "p25": 0.0,
         "p75": 0.0,
-        "p90": 0.28
+        "p90": 0.2
        },
-       "route": "fallback#4",
+       "route": "fallback#2",
        "is_fallback": true,
        "heldout_scored": false,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
+       "calibrated_model": "ecmwf_ifs025_pr",
+       "calibrated_model_label": "ECMWF IFS 0.25° only",
        "models_available": [
+        "pr_ecmwf_ifs025",
+        "pr_ncep_gfs_global",
         "sr_ecmwf_ifs"
        ],
        "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
+        "pr_jma_gsm"
        ],
        "input_runs": [
         {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-10-04T12:00Z",
-         "run_identification": "explicit run requested"
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "run_init_utc": "2026-10-19T00:00Z",
+         "run_identification": "latest contributing run, inferred from the offset rule"
         }
        ],
        "raw_model_totals_uncalibrated": [
         {
-         "input": "sr_ecmwf_ifs",
-         "model": "ECMWF IFS (single run)",
-         "total_mm": 0.1
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "total_mm": 0.0
         }
        ],
        "model_trained_to": "2026-09-29",
-       "model_training_days": 915,
+       "model_training_days": 960,
        "model_run_id": "noenso-20260930T155325Z-6521c3bf",
        "artifact_sha256": "b34df760e6fa61741e396f49f8a38eabf365e651ccfe3f7eeb3f2d9a094eefc4",
-       "inputs_retrieved_utc": "2026-10-05T02:18:58Z"
+       "inputs_retrieved_utc": "2026-10-19T14:59:41Z"
       },
       {
        "lead_group": "day3",
        "status": "ok",
-       "verification": "unverified",
+       "verification": "checked_at_issue",
        "verification_detail": [
         {
          "input": "sr_ecmwf_ifs",
          "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-10-03 12Z (explicit)"
+         "detail": "sr_ecmwf_ifs: run 2026-10-17 12Z (explicit)"
         },
         {
          "input": "pr_jma_gsm",
-         "status": "unverified",
-         "detail": "live response not found in cache"
+         "status": "verified",
+         "detail": "runs 17 Oct 06Z, 17 Oct 12Z, 17 Oct 18Z, 18 Oct 00Z, 18 Oct 06Z; 24/24 hours equal"
         },
         {
          "input": "pr_ncep_gfs_global",
-         "status": "unverified",
-         "detail": "live response not found in cache"
+         "status": "verified",
+         "detail": "runs 17 Oct 00Z, 17 Oct 06Z, 17 Oct 12Z, 17 Oct 18Z, 18 Oct 00Z; 24/24 hours equal"
         },
         {
          "input": "pr_ecmwf_ifs025",
          "status": "verified",
-         "detail": "runs 03 Oct 00Z, 03 Oct 06Z, 03 Oct 12Z, 03 Oct 18Z, 04 Oct 00Z; 24/24 hours equal"
+         "detail": "runs 17 Oct 00Z, 17 Oct 06Z, 17 Oct 12Z, 17 Oct 18Z, 18 Oct 00Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-10-04T06:00:00Z",
+       "latest_model_run_utc": "2026-10-18T06:00:00Z",
        "lead_hours_to_window_start": 43.0,
        "lead_hours_to_window_end": 67.0,
        "probabilities": {
@@ -1118,30 +1150,35 @@
         {
          "input": "pr_ecmwf_ifs025",
          "model": "ECMWF IFS 0.25°",
-         "run_init_utc": "2026-10-04T00:00Z",
+         "run_init_utc": "2026-10-18T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_jma_gsm",
          "model": "JMA GSM",
-         "run_init_utc": "2026-10-04T06:00Z",
+         "run_init_utc": "2026-10-18T06:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "pr_ncep_gfs_global",
          "model": "NOAA GFS",
-         "run_init_utc": "2026-10-04T00:00Z",
+         "run_init_utc": "2026-10-18T00:00Z",
          "run_identification": "latest contributing run, inferred from the offset rule"
         },
         {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-10-03T12:00Z",
+         "run_init_utc": "2026-10-17T12:00Z",
          "run_identification": "explicit run requested"
         }
        ],
        "raw_model_totals_uncalibrated": [
         {
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "total_mm": 0.0
+        },
+        {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
          "total_mm": 0.0
@@ -1154,11 +1191,6 @@
         {
          "input": "pr_ncep_gfs_global",
          "model": "NOAA GFS",
-         "total_mm": 0.0
-        },
-        {
-         "input": "pr_ecmwf_ifs025",
-         "model": "ECMWF IFS 0.25°",
          "total_mm": 0.0
         }
        ],
@@ -1166,16 +1198,16 @@
        "model_training_days": 897,
        "model_run_id": "noenso-20260930T155325Z-6521c3bf",
        "artifact_sha256": "d3730c83c195b1bea843a1be878b4a8e476cd8d7fcf10113b0d7ab9c07ade75e",
-       "inputs_retrieved_utc": "2026-10-05T02:19:00Z"
+       "inputs_retrieved_utc": "2026-10-19T14:59:41Z"
       }
      ]
     },
     {
-     "label_date": "2026-10-08",
-     "window_start_local": "2026-10-07T09:00:00+08:00",
-     "window_end_local": "2026-10-08T09:00:00+08:00",
-     "window_start_utc": "2026-10-07T01:00:00Z",
-     "window_end_utc": "2026-10-08T01:00:00Z",
+     "label_date": "2026-10-22",
+     "window_start_local": "2026-10-21T09:00:00+08:00",
+     "window_end_local": "2026-10-22T09:00:00+08:00",
+     "window_start_utc": "2026-10-21T01:00:00Z",
+     "window_end_utc": "2026-10-22T01:00:00Z",
      "availability": "available",
      "unavailable_reason": null,
      "withdrawn": [],
@@ -1188,73 +1220,89 @@
       {
        "lead_group": "day3",
        "status": "ok",
-       "verification": "verified",
+       "verification": "checked_at_issue",
        "verification_detail": [
         {
          "input": "sr_ecmwf_ifs",
          "status": "verified",
-         "detail": "sr_ecmwf_ifs: run 2026-10-04 12Z (explicit)"
+         "detail": "sr_ecmwf_ifs: run 2026-10-18 12Z (explicit)"
+        },
+        {
+         "input": "pr_ecmwf_ifs025",
+         "status": "verified",
+         "detail": "runs 18 Oct 00Z, 18 Oct 06Z, 18 Oct 12Z, 18 Oct 18Z, 19 Oct 00Z; 24/24 hours equal"
         }
        ],
-       "latest_model_run_utc": "2026-10-04T12:00:00Z",
-       "lead_hours_to_window_start": 61.0,
-       "lead_hours_to_window_end": 85.0,
+       "latest_model_run_utc": "2026-10-19T00:00:00Z",
+       "lead_hours_to_window_start": 49.0,
+       "lead_hours_to_window_end": 73.0,
        "probabilities": {
-        "ge_0_2mm": 0.9889,
-        "ge_1mm": 0.9336,
-        "ge_5mm": 0.6139,
-        "ge_10mm": 0.3135
+        "ge_0_2mm": 0.7122,
+        "ge_1mm": 0.3907,
+        "ge_5mm": 0.065,
+        "ge_10mm": 0.0178
        },
        "amounts_mm": {
-        "median": 6.89,
-        "expected": 8.096,
-        "p10": 1.26,
-        "p25": 3.1,
-        "p75": 10.88,
-        "p90": 17.93
+        "median": 0.64,
+        "expected": 1.274,
+        "p10": 0.0,
+        "p25": 0.0,
+        "p75": 1.9,
+        "p90": 3.89
        },
-       "route": "fallback#4",
+       "route": "fallback#2",
        "is_fallback": true,
        "heldout_scored": false,
-       "calibrated_model": "ecmwf_ifs_sr",
-       "calibrated_model_label": "ECMWF IFS only",
+       "calibrated_model": "ecmwf_composite",
+       "calibrated_model_label": "ECMWF composite",
        "models_available": [
+        "pr_ecmwf_ifs025",
+        "pr_ncep_gfs_global",
         "sr_ecmwf_ifs"
        ],
        "inputs_blocked_by_timing": [
-        "pr_ecmwf_ifs025",
-        "pr_jma_gsm",
-        "pr_ncep_gfs_global"
+        "pr_jma_gsm"
        ],
        "input_runs": [
         {
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "run_init_utc": "2026-10-19T00:00Z",
+         "run_identification": "latest contributing run, inferred from the offset rule"
+        },
+        {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "run_init_utc": "2026-10-04T12:00Z",
+         "run_init_utc": "2026-10-18T12:00Z",
          "run_identification": "explicit run requested"
         }
        ],
        "raw_model_totals_uncalibrated": [
         {
+         "input": "pr_ecmwf_ifs025",
+         "model": "ECMWF IFS 0.25°",
+         "total_mm": 1.2
+        },
+        {
          "input": "sr_ecmwf_ifs",
          "model": "ECMWF IFS (single run)",
-         "total_mm": 9.0
+         "total_mm": 1.7
         }
        ],
        "model_trained_to": "2026-09-29",
        "model_training_days": 913,
        "model_run_id": "noenso-20260930T155325Z-6521c3bf",
        "artifact_sha256": "d3730c83c195b1bea843a1be878b4a8e476cd8d7fcf10113b0d7ab9c07ade75e",
-       "inputs_retrieved_utc": "2026-10-05T02:18:58Z"
+       "inputs_retrieved_utc": "2026-10-19T14:59:41Z"
       }
      ]
     },
     {
-     "label_date": "2026-10-09",
-     "window_start_local": "2026-10-08T09:00:00+08:00",
-     "window_end_local": "2026-10-09T09:00:00+08:00",
-     "window_start_utc": "2026-10-08T01:00:00Z",
-     "window_end_utc": "2026-10-09T01:00:00Z",
+     "label_date": "2026-10-23",
+     "window_start_local": "2026-10-22T09:00:00+08:00",
+     "window_end_local": "2026-10-23T09:00:00+08:00",
+     "window_start_utc": "2026-10-22T01:00:00Z",
+     "window_end_utc": "2026-10-23T01:00:00Z",
      "availability": "unavailable",
      "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
      "withdrawn": [],
@@ -1266,11 +1314,11 @@
      "forecasts": []
     },
     {
-     "label_date": "2026-10-10",
-     "window_start_local": "2026-10-09T09:00:00+08:00",
-     "window_end_local": "2026-10-10T09:00:00+08:00",
-     "window_start_utc": "2026-10-09T01:00:00Z",
-     "window_end_utc": "2026-10-10T01:00:00Z",
+     "label_date": "2026-10-24",
+     "window_start_local": "2026-10-23T09:00:00+08:00",
+     "window_end_local": "2026-10-24T09:00:00+08:00",
+     "window_start_utc": "2026-10-23T01:00:00Z",
+     "window_end_utc": "2026-10-24T01:00:00Z",
      "availability": "unavailable",
      "unavailable_reason": "The model runs needed for a calibrated forecast of this window had not been published when the forecast was made.",
      "withdrawn": [],

@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "exported_utc": "2026-10-05T02:30:10Z",
+ "exported_utc": "2026-10-19T15:00:50Z",
  "champion": {
   "perth": {
    "name": "Perth",
@@ -11269,7 +11269,7 @@
     ],
     "champion_model": null,
     "champion_run_id": null,
-    "eligible_windows": 2,
+    "eligible_windows": 8,
     "common_days": 0,
     "first_date": null,
     "last_date": null,
@@ -11277,17 +11277,17 @@
      {
       "competitor": "Our forecast (median)",
       "key": "champion_median",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 0,
-      "missing": 2,
+      "missing": 8,
       "coverage": 0.0
      },
      {
       "competitor": "Our forecast (expected total)",
       "key": "champion_expected",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 0,
-      "missing": 2,
+      "missing": 8,
       "coverage": 0.0
      }
     ],
@@ -11375,7 +11375,7 @@
     ],
     "champion_model": null,
     "champion_run_id": null,
-    "eligible_windows": 2,
+    "eligible_windows": 8,
     "common_days": 1,
     "first_date": "2026-10-03",
     "last_date": "2026-10-03",
@@ -11383,42 +11383,42 @@
      {
       "competitor": "Our forecast (median)",
       "key": "champion_median",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "Our forecast (expected total)",
       "key": "champion_expected",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "ECMWF IFS (raw)",
       "key": "sr_ecmwf_ifs",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "DWD ICON Global, 12 UTC run (challenger, raw)",
       "key": "icon_global_12z",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 1,
-      "missing": 1,
-      "coverage": 0.5
+      "missing": 7,
+      "coverage": 0.125
      },
      {
       "competitor": "ECMWF AIFS, 12 UTC run (challenger, raw)",
       "key": "ecmwf_aifs025_single_12z",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 1,
-      "missing": 1,
-      "coverage": 0.5
+      "missing": 7,
+      "coverage": 0.125
      }
     ],
     "amounts": [
@@ -11670,7 +11670,7 @@
     ],
     "champion_model": null,
     "champion_run_id": null,
-    "eligible_windows": 2,
+    "eligible_windows": 8,
     "common_days": 1,
     "first_date": "2026-10-03",
     "last_date": "2026-10-03",
@@ -11678,90 +11678,90 @@
      {
       "competitor": "Our forecast (median)",
       "key": "champion_median",
-      "eligible_windows": 2,
-      "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "eligible_windows": 8,
+      "with_forecast": 4,
+      "missing": 4,
+      "coverage": 0.5
      },
      {
       "competitor": "Our forecast (expected total)",
       "key": "champion_expected",
-      "eligible_windows": 2,
-      "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "eligible_windows": 8,
+      "with_forecast": 4,
+      "missing": 4,
+      "coverage": 0.5
      },
      {
       "competitor": "ECMWF IFS (raw)",
       "key": "sr_ecmwf_ifs",
-      "eligible_windows": 2,
-      "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "eligible_windows": 8,
+      "with_forecast": 4,
+      "missing": 4,
+      "coverage": 0.5
      },
      {
       "competitor": "ECMWF IFS 0.25° (raw)",
       "key": "pr_ecmwf_ifs025",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "JMA GSM (raw)",
       "key": "pr_jma_gsm",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "NOAA GFS (raw)",
       "key": "pr_ncep_gfs_global",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "DWD ICON Global (challenger, raw)",
       "key": "icon_global",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "ECMWF AIFS (challenger, raw)",
       "key": "ecmwf_aifs025_single",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "DWD ICON Global, 12 UTC run (challenger, raw)",
       "key": "icon_global_12z",
-      "eligible_windows": 2,
-      "with_forecast": 1,
-      "missing": 1,
-      "coverage": 0.5
+      "eligible_windows": 8,
+      "with_forecast": 2,
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "ECMWF AIFS, 12 UTC run (challenger, raw)",
       "key": "ecmwf_aifs025_single_12z",
-      "eligible_windows": 2,
-      "with_forecast": 1,
-      "missing": 1,
-      "coverage": 0.5
+      "eligible_windows": 8,
+      "with_forecast": 2,
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "Equal-weight blend of existing raw models",
       "key": "blend",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      }
     ],
     "amounts": [
@@ -12301,7 +12301,7 @@
     ],
     "champion_model": null,
     "champion_run_id": null,
-    "eligible_windows": 2,
+    "eligible_windows": 8,
     "common_days": 0,
     "first_date": null,
     "last_date": null,
@@ -12309,17 +12309,17 @@
      {
       "competitor": "Our forecast (median)",
       "key": "champion_median",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 0,
-      "missing": 2,
+      "missing": 8,
       "coverage": 0.0
      },
      {
       "competitor": "Our forecast (expected total)",
       "key": "champion_expected",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 0,
-      "missing": 2,
+      "missing": 8,
       "coverage": 0.0
      }
     ],
@@ -12407,7 +12407,7 @@
     ],
     "champion_model": null,
     "champion_run_id": null,
-    "eligible_windows": 2,
+    "eligible_windows": 8,
     "common_days": 1,
     "first_date": "2026-10-03",
     "last_date": "2026-10-03",
@@ -12415,42 +12415,42 @@
      {
       "competitor": "Our forecast (median)",
       "key": "champion_median",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "Our forecast (expected total)",
       "key": "champion_expected",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "ECMWF IFS (raw)",
       "key": "sr_ecmwf_ifs",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "DWD ICON Global, 12 UTC run (challenger, raw)",
       "key": "icon_global_12z",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 1,
-      "missing": 1,
-      "coverage": 0.5
+      "missing": 7,
+      "coverage": 0.125
      },
      {
       "competitor": "ECMWF AIFS, 12 UTC run (challenger, raw)",
       "key": "ecmwf_aifs025_single_12z",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 1,
-      "missing": 1,
-      "coverage": 0.5
+      "missing": 7,
+      "coverage": 0.125
      }
     ],
     "amounts": [
@@ -12702,7 +12702,7 @@
     ],
     "champion_model": null,
     "champion_run_id": null,
-    "eligible_windows": 2,
+    "eligible_windows": 8,
     "common_days": 1,
     "first_date": "2026-10-03",
     "last_date": "2026-10-03",
@@ -12710,90 +12710,90 @@
      {
       "competitor": "Our forecast (median)",
       "key": "champion_median",
-      "eligible_windows": 2,
-      "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "eligible_windows": 8,
+      "with_forecast": 4,
+      "missing": 4,
+      "coverage": 0.5
      },
      {
       "competitor": "Our forecast (expected total)",
       "key": "champion_expected",
-      "eligible_windows": 2,
-      "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "eligible_windows": 8,
+      "with_forecast": 4,
+      "missing": 4,
+      "coverage": 0.5
      },
      {
       "competitor": "ECMWF IFS (raw)",
       "key": "sr_ecmwf_ifs",
-      "eligible_windows": 2,
-      "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "eligible_windows": 8,
+      "with_forecast": 4,
+      "missing": 4,
+      "coverage": 0.5
      },
      {
       "competitor": "ECMWF IFS 0.25° (raw)",
       "key": "pr_ecmwf_ifs025",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "JMA GSM (raw)",
       "key": "pr_jma_gsm",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "NOAA GFS (raw)",
       "key": "pr_ncep_gfs_global",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "DWD ICON Global (challenger, raw)",
       "key": "icon_global",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "ECMWF AIFS (challenger, raw)",
       "key": "ecmwf_aifs025_single",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "DWD ICON Global, 12 UTC run (challenger, raw)",
       "key": "icon_global_12z",
-      "eligible_windows": 2,
-      "with_forecast": 1,
-      "missing": 1,
-      "coverage": 0.5
+      "eligible_windows": 8,
+      "with_forecast": 2,
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "ECMWF AIFS, 12 UTC run (challenger, raw)",
       "key": "ecmwf_aifs025_single_12z",
-      "eligible_windows": 2,
-      "with_forecast": 1,
-      "missing": 1,
-      "coverage": 0.5
+      "eligible_windows": 8,
+      "with_forecast": 2,
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "Equal-weight blend of existing raw models",
       "key": "blend",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      }
     ],
     "amounts": [
@@ -13337,7 +13337,7 @@
     ],
     "champion_model": null,
     "champion_run_id": null,
-    "eligible_windows": 2,
+    "eligible_windows": 8,
     "common_days": 0,
     "first_date": null,
     "last_date": null,
@@ -13345,17 +13345,17 @@
      {
       "competitor": "Our forecast (median)",
       "key": "champion_median",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 0,
-      "missing": 2,
+      "missing": 8,
       "coverage": 0.0
      },
      {
       "competitor": "Our forecast (expected total)",
       "key": "champion_expected",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 0,
-      "missing": 2,
+      "missing": 8,
       "coverage": 0.0
      }
     ],
@@ -13447,7 +13447,7 @@
     ],
     "champion_model": null,
     "champion_run_id": null,
-    "eligible_windows": 2,
+    "eligible_windows": 8,
     "common_days": 1,
     "first_date": "2026-10-03",
     "last_date": "2026-10-03",
@@ -13455,42 +13455,42 @@
      {
       "competitor": "Our forecast (median)",
       "key": "champion_median",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "Our forecast (expected total)",
       "key": "champion_expected",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "ECMWF IFS (raw)",
       "key": "sr_ecmwf_ifs",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "DWD ICON Global, 12 UTC run (challenger, raw)",
       "key": "icon_global_12z",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 1,
-      "missing": 1,
-      "coverage": 0.5
+      "missing": 7,
+      "coverage": 0.125
      },
      {
       "competitor": "ECMWF AIFS, 12 UTC run (challenger, raw)",
       "key": "ecmwf_aifs025_single_12z",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 1,
-      "missing": 1,
-      "coverage": 0.5
+      "missing": 7,
+      "coverage": 0.125
      }
     ],
     "amounts": [
@@ -13746,7 +13746,7 @@
     ],
     "champion_model": null,
     "champion_run_id": null,
-    "eligible_windows": 2,
+    "eligible_windows": 8,
     "common_days": 1,
     "first_date": "2026-10-03",
     "last_date": "2026-10-03",
@@ -13754,90 +13754,90 @@
      {
       "competitor": "Our forecast (median)",
       "key": "champion_median",
-      "eligible_windows": 2,
-      "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "eligible_windows": 8,
+      "with_forecast": 4,
+      "missing": 4,
+      "coverage": 0.5
      },
      {
       "competitor": "Our forecast (expected total)",
       "key": "champion_expected",
-      "eligible_windows": 2,
-      "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "eligible_windows": 8,
+      "with_forecast": 4,
+      "missing": 4,
+      "coverage": 0.5
      },
      {
       "competitor": "ECMWF IFS (raw)",
       "key": "sr_ecmwf_ifs",
-      "eligible_windows": 2,
-      "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "eligible_windows": 8,
+      "with_forecast": 4,
+      "missing": 4,
+      "coverage": 0.5
      },
      {
       "competitor": "ECMWF IFS 0.25° (raw)",
       "key": "pr_ecmwf_ifs025",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "JMA GSM (raw)",
       "key": "pr_jma_gsm",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "NOAA GFS (raw)",
       "key": "pr_ncep_gfs_global",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "DWD ICON Global (challenger, raw)",
       "key": "icon_global",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "ECMWF AIFS (challenger, raw)",
       "key": "ecmwf_aifs025_single",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "DWD ICON Global, 12 UTC run (challenger, raw)",
       "key": "icon_global_12z",
-      "eligible_windows": 2,
-      "with_forecast": 1,
-      "missing": 1,
-      "coverage": 0.5
+      "eligible_windows": 8,
+      "with_forecast": 2,
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "ECMWF AIFS, 12 UTC run (challenger, raw)",
       "key": "ecmwf_aifs025_single_12z",
-      "eligible_windows": 2,
-      "with_forecast": 1,
-      "missing": 1,
-      "coverage": 0.5
+      "eligible_windows": 8,
+      "with_forecast": 2,
+      "missing": 6,
+      "coverage": 0.25
      },
      {
       "competitor": "Equal-weight blend of existing raw models",
       "key": "blend",
-      "eligible_windows": 2,
+      "eligible_windows": 8,
       "with_forecast": 2,
-      "missing": 0,
-      "coverage": 1.0
+      "missing": 6,
+      "coverage": 0.25
      }
     ],
     "amounts": [
@@ -14370,7 +14370,7 @@
   "verdict_rule": "A verdict needs at least 60 common days and 15 observed wet days (>= 0.2 mm) and a Holm-adjusted p < 0.05; otherwise 'insufficient evidence' or 'inconclusive'. Wins are never awarded for missing forecasts.",
   "n_comparisons": 0,
   "windows_issued": 72,
-  "windows_scored": 18,
+  "windows_scored": 72,
   "ledger_records": 736
  },
  "ledger_head": {
@@ -14831,7 +14831,7 @@
     "lead": "day1",
     "window_start_utc": "2026-10-03 01:00:00+00:00",
     "window_end_utc": "2026-10-04 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -14935,7 +14935,7 @@
     "lead": "day2",
     "window_start_utc": "2026-10-03 01:00:00+00:00",
     "window_end_utc": "2026-10-04 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -15065,7 +15065,7 @@
     "lead": "day3",
     "window_start_utc": "2026-10-03 01:00:00+00:00",
     "window_end_utc": "2026-10-04 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -15220,7 +15220,7 @@
     "lead": "day1",
     "window_start_utc": "2026-10-04 01:00:00+00:00",
     "window_end_utc": "2026-10-05 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -15324,7 +15324,7 @@
     "lead": "day2",
     "window_start_utc": "2026-10-04 01:00:00+00:00",
     "window_end_utc": "2026-10-05 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -15454,7 +15454,7 @@
     "lead": "day3",
     "window_start_utc": "2026-10-04 01:00:00+00:00",
     "window_end_utc": "2026-10-05 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -15584,7 +15584,7 @@
     "lead": "day1",
     "window_start_utc": "2026-10-05 01:00:00+00:00",
     "window_end_utc": "2026-10-06 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -15688,7 +15688,7 @@
     "lead": "day2",
     "window_start_utc": "2026-10-05 01:00:00+00:00",
     "window_end_utc": "2026-10-06 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -15818,7 +15818,7 @@
     "lead": "day3",
     "window_start_utc": "2026-10-05 01:00:00+00:00",
     "window_end_utc": "2026-10-06 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -16387,7 +16387,7 @@
     "lead": "day1",
     "window_start_utc": "2026-10-03 01:00:00+00:00",
     "window_end_utc": "2026-10-04 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -16491,7 +16491,7 @@
     "lead": "day2",
     "window_start_utc": "2026-10-03 01:00:00+00:00",
     "window_end_utc": "2026-10-04 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -16621,7 +16621,7 @@
     "lead": "day3",
     "window_start_utc": "2026-10-03 01:00:00+00:00",
     "window_end_utc": "2026-10-04 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -16776,7 +16776,7 @@
     "lead": "day1",
     "window_start_utc": "2026-10-04 01:00:00+00:00",
     "window_end_utc": "2026-10-05 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -16880,7 +16880,7 @@
     "lead": "day2",
     "window_start_utc": "2026-10-04 01:00:00+00:00",
     "window_end_utc": "2026-10-05 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -17010,7 +17010,7 @@
     "lead": "day3",
     "window_start_utc": "2026-10-04 01:00:00+00:00",
     "window_end_utc": "2026-10-05 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -17140,7 +17140,7 @@
     "lead": "day1",
     "window_start_utc": "2026-10-05 01:00:00+00:00",
     "window_end_utc": "2026-10-06 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -17244,7 +17244,7 @@
     "lead": "day2",
     "window_start_utc": "2026-10-05 01:00:00+00:00",
     "window_end_utc": "2026-10-06 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -17374,7 +17374,7 @@
     "lead": "day3",
     "window_start_utc": "2026-10-05 01:00:00+00:00",
     "window_end_utc": "2026-10-06 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -17943,7 +17943,7 @@
     "lead": "day1",
     "window_start_utc": "2026-10-03 01:00:00+00:00",
     "window_end_utc": "2026-10-04 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -18047,7 +18047,7 @@
     "lead": "day2",
     "window_start_utc": "2026-10-03 01:00:00+00:00",
     "window_end_utc": "2026-10-04 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -18177,7 +18177,7 @@
     "lead": "day3",
     "window_start_utc": "2026-10-03 01:00:00+00:00",
     "window_end_utc": "2026-10-04 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -18332,7 +18332,7 @@
     "lead": "day1",
     "window_start_utc": "2026-10-04 01:00:00+00:00",
     "window_end_utc": "2026-10-05 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -18436,7 +18436,7 @@
     "lead": "day2",
     "window_start_utc": "2026-10-04 01:00:00+00:00",
     "window_end_utc": "2026-10-05 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -18566,7 +18566,7 @@
     "lead": "day3",
     "window_start_utc": "2026-10-04 01:00:00+00:00",
     "window_end_utc": "2026-10-05 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -18696,7 +18696,7 @@
     "lead": "day1",
     "window_start_utc": "2026-10-05 01:00:00+00:00",
     "window_end_utc": "2026-10-06 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -18800,7 +18800,7 @@
     "lead": "day2",
     "window_start_utc": "2026-10-05 01:00:00+00:00",
     "window_end_utc": "2026-10-06 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -18930,7 +18930,7 @@
     "lead": "day3",
     "window_start_utc": "2026-10-05 01:00:00+00:00",
     "window_end_utc": "2026-10-06 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -19499,7 +19499,7 @@
     "lead": "day1",
     "window_start_utc": "2026-10-03 01:00:00+00:00",
     "window_end_utc": "2026-10-04 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -19603,7 +19603,7 @@
     "lead": "day2",
     "window_start_utc": "2026-10-03 01:00:00+00:00",
     "window_end_utc": "2026-10-04 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -19733,7 +19733,7 @@
     "lead": "day3",
     "window_start_utc": "2026-10-03 01:00:00+00:00",
     "window_end_utc": "2026-10-04 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -19888,7 +19888,7 @@
     "lead": "day1",
     "window_start_utc": "2026-10-04 01:00:00+00:00",
     "window_end_utc": "2026-10-05 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -19992,7 +19992,7 @@
     "lead": "day2",
     "window_start_utc": "2026-10-04 01:00:00+00:00",
     "window_end_utc": "2026-10-05 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -20122,7 +20122,7 @@
     "lead": "day3",
     "window_start_utc": "2026-10-04 01:00:00+00:00",
     "window_end_utc": "2026-10-05 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -20252,7 +20252,7 @@
     "lead": "day1",
     "window_start_utc": "2026-10-05 01:00:00+00:00",
     "window_end_utc": "2026-10-06 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -20356,7 +20356,7 @@
     "lead": "day2",
     "window_start_utc": "2026-10-05 01:00:00+00:00",
     "window_end_utc": "2026-10-06 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
@@ -20486,7 +20486,7 @@
     "lead": "day3",
     "window_start_utc": "2026-10-05 01:00:00+00:00",
     "window_end_utc": "2026-10-06 01:00:00+00:00",
-    "observed_mm": null,
+    "observed_mm": 0.0,
     "competitors": [
      {
       "competitor": "Our forecast",
